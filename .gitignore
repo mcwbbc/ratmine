@@ -1,4 +1,6 @@
-*.log
+*.log*
+dist/
+dump*
 build/
 project.xml
 .svn/
