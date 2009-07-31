@@ -192,6 +192,30 @@
     </fields>
   </class>
 
+	<class className="org.intermine.model.bio.DOAnnotation">
+		<fields>
+			<fieldconfig fieldExpr="ontologyTerm.identifier" />
+			<fieldconfig fieldExpr="ontologyTerm.name" />
+			<fieldconfig fieldExpr="qualifier" />
+		</fields>
+	</class>
+
+	<class className="org.intermine.model.bio.MPAnnotation">
+		<fields>
+			<fieldconfig fieldExpr="ontologyTerm.identifier" />
+			<fieldconfig fieldExpr="ontologyTerm.name" />
+			<fieldconfig fieldExpr="qualifier" />
+		</fields>
+	</class>
+	
+	<class className="org.intermine.model.bio.PWAnnotation">
+		<fields>
+			<fieldconfig fieldExpr="ontologyTerm.identifier" />
+			<fieldconfig fieldExpr="ontologyTerm.name" />
+			<fieldconfig fieldExpr="qualifier" />
+		</fields>
+	</class>
+	
   <class className="org.intermine.model.bio.Transcript">
     <fields>
       <fieldconfig fieldExpr="primaryIdentifier"/>

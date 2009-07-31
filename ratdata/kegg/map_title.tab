@@ -1,6 +1,7 @@
 00010	Glycolysis / Gluconeogenesis
 00020	Citrate cycle (TCA cycle)
 00030	Pentose phosphate pathway
+00031	Inositol metabolism
 00040	Pentose and glucuronate interconversions
 00051	Fructose and mannose metabolism
 00052	Galactose metabolism
@@ -9,9 +10,9 @@
 00062	Fatty acid elongation in mitochondria
 00071	Fatty acid metabolism
 00072	Synthesis and degradation of ketone bodies
-00100	Biosynthesis of steroids
-00120	Bile acid biosynthesis
-00130	Ubiquinone and menaquinone biosynthesis
+00100	Steroid biosynthesis
+00120	Primary bile acid biosynthesis
+00130	Terpenoid-quinone biosynthesis
 00140	C21-Steroid hormone metabolism
 00150	Androgen and estrogen metabolism
 00190	Oxidative phosphorylation
@@ -22,10 +23,12 @@
 00231	Puromycin biosynthesis
 00232	Caffeine metabolism
 00240	Pyrimidine metabolism
+00250	Alanine, aspartate and glutamate metabolism
 00251	Glutamate metabolism
 00252	Alanine and aspartate metabolism
 00253	Tetracycline biosynthesis
 00260	Glycine, serine and threonine metabolism
+00270	Cysteine and methionine metabolism
 00271	Methionine metabolism
 00272	Cysteine metabolism
 00280	Valine, leucine and isoleucine degradation
@@ -64,7 +67,7 @@
 00512	O-Glycan biosynthesis
 00513	High-mannose type N-glycan biosynthesis
 00514	O-Mannosyl glycan biosynthesis
-00520	Nucleotide sugars metabolism
+00520	Amino sugar and nucleotide sugar metabolism
 00521	Streptomycin biosynthesis
 00522	Biosynthesis of 12-, 14- and 16-membered macrolides
 00523	Polyketide sugar unit biosynthesis
@@ -85,6 +88,7 @@
 00592	alpha-Linolenic acid metabolism
 00600	Sphingolipid metabolism
 00601	Glycosphingolipid biosynthesis - lacto and neolacto series
+00602	Glycosphingolipid biosynthesis - neo-lactoseries
 00603	Glycosphingolipid biosynthesis - globo series
 00604	Glycosphingolipid biosynthesis - ganglio series
 00620	Pyruvate metabolism
@@ -122,15 +126,15 @@
 00791	Atrazine degradation
 00830	Retinol metabolism
 00860	Porphyrin and chlorophyll metabolism
-00900	Terpenoid biosynthesis
+00900	Terpenoid backbone biosynthesis
 00901	Indole and ipecac alkaloid biosynthesis
 00902	Monoterpenoid biosynthesis
 00903	Limonene and pinene degradation
 00904	Diterpenoid biosynthesis
 00905	Brassinosteroid biosynthesis
-00906	Carotenoid biosynthesis - General
-00907	Carotenoid biosynthesis - Organism group-specific
+00906	Carotenoid biosynthesis
 00908	Zeatin biosynthesis
+00909	Sesquiterpenoid biosynthesis
 00910	Nitrogen metabolism
 00920	Sulfur metabolism
 00930	Caprolactam degradation
@@ -141,12 +145,16 @@
 00944	Flavone and flavonol biosynthesis
 00950	Alkaloid biosynthesis I
 00960	Alkaloid biosynthesis II
+00966	Glucosinolate biosynthesis
 00970	Aminoacyl-tRNA biosynthesis
 00980	Metabolism of xenobiotics by cytochrome P450
 00981	Insect hormone biosynthesis
 00982	Drug metabolism - cytochrome P450
 00983	Drug metabolism - other enzymes
 01010	Overview of biosynthetic pathways
+01030	Glycan structures - biosynthesis 1
+01031	Glycan structures - biosynthesis 2
+01032	Glycan structures - degradation
 01040	Biosynthesis of unsaturated fatty acids
 01051	Biosynthesis of ansamycins
 01052	Type I polyketide structures
@@ -164,11 +172,13 @@
 01065	Biosynthesis of alkaloids derived from histidine and purine
 01066	Biosynthesis of alkaloids derived from terpenoid and polyketide
 01070	Biosynthesis of plant hormones
+01080	Biosynthesis of antibiotics
+01081	Biosynthesis of beta-lactam antibiotics
+01082	Biosynthesis of aminoglycosides
 01100	Metabolic pathways
 02010	ABC transporters
 02020	Two-component system
-02030	Bacterial chemotaxis - General
-02031	Bacterial chemotaxis - Organism-specific
+02030	Bacterial chemotaxis
 02040	Flagellar assembly
 02060	Phosphotransferase system (PTS)
 03010	Ribosome
@@ -177,7 +187,7 @@
 03030	DNA replication
 03050	Proteasome
 03060	Protein export
-03070	Type III secretion system
+03070	Bacterial secretion system
 03080	Type IV secretion system
 03090	Type II secretion system
 03320	PPAR signaling pathway
@@ -192,6 +202,7 @@
 04013	MAPK signaling pathway - fruit fly
 04020	Calcium signaling pathway
 04060	Cytokine-cytokine receptor interaction
+04062	Chemokine signaling pathway
 04070	Phosphatidylinositol signaling system
 04080	Neuroactive ligand-receptor interaction
 04110	Cell cycle
@@ -200,9 +211,12 @@
 04120	Ubiquitin mediated proteolysis
 04130	SNARE interactions in vesicular transport
 04140	Regulation of autophagy
+04142	Lysosome
+04144	Endocytosis
 04150	mTOR signaling pathway
 04210	Apoptosis
 04260	Cardiac muscle contraction
+04270	Vascular smooth muscle contraction
 04310	Wnt signaling pathway
 04320	Dorso-ventral axis formation
 04330	Notch signaling pathway
@@ -227,8 +241,11 @@
 04662	B cell receptor signaling pathway
 04664	Fc epsilon RI signaling pathway
 04670	Leukocyte transendothelial migration
-04710	Circadian rhythm
+04710	Circadian rhythm - mammal
+04711	Circadian rhythm - fly
+04712	Circadian rhythm - plant
 04720	Long-term potentiation
+04722	Neurotrophin signaling pathway
 04730	Long-term depression
 04740	Olfactory transduction
 04742	Taste transduction
@@ -245,9 +262,13 @@
 05012	Parkinson's disease
 05014	Amyotrophic lateral sclerosis (ALS)
 05016	Huntington's disease
+05018	Dentatorubropallidoluysian atrophy (DRPLA)
+05020	Prion diseases
 05110	Vibrio cholerae infection
 05111	Vibrio cholerae pathogenic cycle
 05120	Epithelial cell signaling in Helicobacter pylori infection
+05130	Pathogenic Escherichia coli infection - EHEC
+05131	Pathogenic Escherichia coli infection - EPEC
 05130	Pathogenic Escherichia coli infection - EHEC
 05131	Pathogenic Escherichia coli infection - EPEC
 05200	Pathways in cancer
