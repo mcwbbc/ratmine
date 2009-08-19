@@ -70,7 +70,7 @@ while(<QTLS>)
 		unless($qtl_info[$index{'3.4_MAP_POS_START'}] eq '')
 		{
 			my @gff_line; #Create a GFF3 compatable line for each record
-			push(@gff_line, "Chr" . $qtl_info[$index{CHROMOSOME_FROM_REF}]); #chromsome location
+			push(@gff_line, $qtl_info[$index{CHROMOSOME_FROM_REF}]); #chromsome location
 			push(@gff_line, "RatGenomeDatabase"); #source
 			push(@gff_line, "region"); #SOFA term
 			push(@gff_line, $qtl_info[$index{'3.4_MAP_POS_START'}]); #start position
@@ -78,7 +78,7 @@ while(<QTLS>)
 			push(@gff_line, '.'); #score, left blank since QTLs have two different scores
 			push(@gff_line, '.'); #strand, irrelevant
 			push(@gff_line, '.'); #phase, irrelevant
-			push(@gff_line, "ID=RGD:$qtl_info[$index{QTL_RGD_ID}]"); #attributes line
+			push(@gff_line, "ID=$qtl_info[$index{QTL_RGD_ID}]"); #attributes line
 		
 			push(@gff, join("\t", @gff_line)); #add line to gff list
 		}
