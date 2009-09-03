@@ -222,7 +222,6 @@
 			<fieldconfig fieldExpr="chromosomeLocation"/>
 			<fieldconfig fieldExpr="allele1"/>
 			<fieldconfig fieldExpr="allele2"/>
-			<fieldconfig fieldExpr="consequenceType.type"/>
 			<fieldconfig fieldExpr="organism.name"/>
 		</fields>
 	</class>
