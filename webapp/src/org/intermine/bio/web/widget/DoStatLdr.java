@@ -40,6 +40,8 @@ import org.intermine.web.logic.widget.EnrichmentWidgetLdr;
 /**
  * {@inheritDoc}
  * @author Julie Sullivan
+ * @updated by Wes Rood
+ * @updated by Andrew Vallejos
  */
 public class DoStatLdr extends EnrichmentWidgetLdr
 {

@@ -57,10 +57,10 @@ public class MpStatURLQuery implements WidgetURLQuery
         pathStrings += prefix + ".primaryIdentifier,"
             + prefix + ".symbol,"
             + prefix + ".organism.name,"
-            + prefix + ".mpAnnotation.MPTerm.identifier,"
-            + prefix + ".mpAnnotation.MPTerm.name,"
-            + prefix + ".mpAnnotation.MPTerm.relations.parentTerm.identifier,"
-            + prefix + ".mpAnnotation.MPTerm.relations.parentTerm.name";
+            + prefix + ".mpAnnotation.ontologyTerm.identifier,"
+            + prefix + ".mpAnnotation.ontologyTerm.name,"
+            + prefix + ".mpAnnotation.ontologyTerm.relations.parentTerm.identifier,"
+            + prefix + ".mpAnnotation.ontologyTerm.relations.parentTerm.name";
 
         q.setView(pathStrings);
         q.setOrderBy(pathStrings);
@@ -72,7 +72,7 @@ public class MpStatURLQuery implements WidgetURLQuery
         q.addConstraint(pathString, Constraints.isNull());
 
         // go term
-        pathString = prefix + ".mpAnnotation.MPTerm.relations.parentTerm";
+        pathString = prefix + ".mpAnnotation.ontologyTerm.relations.parentTerm";
         q.addConstraint(pathString, Constraints.lookup(key), "C", "MPTerm");
 
         q.setConstraintLogic("A and B and C");

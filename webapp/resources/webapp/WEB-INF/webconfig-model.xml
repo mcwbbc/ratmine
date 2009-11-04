@@ -310,7 +310,7 @@
 	                                 dataSetLoader="org.intermine.bio.web.widget.MpStatLdr"
 	                                 description="Mammalian Phenotype terms enriched for items in this list."
 	                                 label="Mammalian Phenotype Term"
-	                                 filters="mammalian_phenotype"
+									 filters="MPheno.ontology"
 	                                 filterLabel="Ontology"
 	                                 typeClass="org.intermine.model.bio.Gene,org.intermine.model.bio.Protein"
 	                                 externalLink="http://www.informatics.jax.org/searches/Phat.cgi?id=" />
