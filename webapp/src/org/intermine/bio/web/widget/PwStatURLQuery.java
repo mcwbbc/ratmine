@@ -57,10 +57,10 @@ public class PwStatURLQuery implements WidgetURLQuery
         pathStrings += prefix + ".primaryIdentifier,"
             + prefix + ".symbol,"
             + prefix + ".organism.name,"
-            + prefix + ".pwAnnotation.PWTerm.identifier,"
-            + prefix + ".pwAnnotation.PWTerm.name,"
-            + prefix + ".pwAnnotation.PWTerm.relations.parentTerm.identifier,"
-            + prefix + ".pwAnnotation.PWTerm.relations.parentTerm.name";
+            + prefix + ".pwAnnotation.ontologyTerm.identifier,"
+            + prefix + ".pwAnnotation.ontologyTerm.name,"
+            + prefix + ".pwAnnotation.ontologyTerm.relations.parentTerm.identifier,"
+            + prefix + ".pwAnnotation.ontologyTerm.relations.parentTerm.name";
 
         q.setView(pathStrings);
         q.setOrderBy(pathStrings);
@@ -72,7 +72,7 @@ public class PwStatURLQuery implements WidgetURLQuery
         q.addConstraint(pathString, Constraints.isNull());
 
         // go term
-        pathString = prefix + ".pwAnnotation.PWTerm.relations.parentTerm";
+        pathString = prefix + ".pwAnnotation.ontologyTerm.relations.parentTerm";
         q.addConstraint(pathString, Constraints.lookup(key), "C", "PWTerm");
 
         q.setConstraintLogic("A and B and C");

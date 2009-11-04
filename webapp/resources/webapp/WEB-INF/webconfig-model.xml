@@ -315,6 +315,15 @@
 	                                 typeClass="org.intermine.model.bio.Gene,org.intermine.model.bio.Protein"
 	                                 externalLink="http://www.informatics.jax.org/searches/Phat.cgi?id=" />
 
+		 <enrichmentwidgetdisplayer id="publication_enrichment" title="Publication Enrichment"
+		                             link="org.intermine.bio.web.widget.PublicationURLQuery"
+			                         dataSetLoader="org.intermine.bio.web.widget.PublicationLdr"
+				                     label="Publication"
+					                 description="Publications enriched for genes in this list."
+						             externalLink="http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?cmd=Retrieve&amp;db=PubMed&amp;dopt=Abstract&amp;list_uids="
+									typeClass="org.intermine.model.bio.Gene,org.intermine.model.bio.Protein"
+									externalLinkLabel="PubMed:" />
+
 
 	</widgets>
 </webconfig>
