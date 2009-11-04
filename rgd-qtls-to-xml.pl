@@ -15,15 +15,25 @@ use XML::Writer;
 use InterMine::Item;
 use InterMine::ItemFactory;
 use InterMine::Model;
+use InterMine::Util qw(get_property_value);
+use IO qw(Handle File);
+use Cwd;
 
-my ($model_file, $qtls_file, $gff_file) = @ARGV;
+my ($model_file, $qtls_file, $qtl_xml, $gff_file) = @ARGV;
 
-die "Must point to valid InterMine Model" unless (-e $model_file);
+unless ( $model_file ne '' and -e $model_file)
+{
+	print "\nrgd-qtls-to-xml.pl\n";
+	print "Convert the QTLS_RAT flat file from RGD into InterMine XML\n";
+	print "rgd-qtls-to-xml.pl model_file QTLS_RAT qtl_xml_output qtl_gff_output\n\n";
+	exit(0);
+}
+
 my $data_source = 'RGD';
 my $taxon_id = 10116;
-my $writer = new XML::Writer(DATA_MODE => 1, DATA_INDENT => 3);
+my $output = new IO::File(">$qtl_xml");
+my $writer = new XML::Writer(DATA_MODE => 1, DATA_INDENT => 3, OUTPUT => $output);
 
-my @items = ();
 my %pubs = ();
 my @gff;
 
@@ -39,8 +49,7 @@ $writer->startTag("items");
 #User Additions
 my $org_item = $item_factory->make_item('Organism');
 $org_item->set('taxonId', $taxon_id);
-push(@items, $org_item); #add organism to items list
-
+$org_item->as_xml($writer);
 
 # read the genes file
 open QTLS, $qtls_file;
@@ -69,7 +78,13 @@ while(<QTLS>)
 		$syn_item->set('type', 'symbol');
 		$syn_item->set('subject', $qtl_item);
 		$syn_item->as_xml($writer);
-		
+
+		my $syn_item2 = $item_factory->make_item('Synonym');
+		$syn_item2->set('value', $qtl_info[$index{QTL_NAME}]);
+		$syn_item2->set('type', 'name');
+		$syn_item2->set('subject', $qtl_item);
+		$syn_item2->as_xml($writer);
+				
 		$qtl_item->set('lod', $qtl_info[$index{LOD}]) unless $qtl_info[$index{LOD}] eq '';
 		$qtl_item->set('pValue', $qtl_info[$index{P_VALUE}]) unless $qtl_info[$index{P_VALUE}] eq '';
 		$qtl_item->set('trait', $qtl_info[$index{TRAIT_NAME}]);
@@ -106,31 +121,20 @@ while(<QTLS>)
 	          		$pub1->set("pubMedId", $_);
 	          		$pubs{$_} = $pub1;
 	          		push(@currentPubs, $pub1);
+	          		$pub1->as_xml($writer);
 	        	}#end if-else
 	      	}#end foreach
 	      	$qtl_item->set("publications", \@currentPubs);
+	      	$qtl_item->as_xml($writer);
     	}#end if
 
-		push(@items, $qtl_item);
 	} #end if-else	
 
 }#end while
 close QTLS;
 
-# write everything out as xml:
-
-
-#write the organism and the genes
-for my $item (@items) {
-  $item->as_xml($writer);
-}
-#write the pubs
-for my $item (values(%pubs)) {
-  $item->as_xml($writer);
-}
 $writer->endTag("items");
 
 open(GFF, ">$gff_file");
 foreach my $line (@gff) {	print GFF "$line\n";	}
 close GFF;
-
