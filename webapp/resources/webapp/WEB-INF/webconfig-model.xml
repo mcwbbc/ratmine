@@ -192,6 +192,14 @@
     </fields>
   </class>
 
+	<class className="org.intermine.model.bio.GOAnnotation">
+		<fields>
+			<fieldconfig fieldExpr="ontologyTerm.identifier" />
+			<fieldconfig fieldExpr="ontologyTerm.name" />
+			<fieldconfig fieldExpr="qualifier" />
+		</fields>
+	</class>
+
 	<class className="org.intermine.model.bio.DOAnnotation">
 		<fields>
 			<fieldconfig fieldExpr="ontologyTerm.identifier" />

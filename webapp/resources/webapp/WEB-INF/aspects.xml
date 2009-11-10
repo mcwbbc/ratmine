@@ -16,12 +16,11 @@
     <tile-name>model/genomics.jsp</tile-name>
     <aspect-source name="RGD" url="http://rgd.mcw.edu"/>
   </aspect>
-
-	<aspect name="Quantitative Trait Loci">
-  <subtitle></subtitle>
-  <icon-image>model/images/QTL_image_197x153.gif</icon-image>
-  <large-image>model/images/QTL_image_197x153.gif</large-image>
-  <intro-text>
+  <aspect name="Quantitative Trait Loci">
+	<subtitle></subtitle>
+	<icon-image>model/images/QTL_image_197x153.gif</icon-image>
+	<large-image>model/images/QTL_image_197x153.gif</large-image>
+	<intro-text>
   	Quantitative Trait Locus (QTL) is a polymorphic locus which contains alleles that differentially affect the 
 		expression of a continuously distributed phenotypic trait. Usually it is a marker described by statistical 
 		association to quantitative variation in the particular phenotypic trait that is thought to be controlled by the cumulative action of alleles at multiple loci.
@@ -30,10 +29,22 @@
 		strain (showing the phenotype) is crossed with an unaffected strain (lacking the phenotype), the progeny are 
 		genotyped and phenotyped and through statistical techniques, a correlation is made between a particular genotype 
 		and the phenotype being measured.
-  </intro-text>
-  <tile-name></tile-name>
-  <aspect-source name="QTL" url="http://rgd.mcw.edu/rgdweb/search/qtls.html?100"/>
-	</aspect>
+	</intro-text>
+	<tile-name></tile-name>
+	<aspect-source name="QTL" url="http://rgd.mcw.edu/rgdweb/search/qtls.html?100"/>
+  </aspect>
+
+  <aspect name="Single Nucleotide Polymorphism">
+	<subtitle></subtitle>
+	<icon-image>model/images/QTL_image_197x153.gif</icon-image>
+	<large-image>model/images/QTL_image_197x153.gif</large-image>
+	<intro-text>
+  		Single Nucleotide Polymorphism brought to you by Ensembl.
+	</intro-text>
+	<tile-name></tile-name>
+	<aspect-source name="SNP" url="http://www.ensembl.org/Rattus_norvegicus/Info/Index"/>
+  </aspect>
+
 
   <aspect name="Proteins">
     <subtitle>Protein and proteomics&lt;br/&gt;data</subtitle>
