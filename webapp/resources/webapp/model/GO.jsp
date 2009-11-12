@@ -19,7 +19,7 @@
           </P>
           <DT><I>Rattus Norvegicus</I></DT>
           <DD>
-            GO annotations for <I>Rattus Norvegicus</I> gene products assigned by <a href="http://www.informatics.jax.org">MGI</a><BR/>
+            GO annotations for <I>Rattus Norvegicus</I> gene products assigned by <a href="http://rgd.mcw.edu">RGD</a><BR/>
           </DD>
         </DL>
       </div>
@@ -31,28 +31,13 @@
       <div class="body">
         <ul>
           <li>
-            All gene/GO annotation pairs from <i>Rattus Norvegicus</i>
-            <im:querylink text="(browse)" skipBuilder="true">
-<query name="" model="genomic" view="Gene Gene.goAnnotation">
+            <im:querylink text="All gene/GO annotation pairs from <i>Rattus Norvegicus</i>" skipBuilder="true">
+<query name="" model="genomic" view="Gene.primaryIdentifier Gene.symbol Gene.name Gene.goAnnotation.ontologyTerm.name Gene.goAnnotation.ontologyTerm.description" sortOrder="Gene.primaryIdentifier asc">
   <node path="Gene" type="Gene">
   </node>
-  <node path="Gene.organism" type="Organism">
+  <node path="Gene.goAnnotation" type="GOAnnotation">
   </node>
-  <node path="Gene.organism.name" type="String">
-    <constraint op="=" value="Rattus Norvegicus" description="" identifier="" code="A">
-    </constraint>
-  </node>
-</query>
-            </im:querylink>
-            <im:querylink text="(export)" skipBuilder="true">
-<query name="" model="genomic" view="Gene.identifier Gene.primaryIdentifier Gene.symbol Gene.goAnnotation.identifier Gene.goAnnotation.name Gene.goAnnotation.qualifier">
-  <node path="Gene" type="Gene">
-  </node>
-  <node path="Gene.organism" type="Organism">
-  </node>
-  <node path="Gene.organism.name" type="String">
-    <constraint op="=" value="Rattus Norvegicus" description="" identifier="" code="A">
-    </constraint>
+  <node path="Gene.goAnnotation.ontologyTerm" type="GOTerm">
   </node>
 </query>
             </im:querylink>

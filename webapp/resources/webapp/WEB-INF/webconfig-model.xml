@@ -192,6 +192,14 @@
     </fields>
   </class>
 
+	<class className="org.intermine.model.bio.GOAnnotation">
+		<fields>
+			<fieldconfig fieldExpr="ontologyTerm.identifier" />
+			<fieldconfig fieldExpr="ontologyTerm.name" />
+			<fieldconfig fieldExpr="qualifier" />
+		</fields>
+	</class>
+
 	<class className="org.intermine.model.bio.DOAnnotation">
 		<fields>
 			<fieldconfig fieldExpr="ontologyTerm.identifier" />
@@ -242,8 +250,10 @@
   </class>
 
 <!-- exporters -->
-  <tableExportConfig id="sequence" className="org.intermine.bio.web.export.SequenceHttpExporter"/>
-  <tableExportConfig id="gff3" className="org.intermine.bio.web.export.GFF3HttpExporter"/>
+  <tableExportConfig id="sequence" actionPath="/exportAction?type=sequenceExporter"
+									className="org.intermine.bio.web.export.SequenceHttpExporter"/>
+  <tableExportConfig id="gff3" actionPath="/exportAction?type=gff3Exporter"
+									className="org.intermine.bio.web.export.GFF3HttpExporter"/>
 
 	<!-- widgets -->
 	<widgets>
@@ -315,14 +325,14 @@
 	                                 typeClass="org.intermine.model.bio.Gene,org.intermine.model.bio.Protein"
 	                                 externalLink="http://www.informatics.jax.org/searches/Phat.cgi?id=" />
 
-      <enrichmentwidgetdisplayer id="publication_enrichment" title="Publication Enrichment"
-                                 link="org.intermine.bio.web.widget.PublicationURLQuery"
-                                 dataSetLoader="org.intermine.bio.web.widget.PublicationLdr"
-                                 label="Publication"
-                                 description="Publications enriched for genes in this list."
-                                 externalLink="http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?cmd=Retrieve&amp;db=PubMed&amp;dopt=Abstract&amp;list_uids="
-                                 typeClass="org.intermine.model.bio.Gene"
-                                 externalLinkLabel="PubMed:" />
+		 <enrichmentwidgetdisplayer id="publication_enrichment" title="Publication Enrichment"
+		                             link="org.intermine.bio.web.widget.PublicationURLQuery"
+			                         dataSetLoader="org.intermine.bio.web.widget.PublicationLdr"
+				                     label="Publication"
+					                 description="Publications enriched for genes in this list."
+						             externalLink="http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?cmd=Retrieve&amp;db=PubMed&amp;dopt=Abstract&amp;list_uids="
+									typeClass="org.intermine.model.bio.Gene,org.intermine.model.bio.Protein"
+									externalLinkLabel="PubMed:" />
 
 	</widgets>
 </webconfig>

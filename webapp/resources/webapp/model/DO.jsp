@@ -16,7 +16,7 @@
           </P>
           <DT><I>Rattus Norvegicus</I></DT>
           <DD>
-            DO annotations for <I>Rattus Norvegicus</I> gene products assigned by <a href="http://diseaseontology.sourceforge.net/">Disease Ontology</a><BR/>
+            Disease annotations for <I>Rattus Norvegicus</I> gene products assigned by <a href="http://rgd.mcw.edu">Rat Genome Database</a><BR/>
           </DD>
         </DL>
       </div>
@@ -28,31 +28,17 @@
       <div class="body">
         <ul>
           <li>
-            All gene/DO annotation pairs from <i>Rattus Norvegicus</i>
-            <im:querylink text="(browse)" skipBuilder="true">
-<query name="" model="genomic" view="Gene Gene.doAnnotation">
+            <im:querylink text="All gene/DO annotation pairs from <i>Rattus Norvegicus</i>(browse)" skipBuilder="true">
+<query name="" model="genomic" view="Gene.primaryIdentifier Gene.symbol Gene.doAnnotation.ontologyTerm.identifier Gene.doAnnotation.ontologyTerm.name Gene.doAnnotation.ontologyTerm.description" sortOrder="Gene.primaryIdentifier asc">
   <node path="Gene" type="Gene">
   </node>
-  <node path="Gene.organism" type="Organism">
+  <node path="Gene.doAnnotation" type="DOAnnotation">
   </node>
-  <node path="Gene.organism.name" type="String">
-    <constraint op="=" value="Rattus Norvegicus" description="" identifier="" code="A">
-    </constraint>
+  <node path="Gene.doAnnotation.ontologyTerm" type="DOTerm">
   </node>
 </query>
             </im:querylink>
-            <im:querylink text="(export)" skipBuilder="true">
-<query name="" model="genomic" view="Gene.identifier Gene.primaryIdentifier Gene.symbol Gene.doAnnotation.identifier Gene.doAnnotation.name Gene.doAnnotation.qualifier">
-  <node path="Gene" type="Gene">
-  </node>
-  <node path="Gene.organism" type="Organism">
-  </node>
-  <node path="Gene.organism.name" type="String">
-    <constraint op="=" value="Rattus Norvegicus" description="" identifier="" code="A">
-    </constraint>
-  </node>
-</query>
-            </im:querylink>
+
           </li>
         </ul>
       </div>
