@@ -250,8 +250,10 @@
   </class>
 
 <!-- exporters -->
-  <tableExportConfig id="sequence" className="org.intermine.bio.web.export.SequenceHttpExporter"/>
-  <tableExportConfig id="gff3" className="org.intermine.bio.web.export.GFF3HttpExporter"/>
+  <tableExportConfig id="sequence" actionPath="/exportAction?type=sequenceExporter"
+									className="org.intermine.bio.web.export.SequenceHttpExporter"/>
+  <tableExportConfig id="gff3" actionPath="/exportAction?type=gff3Exporter"
+									className="org.intermine.bio.web.export.GFF3HttpExporter"/>
 
 	<!-- widgets -->
 	<widgets>

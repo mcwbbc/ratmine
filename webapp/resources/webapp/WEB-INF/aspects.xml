@@ -6,16 +6,13 @@
     <intro-text>
       The gene structures and other genome annotations in RatMine are 
 			provided by a variety of curated source databases including RGD, 
-			NCBI and Ensembl.  RatMine includes both known and predicted genes
-			 with information about their associated transcripts and proteins.
-			  Gene data also includes external identifiers which link out to
-			 information in other databases.  In addition, annotations to the 
-			Disease, Pathway, Phenotype and Gene Ontologies provide detailed 
-			biological data.
+			NCBI and Ensembl.
     </intro-text>
     <tile-name>model/genomics.jsp</tile-name>
     <aspect-source name="RGD" url="http://rgd.mcw.edu"/>
+	<aspect-source name="Ensembl" url="http://www.ensembl.org/Rattus_norvegicus/Info/Index"/>
   </aspect>
+
   <aspect name="Quantitative Trait Loci">
 	<subtitle></subtitle>
 	<icon-image>model/images/QTL_image_197x153.gif</icon-image>
@@ -42,7 +39,7 @@
   		Single Nucleotide Polymorphism brought to you by Ensembl.
 	</intro-text>
 	<tile-name></tile-name>
-	<aspect-source name="SNP" url="http://www.ensembl.org/Rattus_norvegicus/Info/Index"/>
+	<aspect-source name="Ensembl" url="http://www.ensembl.org/Rattus_norvegicus/Info/Index"/>
   </aspect>
 
 
@@ -53,8 +50,6 @@
     <intro-text>
       RatMine includes protein data such as sequences, family associations, 
 			domain structures and gene associations downloaded from the UniProt Knowledgebase.   
-			Protein data also includes ontology annotations which give information about function 
-			and subcellular localization, as well as associations with processes, pathways, phenotypes and diseases.
     </intro-text>
     <tile-name>model/proteins.jsp</tile-name>
     <aspect-source name="UniProt" url="http://www.uniprot.org"/>
@@ -78,12 +73,12 @@
     <aspect-source name="Gene Ontology Consortium" url="http://www.geneontology.org/"/>
   </aspect>
 
-  <aspect name="Disease Ontology">
-    <subtitle></subtitle>
+  <aspect name="Disease">
+    <subtitle>Disease Ontology</subtitle>
     <icon-image>model/images/do.png</icon-image>
     <large-image>model/images/do.png</large-image>
     <intro-text>
-			The Rat Genome DatabaseÕ Disease Ontology (DO) is a controlled, 
+			The Rat Genome Database Disease Ontology (DO) is a controlled, 
 			hierarchical vocabulary based on the National Library of Medicine's 
 			Medical Subject Headings (MeSH).  RGD manually assigns DO terms to rat 
 			genes, QTLs and strains, human genes and QTLs and mouse genes based on data 
@@ -92,7 +87,6 @@
 			genes such that the information available for each gene includes a list of its DO annotations.
     </intro-text>
     <tile-name>model/DO.jsp</tile-name>
-    <aspect-source name="Disease Ontology" url=""/>
   </aspect>  
 
     <aspect name="Pathway Ontology">

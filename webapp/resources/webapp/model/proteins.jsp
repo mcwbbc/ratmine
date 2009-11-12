@@ -9,15 +9,15 @@
       </div>
       <div class="body">
         <DL>
-          <DT><A href="http://www.ebi.uniprot.org/index.shtml">UniProt
+          <DT><A href="http://www.uniprot.org/">UniProt
           Knowledgebase (UniProtKB)</A></DT>
           <DD>
             All proteins from the <A
-            href="http://www.ebi.uniprot.org/index.shtml">UniProt
-            Knowledgebase</A> (version 7.5) for the following organisms have
+            href="http://www.uniprot.org/">UniProt
+            Knowledgebase</A> for the following organisms have
             been loaded:
             <UL>
-              <LI><I>Plasmodium falciparum (isolate 3D7)</I></LI>
+              <LI><I>Rattus Norvegicus</I></LI>
             </UL>
             For each protein record in UniProt for each species the following
             information is extracted:
@@ -37,37 +37,24 @@
     </td>
     <td valign="top">
       <div class="heading2">
-        Bulk download <i>P. falciparum 3d7</i> data
+        Bulk download
       </div>
       <div class="body">
         <ul>
           <li>
-            <i>Plasmodium falciparum</i> proteins and corresponding genes:
             <span style="white-space:nowrap">
-              <im:querylink text="[browse]" skipBuilder="true">
-                <query name="" model="genomic" view="Protein Protein.genes">
-                  <node path="Protein" type="Protein">
-                  </node>
-                  <node path="Protein.organism" type="Organism">
-                  </node>
-                  <node path="Protein.organism.name" type="String">
-                    <constraint op="=" value="Plasmodium falciparum 3D7"
-                                description="" identifier="" code="A">
-                    </constraint>
-                  </node>
-                </query>
-              </im:querylink>
-              or
-              <im:querylink text="[export/download]" skipBuilder="true">
-                <query name="" model="genomic" view="Protein.identifier Protein.name Protein.primaryAccession Protein.genes.identifier Protein.genes.chromosomeLocation.start Protein.genes.chromosomeLocation.end">
-                  <node path="Protein" type="Protein">
-                  </node>
-                  <node path="Protein.organism" type="Organism">
-                  </node>
-                  <node path="Protein.organism.name" type="String">
-                    <constraint op="=" value="Plasmodium falciparum 3D7" description="" identifier="" code="A">
-                    </constraint>
-                  </node>
+              <im:querylink text="<i>Rattus norvegicus</i> proteins and corresponding genes(browse)" skipBuilder="true">
+                <query name="" model="genomic" view="Protein.primaryAccession Protein.genes.symbol" sortOrder="Protein.primaryAccession asc">
+					<node path="Protein" type="Protein">
+					</node>
+					<node path="Protein.organism" type="Organism">
+					</node>
+					<node path="Protein.organism.name" type="String">
+					<constraint op="=" value="Rattus norvegicus" description="" identifier="" code="A" extraValue="">
+					</constraint>
+					</node>
+					<node path="Protein.genes" type="Gene">
+					</node>
                 </query>
               </im:querylink>
             </span>
