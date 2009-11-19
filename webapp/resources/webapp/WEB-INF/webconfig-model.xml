@@ -227,10 +227,16 @@
 	<class className="org.intermine.model.bio.SNP">
 		<fields>
 			<fieldconfig fieldExpr="primaryIdentifier"/>
-			<fieldconfig fieldExpr="chromosomeLocation"/>
+			<fieldconfig fieldExpr="chromosomeLocation" displayer="/model/chromosomeLocDisplayer.jsp" showInResults="false" />
 			<fieldconfig fieldExpr="allele1"/>
 			<fieldconfig fieldExpr="allele2"/>
 			<fieldconfig fieldExpr="organism.name"/>
+		</fields>
+	</class>
+
+	<class className="org.intermine.model.bio.ConsequenceType">
+		<fields>
+			<fieldconfig fieldExpr="type"/>
 		</fields>
 	</class>
 	
