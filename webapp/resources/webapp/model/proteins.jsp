@@ -8,10 +8,16 @@
         Current data
       </div>
       <div class="body">
-        <DL>
-          <DT><A href="http://www.uniprot.org/">UniProt
-          Knowledgebase (UniProtKB)</A></DT>
-          <DD>
+	  	  <!--insert hidden here -->
+		<h4>
+			<a href="javascript:toggleDiv('hiddenDiv1');">
+			<img id='hiddenDiv1Toggle' src="images/disclosed.gif"/>
+			Proteins in RatMine ...
+			</a>
+		</h4>
+		<div id="hiddenDiv1" class="dataSetDescription">
+			<A href="http://www.uniprot.org/">UniProt
+			Knowledgebase (UniProtKB)</A>
             All proteins from the <A
             href="http://www.uniprot.org/">UniProt
             Knowledgebase</A> for the following organisms have
@@ -31,9 +37,18 @@
               <LI>Sequence</LI>
               <LI>Gene ORF name</LI>
             </UL>
-          </DD>
-        </DL>
-      </div>
+		</div>
+		<h4>
+			<a href="javascript:toggleDiv('hiddenDiv2');">
+			<img id='hiddenDiv2Toggle' src="images/disclosed.gif"/>
+			Data from InterPro in RatMine ...
+			</a>
+		</h4>
+		<div id="hiddenDiv2" class="dataSetDescription">
+			Protein family and domain assignments to proteins are loaded from Uniprot (see above). Details for each family or domain are loaded from <a href="http://www.ebi.ac.uk/interpro/" target="_blank">InterPro</a>
+		</div>
+	    <!-- end hidden -->
+	  </div>
     </td>
     <td valign="top">
       <div class="heading2">

@@ -42,7 +42,7 @@ public class DoStatURLQuery implements WidgetURLQuery
     /**
      * {@inheritDoc}
      */
-    public PathQuery generatePathQuery() {
+    public PathQuery generatePathQuery(boolean showAll) {
 
         PathQuery q = new PathQuery(os.getModel());
         String bagType = bag.getType();

@@ -10,15 +10,82 @@
         Pathway annotation
       </div>
       <div class="body">
-        <DL>
-          <P>
-      The Pathway collaborators are...
-          </P>
-          <DT><I>Rattus Norvegicus</I></DT>
-          <DD>
-            Pathway annotations for <I>Rattus Norvegicus</I> gene products assigned by <a href="http://rgd.mcw.edu/">Pathway Ontology</a><BR/>
-          </DD>
-        </DL>
+        <h4>
+   <a href="javascript:toggleDiv('hiddenDiv1');">
+    <img id='hiddenDiv1Toggle' src="images/disclosed.gif"/>
+    Pathway annotation in RatMine ...
+   </a>
+ </h4>
+
+<div id="hiddenDiv1" class="dataSetDescription">
+      <p>
+      The Pathway Ontology project provides a controlled vocabulary to describe
+      pathways as they relate to gene and gene product attributes in any organism.  It includes two sets of pathway information: RGD and KEGG.
+      </p>
+      <p>
+      RatMine has Pathway annotations for <i>R. norvegicus</i>.
+      </p>
+        <ul>
+         <li><i>R. norvegicus</i> - Pathway Ontology annotations for <i>R. norvegicus</i> gene products assigned by <a href="http://rgd.mcw.edu" target="_new">Rat Genome Database</a></li>
+		 <li><i>R. norvegicus</i> - Pathway annotations for <i>R. norvegicus</i> gene products assigned by <a href="http://kegg.jp" target="_new">KEGG</a></li>
+       </ul>
+ </div>
+
+
+ <h4>
+   <a href="javascript:toggleDiv('hiddenDiv2');">
+    <img id='hiddenDiv2Toggle' src="images/disclosed.gif"/>
+    Evidence Codes ...
+   </a>
+ </h4>
+
+<div id="hiddenDiv2"  class="dataSetDescription">
+
+      <p> Every Pathway Ontology annotation indicates the type of evidence that
+      supports it; these evidence codes correspond to broad categories
+      of experimental or other support and are derrived from GO Evidence Codes. The codes are listed below. For more
+      information, go to <a href="http://www.geneontology.org/GO.evidence.shtml" target="_new">Guide to GO Evidence Codes</a>. </p>
+    <p> EXP = Inferred from Experiment </p>
+    <p> IDA = Inferred from Direct Assay </p>
+    <p> IPI = Inferred from Physical Interaction </p>
+    <p> IMP = Inferred from Mutant Phenotype </p>
+    <p> IGI = Inferred from Genetic Interaction </p>
+    <p> IEP = Inferred from Expression Pattern </p>
+    <p> ISS = Inferred from Sequence or Structural Similarity </p>
+    <p> ISO = Inferred from Sequence Orthology </p>
+    <p> ISA = Inferred from Sequence Alignment </p>
+    <p> ISM = Inferred from Sequence Model </p>
+    <p> IGC = Inferred from Genomic Context </p>
+    <p> RCA = inferred from Reviewed Computational Analysis </p>
+    <p> TAS = Traceable Author Statement </p>
+    <p> NAS = Non-traceable Author Statement </p>
+    <p> IC = Inferred by Curator </p>
+    <p> ND = No biological Data available </p>
+    <p> IEA = Inferred from Electronic Annotation </p>
+    <p> NR = Not Recorded </p>
+     <br/>
+    </div>
+
+
+
+ <h4>
+   <a href="javascript:toggleDiv('hiddenDiv3');">
+    <img id='hiddenDiv3Toggle' src="images/disclosed.gif"/>
+    Qualifiers ...
+   </a>
+ </h4>
+
+<div id="hiddenDiv3"  class="dataSetDescription">
+
+      <p> The Qualifier column is used for flags that modify the
+      interpretation of an annotation. Allowable values are
+      'contributes_to', 'colocalizes_with' and 'NOT'.
+      'colocalizes_with' is used only with cellular component terms.
+      'contributes_to' is used only with molecular function terms.
+      'NOT' is used with terms from any of the three ontologies.
+  </p>
+     </div>
+	 <!--end hidden-->
       </div>
     </td>
     <td width="40%" valign="top">
@@ -28,30 +95,15 @@
       <div class="body">
         <ul>
           <li>
-            All gene/PW annotation pairs from <i>Rattus Norvegicus</i>
-            <im:querylink text="(browse)" skipBuilder="true">
-<query name="" model="genomic" view="Gene Gene.pwAnnotation">
-  <node path="Gene" type="Gene">
-  </node>
-  <node path="Gene.organism" type="Organism">
-  </node>
-  <node path="Gene.organism.name" type="String">
-    <constraint op="=" value="Rattus Norvegicus" description="" identifier="" code="A">
-    </constraint>
-  </node>
-</query>
-            </im:querylink>
-            <im:querylink text="(export)" skipBuilder="true">
-<query name="" model="genomic" view="Gene.identifier Gene.primaryIdentifier Gene.symbol Gene.pwAnnotation.identifier Gene.pwAnnotation.name Gene.pwAnnotation.qualifier">
-  <node path="Gene" type="Gene">
-  </node>
-  <node path="Gene.organism" type="Organism">
-  </node>
-  <node path="Gene.organism.name" type="String">
-    <constraint op="=" value="Rattus Norvegicus" description="" identifier="" code="A">
-    </constraint>
-  </node>
-</query>
+            <im:querylink text="All gene/PW annotation pairs from <i>Rattus Norvegicus</i> (browse)" skipBuilder="true">
+				<query name="" model="genomic" view="Gene.primaryIdentifier Gene.symbol Gene.name Gene.pwAnnotation.ontologyTerm.name Gene.pwAnnotation.ontologyTerm.description Gene.pwAnnotation.ontologyTerm.identifier" sortOrder="Gene.primaryIdentifier asc">
+					<node path="Gene" type="Gene">
+					</node>
+					<node path="Gene.pwAnnotation" type="PWAnnotation">
+					</node>
+					<node path="Gene.pwAnnotation.ontologyTerm" type="PWTerm">
+					</node>
+				</query>
             </im:querylink>
           </li>
         </ul>

@@ -18,20 +18,28 @@
   <tr>
     <td>
       <div class="body">
-        <p>
-          <a href="/">RatMine</a> contains <i>Rattus Norvegicus</i> genome
-          data from:
-        </p>
+	  <!--insert hidden here -->
+	  <h4>
+		<a href="javascript:toggleDiv('hiddenDiv1');">
+		<img id='hiddenDiv1Toggle' src="images/disclosed.gif"/>
+		Genes in RatMine ...
+		</a>
+	  </h4>
+
+	  <div id="hiddenDiv1" class="dataSetDescription">
+      <p>
+      A gene is the basic unit of heredity in a living organism. Genes hold the information to build and maintain their cells and pass genetic traits to offspring. According to Sequence Ontology a gene is "A region (or regions) that includes all of the sequence elements necessary to encode a functional transcript. A gene may include regulatory regions, transcribed regions and/or other functional sequence regions".
+      </p>
+      <p>
+      RatMine has Genes for <i>R. norvigicus</i>.
+      </p>
         <ul>
-          <li>
-            <a href="http://hgdownload.cse.ucsc.edu/goldenPath/rn4/bigZips/">
-              Fasta sequences for <i>Rattus Norvegicus</i></a>
-          </li>
-          <li>
-            <a href="http://rgd.mcw.edu">
-              GFF3 for <i>Rattus Norvegicus</i> genome features provided by RGD</a>
-          </li>
-        </ul>
+         <li><i>R. norvegicus</i> - Genes for <i>R. norvegicus</i> currated by <a href="http://rgd.mcw.edu" target="_new">Rat Genome Database</a></li>
+		 <li><i>R. norvegicus</i> - Gene FASTA sequences from <a href="http://hgdownload.cse.ucsc.edu/goldenPath/rn4/bigZips/">UC Santa Cruz</a></li>
+		 <li><i>R. norvegicus</i> - GFF3 for gene features provided by <a href="http://rgd.mcw.edu" target="_new">Rat Genome Database</a></li>
+		</ul>
+		</div>
+		<!-- done hidden -->
       </div>
     </td>
     <td width="40%" valign="top">

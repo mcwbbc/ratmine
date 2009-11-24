@@ -11,6 +11,7 @@
     <tile-name>model/genomics.jsp</tile-name>
     <aspect-source name="RGD" url="http://rgd.mcw.edu"/>
 	<aspect-source name="Ensembl" url="http://www.ensembl.org/Rattus_norvegicus/Info/Index"/>
+	<aspect-source name="Wikipedia" url="http://en.wikipedia.org/wiki/Gene" />
   </aspect>
 
   <aspect name="Quantitative Trait Loci">
@@ -18,30 +19,27 @@
 	<icon-image>model/images/QTL_image_197x153.gif</icon-image>
 	<large-image>model/images/QTL_image_197x153.gif</large-image>
 	<intro-text>
-  	Quantitative Trait Locus (QTL) is a polymorphic locus which contains alleles that differentially affect the 
-		expression of a continuously distributed phenotypic trait. Usually it is a marker described by statistical 
-		association to quantitative variation in the particular phenotypic trait that is thought to be controlled by the cumulative action of alleles at multiple loci.
-		A disease-specific QTL in a rat model is obtained by intensive genetic crossing and analysis and is expected 
-		to contain one to many genetic elements that would be contributing to the phenotype in the rat. An affected 
-		strain (showing the phenotype) is crossed with an unaffected strain (lacking the phenotype), the progeny are 
-		genotyped and phenotyped and through statistical techniques, a correlation is made between a particular genotype 
-		and the phenotype being measured.
+		A Quantitative Trait Locus (QTL) is a genomic region which has been statistically 
+		determined by intensive genetic crossing in rats or population studies in human to 
+		contain one or more elements linked to a measurable phenotypic trait.  QTL data in 
+		RatMine has been manually curated by the Rat Genome Database.
 	</intro-text>
-	<tile-name></tile-name>
+	<tile-name>model/QTL.jsp</tile-name>
 	<aspect-source name="QTL" url="http://rgd.mcw.edu/rgdweb/search/qtls.html?100"/>
+	<aspect-source name="Wikipedia" url="http://en.wikipedia.org/wiki/Gene" />
   </aspect>
 
   <aspect name="Single Nucleotide Polymorphism">
 	<subtitle></subtitle>
-	<icon-image>model/images/QTL_image_197x153.gif</icon-image>
-	<large-image>model/images/QTL_image_197x153.gif</large-image>
+	<icon-image>model/images/snp_image.jpg</icon-image>
+	<large-image>model/images/snp_image.jpg</large-image>
 	<intro-text>
-  		Single Nucleotide Polymorphism brought to you by Ensembl.
+  		A single-nucleotide polymorphism (SNP, pronounced snip) is a DNA sequence variation occurring when a single nucleotide (A, T, C, or G) in the genome (or other shared sequence) differs between members of a species (or between paired chromosomes in an individual).
 	</intro-text>
-	<tile-name></tile-name>
+	<tile-name>model/SNP.jsp</tile-name>
 	<aspect-source name="Ensembl" url="http://www.ensembl.org/Rattus_norvegicus/Info/Index"/>
+	<aspect-source name="Wikipedia" url="http://en.wikipedia.org/wiki/Single-nucleotide_polymorphism" />
   </aspect>
-
 
   <aspect name="Proteins">
     <subtitle>Protein and proteomics&lt;br/&gt;data</subtitle>
@@ -53,6 +51,7 @@
     </intro-text>
     <tile-name>model/proteins.jsp</tile-name>
     <aspect-source name="UniProt" url="http://www.uniprot.org"/>
+	<aspect-source name="Wikipedia" url="http://en.wikipedia.org/wiki/Protein" />
   </aspect>
 
   <aspect name="Gene Ontology">
@@ -60,14 +59,11 @@
     <icon-image>model/images/geneOntology.png</icon-image>
     <large-image>model/images/geneOntology.png</large-image>
     <intro-text>
-      The Gene Ontology (GO) project is a collaborative effort to address 
-			the need for consistent descriptions of gene products in different databases.  
-			GO collaborators are developing three structured, controlled vocabularies 
-			(i.e. ontologies) that describe the molecular functions, biological processes 
-			and cellular components of gene products in a species-independent manner.  GO 
-			annotations for Rattus norvegicus, supplied by the Rat Genome Database, have been 
-			loaded into RatMine and linked to the corresponding genes such that the information 
-			available for each gene includes a list of its GO annotations.
+      The Gene Ontology (GO) is a combination of three controlled, 
+	  hierarchical vocabularies designed to describe the molecular functions, 
+	  biological processes and cellular components of gene products 
+	  in a species-independent manner.  GO annotations for rat genes in 
+	  RatMine have been supplied by the Rat Genome Database.
     </intro-text>
     <tile-name>model/GO.jsp</tile-name>
     <aspect-source name="Gene Ontology Consortium" url="http://www.geneontology.org/"/>
@@ -89,41 +85,33 @@
     <tile-name>model/DO.jsp</tile-name>
   </aspect>  
 
-    <aspect name="Pathway Ontology">
+  <aspect name="Pathway">
     <subtitle></subtitle>
     <icon-image>model/images/pw.png</icon-image>
     <large-image>model/images/pw.png</large-image>
     <intro-text>
-			The Pathway Ontology (PW) is a controlled biological vocabulary currently under 
-			development at the Rat Genome Database.  The goal of the Pathway Ontology is to 
-			capture the various kinds of biological networks, the relationships between them 
-			and the alterations or malfunctioning of such networks within a hierarchical structure. 
-			The four nodes are: classic metabolic pathways, regulatory pathways, signaling pathways 
-			and disease pathways for complex human conditions.  RGD manually assigns PW terms to rat, 
-			mouse and human genes based on data from primary research articles.   PW annotations for 
-			Rattus norvegicus, supplied by RGD, have been loaded into RatMine and linked to the 
-			corresponding genes such that the information available for each gene includes a list of its PW annotations.
+			The Pathway Ontology (PW) is a controlled, hierarchical vocabulary designed to 
+			describe a variety of biological networks and the relationships between them, 
+			including classic metabolic pathways, regulatory pathways, signaling pathways 
+			and disease pathways.  PW assignments in RatMine have been manually curated by 
+			the Rat Genome Database.
     </intro-text>
     <tile-name>model/PW.jsp</tile-name>
     <aspect-source name="Pathway Ontology" url="http://rgd.mcw.edu/wg/pathway?100"/>
   </aspect> 
   
-    <aspect name="Mammalian Phenotype Ontology">
+  <aspect name="Mammalian Phenotype">
     <subtitle></subtitle>
     <icon-image>model/images/mp.png</icon-image>
     <large-image>model/images/mp.png</large-image>
     <intro-text>
-			The Mammalian Phenotype (MP) Ontology is being developed as a community 
-			effort to provide standard terms for annotating phenotypic data.  The MP 
-			Ontology has a hierarchical structure that permits a range of detail from 
-			high-level, broadly descriptive terms to very low-level, highly specific terms.  
-			RGD manually assigns MP terms to rat genes, QTLs and strains, and human genes and 
-			QTLs based on data from primary research articles.   MP annotations for Rattus norvegicus, 
-			supplied by RGD, have been loaded into RatMine and linked to the corresponding 
-			genes such that the information available for each gene includes a list of its MP annotations.
+			The Mammalian Phenotype (MP) Ontology is a controlled, hierarchical vocabulary developed 
+			by Mouse Genome Informatics (MGI) to describe alterations in rat, mouse and human physiology 
+			and phenotypes.  Phenotype data for rat genes, QTL and strains  in RatMine has been manually 
+			curated by the Rat Genome Database.
     </intro-text>
     <tile-name>model/MP.jsp</tile-name>
-    <aspect-source name="Mammalian Phenotype Ontology" url="http://www.informatics.jax.org/searches/MP_form.shtml"/>
+    <aspect-source name="Mammalian Phenotype Annotation" url="http://www.informatics.jax.org/searches/MP_form.shtml"/>
   </aspect>
   
 </aspects>
