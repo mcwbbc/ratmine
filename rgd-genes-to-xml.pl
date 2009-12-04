@@ -2,7 +2,7 @@
 # rgd-genes-to-xml.pl
 # purpose: to create a target items xml file for intermine from RGD FTP file
 
-use warnings;
+#use warnings;
 use strict;
 
 BEGIN {
@@ -59,6 +59,7 @@ while(<GENES>)
     #    print "\n   ------------ Line: ".$count."  --------------  \n";
 		$_ =~ s/\026/ /g; #replaces 'Syncronous Idle' (Octal 026) character with space
 		my @gene_info = split(/\t/, $_);
+		my @synonym_items;
 		my $gene_item = $item_factory->make_item('Gene');
 		$gene_item->set('organism', $org_item);
 		$gene_item->set('dataSets', [$dataset_item]);
@@ -67,12 +68,32 @@ while(<GENES>)
 		$gene_item->set('symbol', $gene_info[$index{SYMBOL}]);
 		$gene_item->set('name', $gene_info[$index{NAME}]) unless ($gene_info[$index{NAME}] eq '');	
 		$gene_item->set('description', $gene_info[$index{GENE_DESC}]) unless ($gene_info[$index{GENE_DESC}] eq '');
-		$gene_item->set('ncbiGeneNumber', $gene_info[$index{ENTREZ_GENE}]) unless ($gene_info[$index{ENTREZ_GENE}] eq '' or $gene_info[$index{GENE_TYPE}] =~ /splice|allele/i);
+		unless ($gene_info[$index{ENTREZ_GENE}] eq '' or $gene_info[$index{GENE_TYPE}] =~ /splice|allele/i)
+		{
+			$gene_item->set('ncbiGeneNumber', $gene_info[$index{ENTREZ_GENE}]);
+			my $syn_item = $item_factory->make_item('Synonym');
+			$syn_item->set('value', $gene_info[$index{ENTREZ_GENE}]);
+			$syn_item->set('type', 'ncbiGeneNumber');
+			$syn_item->set('subject', $gene_item);
+			push(@synonym_items, $syn_item); #set the reverse reference
+			$syn_item->as_xml($writer);
+		}
 		$gene_item->set('geneType', $gene_info[$index{GENE_TYPE}]) unless ($gene_info[$index{GENE_TYPE}] eq '');
-		$gene_item->set('ensemblIdentifier', $gene_info[$index{ENSEMBL_ID}]) unless ($gene_info[$index{ENSEMBL_ID}] eq '');
+		unless ($gene_info[$index{ENSEMBL_ID}] eq '')
+		{
+			$gene_item->set('ensemblIdentifier', $gene_info[$index{ENSEMBL_ID}]);
+			my $syn_item = $item_factory->make_item('Synonym');
+			$syn_item->set('value', $gene_info[$index{ENSEMBL_ID}]);
+			$syn_item->set('type', 'ensemblIdentifier');
+			$syn_item->set('subject', $gene_item);
+			push(@synonym_items, $syn_item); #set the reverse reference
+			$syn_item->as_xml($writer);
+		}
 		$gene_item->set('nomenclatureStatus', $gene_info[$index{NOMENCLATURE_STATUS}]) unless ($gene_info[$index{NOMENCLATURE_STATUS}] eq '');
 		$gene_item->set('fishBand', $gene_info[$index{FISH_BAND}]) unless ($gene_info[$index{FISH_BAND}] eq '');
     	
+		#add synonyms to genes
+		$gene_item->set('synonyms', \@synonym_items);
 		#process the publications:
     	if ($gene_info[$index{CURATED_REF_PUBMED_ID}] ne '') {
       		#print "Got some pubmed ids: (".$gene_info[$index{CURATED_REF_PUBMED_ID}].")\n";
