@@ -96,7 +96,7 @@ while(<QTLS>)
 			my @gff_line; #Create a GFF3 compatable line for each record
 			push(@gff_line, $qtl_info[$index{CHROMOSOME_FROM_REF}]); #chromsome location
 			push(@gff_line, "RatGenomeDatabase"); #source
-			push(@gff_line, "QTL"); #SO term
+			push(@gff_line, "Qtl"); #SO term
 			push(@gff_line, $qtl_info[$index{'3.4_MAP_POS_START'}]); #start position
 			push(@gff_line, $qtl_info[$index{'3.4_MAP_POS_STOP'}]); #stop position
 			push(@gff_line, '.'); #score, left blank since QTLs have two different scores
