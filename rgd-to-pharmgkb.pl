@@ -103,6 +103,7 @@ while(<PKB>)
 	}
 }#end while <PKB>
 close PKB;
+$writer->endTag("items");
 exit(0);
 
 #####Subroutines########
