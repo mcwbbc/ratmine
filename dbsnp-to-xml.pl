@@ -178,7 +178,13 @@ sub processDbSNPFile
 				my $syn_item = $item_factory->make_item('Synonym');
 				$syn_item->set('value', $submitted_id);
 				$syn_item->set('type', 'Submitter SNP ID');
-				$ss_item->set('synonyms', [$syn_item]);
+
+				my $syn_item2 = $item_factory->make_item('Synonym');
+				$syn_item2->set('value', "ss$ssId");
+				$syn_item2->set('type', 'dbSNP ss Identifier');
+				$syn_item2->set('subject', $ss_item);
+
+				$ss_item->set('synonyms', [$syn_item, $syn_item2]);
 
 				$ss_item->as_xml($writer);
 				$syn_item->as_xml($writer);
@@ -193,6 +199,8 @@ sub processDbSNPFile
 			my $syn_item = $item_factory->make_item('Synonym');
 			$syn_item->set('value', "rs$id");
 			$syn_item->set('type', "dbSNP rs Identifier");
+			$syn_item->set('subject', $snp_item);
+			$syn_item->set('isPrimary', 'true');
 			$syn_item->as_xml($writer);
 			$snp_item->set('synonyms', [$syn_item]);
 			

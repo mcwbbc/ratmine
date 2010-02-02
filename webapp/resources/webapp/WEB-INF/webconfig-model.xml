@@ -66,6 +66,7 @@
     <longdisplayers>
       <displayer src="attributeLinkDisplayer.tile"/>
       <displayer src="geneMicroArrayDisplayer.tile"/>
+	  <displayer src="/model/locatedSequenceFeatureImage.jsp"/>
     </longdisplayers>
     <bagdisplayers>
       <displayer src="attributeLinkDisplayer.tile"/>
@@ -168,6 +169,21 @@
     </longdisplayers>
   </class>
 
+  <class className="org.intermine.model.bio.Qtl">
+	<fields>
+	  <fieldconfig fieldExpr="primaryIdentifier"/>
+      <fieldconfig fieldExpr="symbol"/>
+      <fieldconfig fieldExpr="name"/>
+      <fieldconfig fieldExpr="chromosomeLocation" displayer="/model/chromosomeLocDisplayer.jsp" showInResults="false" />
+	  <fieldconfig fieldExpr="lod"/>
+	  <fieldconfig fieldExpr="pValue"/>
+	</fields>
+	<longdisplayers>
+		<displayer src="attributeLinkDisplayer.tile"/>
+		<displayer src="/model/locatedSequenceFeatureImage.jsp"/>
+	</longdisplayers>
+  </class>
+
   <class className="org.intermine.model.bio.Relation">
     <fields>
       <fieldconfig fieldExpr="object.primaryIdentifier"/>
@@ -228,10 +244,7 @@
 		<fields>
 			<fieldconfig fieldExpr="primaryIdentifier"/>
 			<fieldconfig fieldExpr="chromosomeLocation" displayer="/model/chromosomeLocDisplayer.jsp" showInResults="false" />
-			<fieldconfig fieldExpr="fivePrimeSequence"/>
 			<fieldconfig fieldExpr="allele"/>
-			<fieldconfig fieldExpr="threePrimeSequence"/>
-			<fieldconfig fieldExpr="organism.name"/>
 		</fields>
 	</class>
 
@@ -239,10 +252,8 @@
 		<fields>
 			<fieldconfig fieldExpr="primaryIdentifier"/>
 			<fieldconfig fieldExpr="chromosomeLocation" displayer="/model/chromosomeLocDisplayer.jsp" showInResults="false" />
-			<fieldconfig fieldExpr="exemplarSNP.fivePrimeSequence"/>
-			<fieldconfig fieldExpr="exemplarSNP.allele"/>
-			<fieldconfig fieldExpr="exemplarSNP.threePrimeSequence"/>
-			<fieldconfig fieldExpr="organism.name"/>
+			<fieldconfig fieldExpr="exemplarSNP.primaryIdentifier" />
+			<fieldconfig fieldExpr="allele"/>
 		</fields>
 	</class>
 
