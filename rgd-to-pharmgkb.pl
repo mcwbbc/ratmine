@@ -20,6 +20,7 @@ use Getopt::Long;
 use strict;
 
 my ($ortho_file, $pharm_file, $help, $out_file, $model_file);
+my $t = 0;
 
 GetOptions( 'model=s' => \$model_file,
 			'orthologue_file=s' => \$ortho_file,
@@ -53,6 +54,7 @@ $writer->startTag("items");
 $org_item->as_xml($writer);
 
 #build RGD to Human Orthologue Index
+print "Reading Orthologue File...\n";
 while(<RGD>)
 {
 	next if $_ =~ /^#/;
@@ -76,8 +78,12 @@ while(<RGD>)
 }#end while <RGD>
 close RGD;
 
+print "Closing Orthologue File...\nOpening Pharm File...\n";
+
 %index = ();
 open(PKB, $pharm_file);
+my %pharm_items;
+my %rgd_flags;
 while(<PKB>)
 {
 	chomp;
@@ -91,18 +97,62 @@ while(<PKB>)
 		my @line = split(/\t/, $_);
 		my $pharm_id = $line[$index{'PharmGKB Accession Id'}];
 		my $gene_id = $line[$index{'Entrez Id'}];
-		if($rgd_mapping{$gene_id}{id})
+		unless (exists($rgd_flags{ $rgd_mapping{$gene_id}{id} }))
 		{
-			my $gene_item = $item_factory->make_item('Gene');
-			$gene_item->set('primaryIdentifier', $rgd_mapping{$gene_id}{id});
-			$gene_item->set('pharmGKBidentifier', $pharm_id);
-			$gene_item->set('organism', $org_item);
-			$gene_item->as_xml($writer);
+			if($rgd_mapping{$gene_id}{id})
+			{
+				#push(@{$rgd_mapping{$gene_id}{pharmids}}, $pharm_id);
+				my $gene_item = $item_factory->make_item('Gene');
+				$gene_item->set('primaryIdentifier', $rgd_mapping{$gene_id}{id});
+				$gene_item->set('pharmGKBidentifier', $pharm_id);
+				$gene_item->set('organism', $org_item);
+				$gene_item->as_xml($writer);
+				$rgd_flags{ $rgd_mapping{$gene_id}{id} } = 'true';
+				#print !exists($rgd_mapping{$gene_id}{flag}) ."\n"; exit(0);
+			}
 		}
 		#print "$pharm_id\t$gene_id\t$rgd_mapping{$gene_id}{id}\t$rgd_mapping{$gene_id}{symbol}\n";
-	}
+
+	} #else
 }#end while <PKB>
+
+=cut
+
+foreach my $gid (keys %rgd_mapping)
+{
+	if($rgd_mapping{$gid}{id})
+	{
+		#print "$pid\n";
+		#$t++;
+		my $gene_item = $item_factory->make_item('Gene');
+		$gene_item->set('primaryIdentifier', $rgd_mapping{$gid}{id});
+		my @pharm_items;
+		foreach my $pid (@{$rgd_mapping{$gid}{pharmids}})
+		{
+			if($pid)
+			{
+				my $pharm_item = $item_factory->make_item('PharmGKB');
+				$pharm_item->set('primaryIdentifier', $pid);
+				$pharm_item->set('gene', $gene_item);
+				$pharm_item->as_xml($writer);
+				push(@pharm_items, $pharm_item);
+			}#unless
+		}
+		$gene_item->set('pharmgkbs', \@pharm_items);
+		$gene_item->as_xml($writer);
+		$gene_item->destroy;
+	}#unless
+} #foreach my $pid
+
+=cut
+
+#my @test = keys(%pharm_items);
+#print @test . "\n";
+#print $test[1] . "\n";
+#print "$t\n";
+#print "@{$pharm_items{$test[1]}} \n";
 close PKB;
+print "Closing PharmFile...\n";
 $writer->endTag("items");
 exit(0);
 
