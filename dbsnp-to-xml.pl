@@ -32,12 +32,14 @@ unless ( $model_file ne '' and -e $model_file)
 
 my @files = <${input_directory}*.xml>;
 my $model = new InterMine::Model(file => $model_file);
-our $item_factory = new InterMine::ItemFactory(model => $model);
+my $item_factory = new InterMine::ItemFactory(model => $model);
 
 my $org_item = $item_factory->make_item('Organism');
 my $taxon_id = 10116;
 $org_item->set('taxonId', $taxon_id);
+my $dataset_item = $item_factory->make_item('DataSet');
 my $organism_trigger = 0;
+my $dataset_trigger = 0;
 my %consequences;
 
 my $count = 0;
@@ -45,6 +47,10 @@ while(my $file = pop(@files))
 {
 	&processDbSNPFile($file);
 }#end while
+
+exit(0);
+
+###Subroutines###
 
 sub processDbSNPFile
 {
@@ -76,14 +82,27 @@ sub processDbSNPFile
 	{
 		chomp;
 		$entry .= $_;
+
+		#create the dataset and datasource objects
+		if(!$dataset_trigger and $entry =~ /dbSnpBuild="(\d+)"\s+generated="([\d\D]+?)"/) 
+		{
+
+			my ($build, $date) = ($1, $2);
+			$dataset_item->set('title', "dbSNP build:$build, $date");
+			$dataset_item->as_xml($writer);
+			$dataset_trigger = 1;
+		}
 	
 		#find one SNP at a time
 		if( $entry =~ m|<Rs[\d\D]+?</Rs>|) #parses header line
 		{
+			
 			#print "$entry\n"; exit (0);
 			#once found load into XPATH object to parse out data
 			my $xp = XML::XPath->new(xml => $&);
+
 			my $snp_item = $item_factory->make_item('rsSNP');
+			$snp_item->set('dataSets', [$dataset_item]);
 			#find Rs Id
 			my $id = $xp->find('//Rs/@rsId')->string_value;
 			$snp_item->set('primaryIdentifier', "rs$id");
@@ -125,6 +144,15 @@ sub processDbSNPFile
 			$loc_item->as_xml($writer);
 			$snp_item->set('chromosome', $chromosome_item);
 			$snp_item->set('chromosomeLocation', $loc_item);
+			
+			#set rsSequence
+			my $rs5 = $xp->find('/Rs/Sequence/Seq5')->string_value;
+			my $rsAllele = $xp->find('/Rs/Sequence/Observed')->string_value;
+			my $rs3 = $xp->find('/Rs/Sequence/Seq3')->string_value;
+
+			$snp_item->set('fivePrimeSequence', $rs5);
+			$snp_item->set('allele', $rsAllele);
+			$snp_item->set('threePrimeSequence', $rs3);
 		
 			#create ssSNPs
 			my %ssSNPs;
@@ -150,7 +178,13 @@ sub processDbSNPFile
 				my $syn_item = $item_factory->make_item('Synonym');
 				$syn_item->set('value', $submitted_id);
 				$syn_item->set('type', 'Submitter SNP ID');
-				$ss_item->set('synonyms', [$syn_item]);
+
+				my $syn_item2 = $item_factory->make_item('Synonym');
+				$syn_item2->set('value', "ss$ssId");
+				$syn_item2->set('type', 'dbSNP ss Identifier');
+				$syn_item2->set('subject', $ss_item);
+
+				$ss_item->set('synonyms', [$syn_item, $syn_item2]);
 
 				$ss_item->as_xml($writer);
 				$syn_item->as_xml($writer);
@@ -161,6 +195,15 @@ sub processDbSNPFile
 			$snp_item->set('ssSNPs', [values(%ssSNPs)]);
 			my $exSNP = $xp->find('//Rs/Sequence/@exemplarSs')->string_value;
 			$snp_item->set('exemplarSNP', $ssSNPs{$exSNP});
+
+			my $syn_item = $item_factory->make_item('Synonym');
+			$syn_item->set('value', "rs$id");
+			$syn_item->set('type', "dbSNP rs Identifier");
+			$syn_item->set('subject', $snp_item);
+			$syn_item->set('isPrimary', 'true');
+			$syn_item->as_xml($writer);
+			$snp_item->set('synonyms', [$syn_item]);
+			
 		
 			$snp_item->as_xml($writer);
 			$loc_item = $loc_item->destroy;
