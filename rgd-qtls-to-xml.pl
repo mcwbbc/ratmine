@@ -35,6 +35,7 @@ my $output = new IO::File(">$qtl_xml");
 my $writer = new XML::Writer(DATA_MODE => 1, DATA_INDENT => 3, OUTPUT => $output);
 
 my %pubs = ();
+my %genes =();
 my @gff;
 
 
@@ -107,6 +108,8 @@ while(<QTLS>)
 			push(@gff, join("\t", @gff_line)); #add line to gff list
 		}
 		
+		
+		#Add Publications
 		if ($qtl_info[$index{CURATED_REF_PUBMED_ID}] ne '') {
 	      	my @publication_info = split(/;/, $qtl_info[$index{CURATED_REF_PUBMED_ID}]);
 	      	my @currentPubs = ();
@@ -125,13 +128,45 @@ while(<QTLS>)
 	        	}#end if-else
 	      	}#end foreach
 	      	$qtl_item->set("publications", \@currentPubs);
-	      	$qtl_item->as_xml($writer);
     	}#end if
 
+
+		#Add Candidate Genes
+		if($qtl_info[$index{CANDIDATE_GENE_RGD_IDS}])
+		{
+			my @gene_info = split(/;/, $qtl_info[$index{CANDIDATE_GENE_RGD_IDS}]);
+			my @geneItems = ();
+			foreach my $g (@gene_info)
+			{
+				if(exists $genes{$g})
+				{ 
+					my $qtls = $genes{$g}->get("parentQTLs");
+					push(@$qtls, $qtl_item);
+					$genes{$g}->set("parentQTLs", $qtls);
+					push(@geneItems, $genes{$g});
+				}
+				else
+				{
+					my $gene_item = $item_factory->make_item("Gene");
+					$gene_item->set('primaryIdentifier', $g);
+					$gene_item->set('parentQTLs', [$qtl_item]);
+					push(@geneItems, $gene_item);
+					$genes{$g} = $gene_item;
+				}#end if-else
+			}#end foreach
+			$qtl_item->set('candidateGenes', \@geneItems);
+		}#end if
+      	$qtl_item->as_xml($writer);
 	} #end if-else	
 
 }#end while
 close QTLS;
+
+#print out Genes
+foreach my $g (keys %genes)
+{
+	$genes{$g}->as_xml($writer);
+}
 
 $writer->endTag("items");
 
