@@ -150,6 +150,7 @@ while(<QTLS>)
 					my $gene_item = $item_factory->make_item("Gene");
 					$gene_item->set('primaryIdentifier', $g);
 					$gene_item->set('parentQTLs', [$qtl_item]);
+					$gene_item->set('organism', $org_item);
 					push(@geneItems, $gene_item);
 					$genes{$g} = $gene_item;
 				}#end if-else
