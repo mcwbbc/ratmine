@@ -18,15 +18,24 @@ use InterMine::Model;
 use InterMine::Util qw(get_property_value);
 use IO qw(Handle File);
 use XML::XPath;
+use Getopt::Long;
 use Cwd;
 
-my ($model_file, $input_directory, $output_directory) = @ARGV;
+my ($model_file, $input_directory, $output_directory, $help, $taxon_id);
 
-unless ( $model_file ne '' and -e $model_file)
+GetOptions( 'model=s' => \$model_file,
+			'input=s' => \$input_directory,
+			'output=s' => \$output_directory,
+			'taxon=s' => \$taxon_id,
+			'help' => \$help);
+
+unless ( !$help and $model_file ne '' and -e $model_file)
 {
 	print "\ndbsnp-to-xml.pl\n";
 	print "Convert the dbSNP XML file into InterMine XML\n";
-	print "dbsnp-to-xml.pl model_file input_xml_file output_xml_file\n\n";
+	print "dbsnp-to-xml.pl \n" .
+	"\t--model=model_file.xml\n\t--input=input/directory\n\t--output=output/directory " .
+	"\n\t--taxon=taxon_id\nOptional\n\t--help\n\n";
 	exit(0);
 }
 
@@ -35,7 +44,6 @@ my $model = new InterMine::Model(file => $model_file);
 my $item_factory = new InterMine::ItemFactory(model => $model);
 
 my $org_item = $item_factory->make_item('Organism');
-my $taxon_id = 10116;
 $org_item->set('taxonId', $taxon_id);
 my $dataset_item = $item_factory->make_item('DataSet');
 my $organism_trigger = 0;
@@ -84,6 +92,7 @@ sub processDbSNPFile
 		$entry .= $_;
 
 		#create the dataset and datasource objects
+		#grabs the data from the top of the XML file before throwing it away
 		if(!$dataset_trigger and $entry =~ /dbSnpBuild="(\d+)"\s+generated="([\d\D]+?)"/) 
 		{
 
@@ -93,8 +102,8 @@ sub processDbSNPFile
 			$dataset_trigger = 1;
 		}
 	
-		#find one SNP at a time
-		if( $entry =~ m|<Rs[\d\D]+?</Rs>|) #parses header line
+		#find one SNP record at a time
+		if( $entry =~ m|<Rs[\d\D]+?</Rs>|) #grabs an Rs item
 		{
 			
 			#print "$entry\n"; exit (0);
@@ -124,6 +133,7 @@ sub processDbSNPFile
 			}
 
 			#find consequence/function
+			#need to update to handle multiple functional classes
 			my $fxnClass = $xp->find('//Assembly[@groupLabel="RGSC_v3.4"]/Component/MapLoc/FxnSet/@fxnClass')->string_value;
 			
 			my $consequences = &getConsequenceType($fxnClass, $writer);
@@ -178,6 +188,7 @@ sub processDbSNPFile
 				my $syn_item = $item_factory->make_item('Synonym');
 				$syn_item->set('value', $submitted_id);
 				$syn_item->set('type', 'Submitter SNP ID');
+				$syn_item->set('subject', $ss_item);
 
 				my $syn_item2 = $item_factory->make_item('Synonym');
 				$syn_item2->set('value', "ss$ssId");
