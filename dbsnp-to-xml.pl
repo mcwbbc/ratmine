@@ -66,7 +66,7 @@ sub processDbSNPFile
 	my $data_source = 'dbSNP';
 	
 	my $outfile = $1 if $file =~ m|(\w+\.xml)$|;
-	my $output = new IO::File(">${output_directory}intermine_$outfile") or die "cannot open IO::Steam >${output_directory}intermine_$outfile";
+	my $output = new IO::File("> ${output_directory}intermine_$outfile") or die "$! \n cannot open IO::Steam >${output_directory}intermine_$outfile";
 	my $writer = new XML::Writer(DATA_MODE => 1, DATA_INDENT => 3, OUTPUT => $output);
 
 
@@ -133,11 +133,14 @@ sub processDbSNPFile
 			}
 
 			#find consequence/function
-			#need to update to handle multiple functional classes
-			my $fxnClass = $xp->find('//Assembly[@groupLabel="RGSC_v3.4"]/Component/MapLoc/FxnSet/@fxnClass')->string_value;
-			
-			my $consequences = &getConsequenceType($fxnClass, $writer);
-			$snp_item->set('consequenceTypes', [$consequences]) if ($consequences);
+			#sets multiple functional classes
+			my $fxnSet = $xp->find('//Assembly[@groupLabel="RGSC_v3.4"]/Component/MapLoc/FxnSet');
+			foreach my $fxnNode ($fxnSet->get_nodelist)
+			{
+				my $fxnClass = $fxnNode->find('@fxnClass')->string_value;
+				my $consequences = &getConsequenceType($fxnClass, $writer);
+				$snp_item->set('consequenceTypes', [$consequences]) if ($consequences);
+			}
 		
 			#set chromosome and location
 			my $pos = $xp->find('//Assembly[@groupLabel="RGSC_v3.4"]/Component/MapLoc/@physMapInt')->string_value;
