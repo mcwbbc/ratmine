@@ -256,7 +256,7 @@
 			<fieldconfig fieldExpr="allele"/>
 		</fields>
 	</class>
-
+<!--
 	<class className="org.intermine.model.bio.Interaction">
 
 	</class>
@@ -264,7 +264,7 @@
 	<class className="org.intermine.model.bio.InteractionExperiment">
 
 	</class>
-
+-->
 	<class className="org.intermine.model.bio.ConsequenceType">
 		<fields>
 			<fieldconfig fieldExpr="type"/>
