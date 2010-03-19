@@ -202,6 +202,7 @@ sub processDbSNPFile
 
 				$ss_item->as_xml($writer);
 				$syn_item->as_xml($writer);
+				$syn_item2->as_xml($writer);
 				$ssSNPs{$ssId} = $ss_item;
 			}
 		
@@ -222,6 +223,9 @@ sub processDbSNPFile
 			$snp_item->as_xml($writer);
 			$loc_item = $loc_item->destroy;
 			$snp_item = $snp_item->destroy;
+			foreach my $ssSnp (values %ssSNPs) {
+				$ssSnp->destroy;
+			}
 			$entry = ''; #empty $entry
 		}
 
