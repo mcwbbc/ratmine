@@ -50,6 +50,14 @@
     <tabledisplayer src="/model/dataSourceShort.jsp"/>
   </class>
 
+	<class className="org.intermine.model.bio.DOAnnotation">
+		<fields>
+			<fieldconfig fieldExpr="ontologyTerm.identifier" />
+			<fieldconfig fieldExpr="ontologyTerm.name" />
+			<fieldconfig fieldExpr="qualifier" />
+		</fields>
+	</class>
+	
   <class className="org.intermine.model.bio.Gene">
     <fields>
       <fieldconfig fieldExpr="primaryIdentifier"/>
@@ -139,6 +147,13 @@
     </longdisplayers>
   </class>
 
+	<class className="org.intermine.model.bio.Pathway">
+		<fields>
+			<fieldconfig fieldExpr="identifier" />
+			<fieldconfig fieldExpr="name" />
+		</fields>
+	</class>
+
   <class className="org.intermine.model.bio.Protein">
     <fields>
       <fieldconfig fieldExpr="primaryIdentifier"/>
@@ -216,13 +231,6 @@
 		</fields>
 	</class>
 
-	<class className="org.intermine.model.bio.DOAnnotation">
-		<fields>
-			<fieldconfig fieldExpr="ontologyTerm.identifier" />
-			<fieldconfig fieldExpr="ontologyTerm.name" />
-			<fieldconfig fieldExpr="qualifier" />
-		</fields>
-	</class>
 
 	<class className="org.intermine.model.bio.MPAnnotation">
 		<fields>
