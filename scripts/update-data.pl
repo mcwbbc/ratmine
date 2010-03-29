@@ -3,16 +3,21 @@
 
 =head1 update-data.pl
 
-=begin text
+=pod
 
-# perl update-data.pl
-#
-# Purpose:
-#	Download and preprocess, if necessary, data for InterMine build
-#
-#	Options:
-#	--conf=file\tconfiguration xml file
-#	--project=file\project.xml file
+perl update-data.pl
+
+Purpose:
+	Download and preprocess, if necessary, data for InterMine build
+
+	Options:
+	--conf [file]		configuration xml file
+	--project [file]	project.xml file
+	--verbose		prints out additional information, may be useful for debugging
+	--help			prints this message
+
+See conf/download_conf.xml.example for information on creating a
+configuration XML file.
 
 =cut
 
@@ -36,8 +41,6 @@ if ($help or !($conf and $project))
 
 my $projectInfo = &getProjectInfo($project);
 
-#foreach my $x (keys %$projectInfo) { print "$x : $$projectInfo{$x}\n"; }
-
 &updateData($conf, $projectInfo);
 
 exit (0);
@@ -53,8 +56,13 @@ sub printHelp
 	Download and preprocess, if necessary, data for InterMine build
 
 	Options:
-	--conf=file\tconfiguration xml file
-	--project=file\tproject.xml file
+	--conf [file]\tconfiguration xml file
+	--project [file]\tproject.xml file
+	--verbose\tprints out additional information, may be useful for debugging
+	--help\t\tprints this message
+
+ See conf/download_conf.xml.example for information on creating a
+ configuration XML file.
 HELP
 }
 
@@ -170,12 +178,10 @@ sub downloadFile
 	my $ua = LWP::UserAgent->new;
 	my $req = HTTP::Request->new(GET => $remoteFile);
 	my $res = $ua->request($req, $localFile);
-	if ($res->is_success)
-	{
-		print "$remoteFile downloaded\n" if $verbose;
-	}
-	else
-	{
-		print $res->status_line . "\n";
+	if($verbose)
+	{	
+		$res->is_success ?
+			print "$remoteFile downloaded\n" :
+			print $res->status_line . "\n";
 	}
 }
