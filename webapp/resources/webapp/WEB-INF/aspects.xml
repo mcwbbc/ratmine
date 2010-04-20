@@ -93,8 +93,9 @@
 			The Pathway Ontology (PW) is a controlled, hierarchical vocabulary designed to 
 			describe a variety of biological networks and the relationships between them, 
 			including classic metabolic pathways, regulatory pathways, signaling pathways 
-			and disease pathways.  PW assignments in RatMine have been manually curated by 
-			the Rat Genome Database.
+			and disease pathways. PW assignments in RatMine have been manually curated by 
+			the Rat Genome Database. In addition, RatMine contains a separate set of 
+			gene-to-pathway mappings assigned by the Kyoto Encyclopedia of Genes and Genomes (KEGG). 
     </intro-text>
     <tile-name>model/PW.jsp</tile-name>
     <aspect-source name="Pathway Ontology" url="http://rgd.mcw.edu/wg/pathway?100"/>
