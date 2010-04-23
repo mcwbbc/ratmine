@@ -21,12 +21,13 @@ use XML::XPath;
 use Getopt::Long;
 use Cwd;
 
-my ($model_file, $input_directory, $output_directory, $help, $taxon_id);
+my ($model_file, $input_directory, $output_directory, $help, $taxon_id, $dlFlag);
 
 GetOptions( 'model=s' => \$model_file,
 			'input=s' => \$input_directory,
 			'output=s' => \$output_directory,
 			'taxon=s' => \$taxon_id,
+			'download' => \$dlFlag,
 			'help' => \$help);
 
 unless ( !$help and $model_file ne '' and -e $model_file)
@@ -38,6 +39,8 @@ unless ( !$help and $model_file ne '' and -e $model_file)
 	"\n\t--taxon=taxon_id\nOptional\n\t--help\n\n";
 	exit(0);
 }
+
+&downloadFiles($input_directory) if $dlFlag;
 
 my @files = <${input_directory}*.xml>;
 my $model = new InterMine::Model(file => $model_file);
@@ -251,4 +254,23 @@ sub getConsequenceType
 		return $consequences{$fxnClass};
 	}
 	return undef;
-}
+}#end getConsequenceType
+
+sub downloadFiles
+{
+	my $input_directory = shift;
+	
+	#Specific to Rat
+	my @chromes = (1..20);
+	push(@chromes, 'X');
+	
+	my $url = 'ftp://ftp.ncbi.nih.gov/snp/organisms/rat_10116/XML/';
+	foreach my $chrom (@chromes)
+	{
+		my $file = "ds_ch${chrom}.xml.gz";
+		print "curl --create-dirs $url/$file -o $input_directory/$file\n";
+		`curl --create-dirs $url/$file -o $input_directory/$file`;
+		print "gzip -d -f $input_directory/$file\n";
+		`gzip -d -f $input_directory/$file`;
+	}
+}#end downloadFiles

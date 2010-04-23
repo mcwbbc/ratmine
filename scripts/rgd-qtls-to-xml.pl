@@ -17,15 +17,22 @@ use InterMine::ItemFactory;
 use InterMine::Model;
 use InterMine::Util qw(get_property_value);
 use IO qw(Handle File);
+use Getopt::Long;
 use Cwd;
 
-my ($model_file, $qtls_file, $qtl_xml, $gff_file) = @ARGV;
+my ($model_file, $qtls_file, $qtl_xml, $gff_file, $help) = (undef, undef, undef, undef, undef);
 
-unless ( $model_file ne '' and -e $model_file)
+GetOptions(
+	'model=s' => \$model_file,
+	'qtl_input=s' => \$qtls_file,
+	'xml_output=s' => \$qtl_xml,
+	'gff_output=s' => \$gff_file);
+
+unless ($help eq '' and $model_file ne '' and -e $model_file)
 {
 	print "\nrgd-qtls-to-xml.pl\n";
 	print "Convert the QTLS_RAT flat file from RGD into InterMine XML\n";
-	print "rgd-qtls-to-xml.pl model_file QTLS_RAT qtl_xml_output qtl_gff_output\n\n";
+	print "rgd-qtls-to-xml.pl --model model.xml --qtl_input QTLS_RAT --xml_output qtls.xml --gff_output qtls.gff\n";
 	exit(0);
 }
 

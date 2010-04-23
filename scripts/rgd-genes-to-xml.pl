@@ -15,11 +15,21 @@ use InterMine::ItemFactory;
 use InterMine::Model;
 use InterMine::Util qw(get_property_value);
 use IO qw(Handle File);
+use Getopt::Long;
 use Cwd;
 
-my ($model_file, $genes_file, $gene_xml) = @ARGV;
+my ($model_file, $genes_file, $gene_xml, $help);
+GetOptions( 'model=s' => \$model_file,
+			'rgd_genes=s' => \$genes_file,
+			'output_file=s' => \$gene_xml,
+			'help' => \$help);
 
-die "Must point to valid InterMine Model" unless (-e $model_file);
+if($help or !($model_file and $genes_file))
+{
+	&printHelp;
+	exit(0);
+}
+
 my $data_source = 'Rat Genome Database';
 my $taxon_id = 10116;
 my $output = new IO::File(">$gene_xml");
@@ -121,3 +131,22 @@ while(<GENES>)
 }#end while
 close GENES;
 $writer->endTag("items");
+
+###Subroutintes###
+
+sub printHelp
+{
+	print <<HELP;
+#
+# perl rgd-genes-to-xml.pl 
+#
+# Purpose:
+#	Convert the GENES_RAT file from RGD into InterMine XML
+#
+#	Options:
+#	--model=file\tMine model file
+#	--rgd_genes\t\tGENES_RAT file from RGD FTP site
+#	--output_file\t\tInterMine XML file 
+#	--help\t\tPrint this message
+HELP
+}
