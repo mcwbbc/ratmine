@@ -164,9 +164,9 @@
     <longdisplayers>
       <displayer src="attributeLinkDisplayer.tile"/>
     </longdisplayers>
-    <bagdisplayers>
+    <!-- <bagdisplayers>
 		<displayer src="orthologueLinkDisplayer.tile"/>
-    </bagdisplayers>
+    </bagdisplayers> -->
   </class>
 
   <class className="org.intermine.model.bio.Publication">
