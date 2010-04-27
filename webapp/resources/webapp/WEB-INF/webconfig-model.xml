@@ -77,7 +77,7 @@
 	  <displayer src="/model/locatedSequenceFeatureImage.jsp"/>
     </longdisplayers>
     <bagdisplayers>
-      <displayer src="attributeLinkDisplayer.tile"/>
+      <displayer src="orthologueLinkDisplayer.tile"/>
     </bagdisplayers>
   </class>
 
@@ -165,7 +165,7 @@
       <displayer src="attributeLinkDisplayer.tile"/>
     </longdisplayers>
     <bagdisplayers>
-			<displayer src="attributeLinkDisplayer.tile"/>
+		<displayer src="orthologueLinkDisplayer.tile"/>
     </bagdisplayers>
   </class>
 
@@ -263,6 +263,18 @@
 			<fieldconfig fieldExpr="exemplarSNP.primaryIdentifier" />
 			<fieldconfig fieldExpr="allele"/>
 		</fields>
+	</class>
+	
+	<class className="org.intermine.model.bio.Strain">
+		<fields>
+			<fieldconfig fieldExpr="primaryIdentifier"/>
+			<fieldconfig fieldExpr="symbol"/>
+			<fieldconfig fieldExpr="name"/>
+			<fieldconfig fieldExpr="type"/>
+		</fields>
+		<longdisplayers>
+	      <displayer src="attributeLinkDisplayer.tile"/>
+	    </longdisplayers>
 	</class>
 <!--
 	<class className="org.intermine.model.bio.Interaction">
