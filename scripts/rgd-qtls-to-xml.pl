@@ -42,7 +42,8 @@ my $output = new IO::File(">$qtl_xml");
 my $writer = new XML::Writer(DATA_MODE => 1, DATA_INDENT => 3, OUTPUT => $output);
 
 my %pubs = ();
-my %genes =();
+my %genes = ();
+my %strains = ();
 my @gff;
 
 
@@ -137,6 +138,32 @@ while(<QTLS>)
 	      	$qtl_item->set("publications", \@currentPubs);
     	}#end if
 
+		#Add Strains
+		if($qtl_info[$index{STRAIN_RGD_IDS}])
+		{
+			my @strain_info = split(/;/, $qtl_info[$index{STRAIN_RGD_IDS}]);
+			my @strainItems = ();
+			foreach my $s (@strain_info)
+			{
+				if(exists $strains{$s})
+				{
+					my $qtls = $strains{$s}->get("qtls");
+					push(@$qtls, $qtl_item);
+					$strains{$s}->set("qtls", $qtls);
+					push(@strainItems, $strains{$s});
+				}
+				else
+				{
+					my $strain_item = $item_factory->make_item("Strain");
+					$strain_item->set("primaryIdentifier", $s);
+					$strain_item->set("qtls", [$qtl_item]);
+					push(@strainItems, $strain_item);
+					$strains{$s} = $strain_item;
+				}#end if-else
+			}#foreach
+			$qtl_item->set('strains', \@strainItems);
+		}#if
+
 
 		#Add Candidate Genes
 		if($qtl_info[$index{CANDIDATE_GENE_RGD_IDS}])
@@ -170,10 +197,15 @@ while(<QTLS>)
 }#end while
 close QTLS;
 
-#print out Genes
+#print out Genes then Strains
 foreach my $g (keys %genes)
 {
 	$genes{$g}->as_xml($writer);
+}
+
+foreach my $s (keys %strains)
+{
+	$strains{$s}->as_xml($writer);
 }
 
 $writer->endTag("items");
