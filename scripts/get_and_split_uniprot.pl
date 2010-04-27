@@ -18,8 +18,8 @@
 
 =cut 
 
-use Bio::Perl;
-use Bio::SeqIO;
+#use Bio::Perl;
+#use Bio::SeqIO;
 use Getopt::Long;
 use LWP::UserAgent;
 use strict;
