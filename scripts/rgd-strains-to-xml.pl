@@ -18,10 +18,11 @@ use IO qw(Handle File);
 use Getopt::Long;
 use Cwd;
 
-my ($model_file, $strains_file, $strains_xml, $help);
+my ($model_file, $strains_file, $strains_xml, $help, $strain_obo);
 GetOptions( 'model=s' => \$model_file,
 			'rgd_strains=s' => \$strains_file,
 			'output_file=s' => \$strains_xml,
+			'strain_obo=s' => \$strain_obo,
 			'help' => \$help);
 			
 if($help or !($model_file and $strains_file))
@@ -52,6 +53,16 @@ $dataset_item->as_xml($writer);
 open STRAINS, $strains_file;
 my %index;
 my %pubs;
+my %rsIndex = ();
+
+if ($strain_obo)
+{
+	print "Creating Obo Index...\n";
+	%rsIndex = &createOboMap($strain_obo);
+
+}
+
+print "Creating XML...\n";
 while(<STRAINS>)
 {
 	chomp;
@@ -78,6 +89,14 @@ while(<STRAINS>)
 		$strain_item->set('source', $strain_info[$index{'SOURCE'}]) unless($strain_info[$index{'SOURCE'}] eq '');
 		$strain_item->set('type', $strain_info[$index{'STRAIN_TYPE'}]) unless($strain_info[$index{'STRAIN_TYPE'}] eq '');
 		
+		if($rsIndex{$strain_info[$index{'RGD_ID'}]})
+		{
+			my $rs_item = $item_factory->make_item('RSTerm');
+			$rs_item->set('identifier', $rsIndex{$strain_info[$index{'RGD_ID'}]});
+			$rs_item->set('strain', $strain_item);
+			$rs_item->as_xml($writer);
+			$strain_item->set('rsTerm', $rs_item);
+		}
 		$strain_item->as_xml($writer);
 	} #end if-else
 	
@@ -100,6 +119,28 @@ sub printHelp
 #	--model=file\tMine model file
 #	--rgd_strains\t\tSTRAINS file from RGD FTP site
 #	--output_file\t\tInterMine XML file 
+#	--strain_obo\t\tStrain Ontology OBO file [optional]
 #	--help\t\tPrint this message
 HELP
+}
+
+sub createOboMap
+{
+	my $file = shift;
+	my %map;
+	
+	my $entry = '';
+	open IN, $file or die("cannot open $file");
+	while(<IN>)
+	{
+		$entry .= $_;
+		if($_ =~ /^\s+$/)
+		{	
+			if($entry =~ /id:\s+(RS:\s?\d+)[\d\D\s]+?RGD ID:\s+(\d+)/m)
+			{	$map{$2} = $1;	}
+			$entry = '';
+		}
+	}
+	print "Found " . keys(%map) . " RSTerms\n";
+	return %map;
 }
