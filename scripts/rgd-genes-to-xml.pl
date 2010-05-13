@@ -85,7 +85,7 @@ while(<GENES>)
 			$syn_item->set('value', $gene_info[$index{ENTREZ_GENE}]);
 			$syn_item->set('type', 'ncbiGeneNumber');
 			$syn_item->set('subject', $gene_item);
-			push(@synonym_items, $syn_item); #set the reverse reference
+			#push(@synonym_items, $syn_item); #set the reverse reference
 			$syn_item->as_xml($writer);
 		}
 		$gene_item->set('geneType', $gene_info[$index{GENE_TYPE}]) unless ($gene_info[$index{GENE_TYPE}] eq '');
@@ -96,14 +96,14 @@ while(<GENES>)
 			$syn_item->set('value', $gene_info[$index{ENSEMBL_ID}]);
 			$syn_item->set('type', 'ensemblIdentifier');
 			$syn_item->set('subject', $gene_item);
-			push(@synonym_items, $syn_item); #set the reverse reference
+			#push(@synonym_items, $syn_item); #set the reverse reference
 			$syn_item->as_xml($writer);
 		}
 		$gene_item->set('nomenclatureStatus', $gene_info[$index{NOMENCLATURE_STATUS}]) unless ($gene_info[$index{NOMENCLATURE_STATUS}] eq '');
 		$gene_item->set('fishBand', $gene_info[$index{FISH_BAND}]) unless ($gene_info[$index{FISH_BAND}] eq '');
     	
 		#add synonyms to genes
-		$gene_item->set('synonyms', \@synonym_items);
+		#$gene_item->set('synonyms', \@synonym_items);
 		#process the publications:
     	if ($gene_info[$index{CURATED_REF_PUBMED_ID}] ne '') {
       		#print "Got some pubmed ids: (".$gene_info[$index{CURATED_REF_PUBMED_ID}].")\n";

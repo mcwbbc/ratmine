@@ -201,7 +201,7 @@ sub processDbSNPFile
 				$syn_item2->set('type', 'dbSNP ss Identifier');
 				$syn_item2->set('subject', $ss_item);
 
-				$ss_item->set('synonyms', [$syn_item, $syn_item2]);
+				#$ss_item->set('synonyms', [$syn_item, $syn_item2]);
 
 				$ss_item->as_xml($writer);
 				$syn_item->as_xml($writer);
@@ -220,7 +220,7 @@ sub processDbSNPFile
 			$syn_item->set('subject', $snp_item);
 			$syn_item->set('isPrimary', 'true');
 			$syn_item->as_xml($writer);
-			$snp_item->set('synonyms', [$syn_item]);
+			#$snp_item->set('synonyms', [$syn_item]);
 			
 		
 			$snp_item->as_xml($writer);

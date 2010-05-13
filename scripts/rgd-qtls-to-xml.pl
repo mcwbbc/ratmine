@@ -98,7 +98,7 @@ while(<QTLS>)
 		$qtl_item->set('pValue', $qtl_info[$index{P_VALUE}]) unless $qtl_info[$index{P_VALUE}] eq '';
 		$qtl_item->set('trait', $qtl_info[$index{TRAIT_NAME}]);
 		$qtl_item->set('name', $qtl_info[$index{QTL_NAME}]);
-		$qtl_item->set('synonyms', [$syn_item, $syn_item2]);
+		#$qtl_item->set('synonyms', [$syn_item, $syn_item2]);
 		
 		unless($qtl_info[$index{'3.4_MAP_POS_START'}] eq '')
 		{
