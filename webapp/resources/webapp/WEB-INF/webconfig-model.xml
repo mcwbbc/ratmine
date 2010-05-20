@@ -81,6 +81,14 @@
     </bagdisplayers>
   </class>
 
+  <class className="org.intermine.model.bio.Genotype">
+	<fields>
+		<fieldconfig fieldExpr="allele"/>
+		<fieldconfig fieldExpr="strain.symbol"/>
+		<fieldconfig fieldExpr="strain.name"/>
+	</fields>
+  </class>
+
   <class className="org.intermine.model.bio.InfoSource">
     <fields>
       <fieldconfig fieldExpr="title"/>
