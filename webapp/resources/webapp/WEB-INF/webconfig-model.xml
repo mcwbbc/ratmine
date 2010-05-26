@@ -224,6 +224,19 @@
     <tabledisplayer src="/model/sequenceShortDisplayer.jsp"/>
   </class>
 
+  <class className="org.intermine.model.bio.SSLP">
+	
+  </class>
+
+  <class className="org.intermine.model.bio.SSLPAllele">
+	<fields>
+		<fieldconfig fieldExpr="sslp.primaryIdentifier"/>
+		<fieldconfig fieldExpr="length"/>
+		<fieldconfig fieldExpr="strain.primaryIdentifier"/>
+		<fieldconfig fieldExpr="strain.symbol"/>
+	</fields>
+  </class>
+
   <class className="org.intermine.model.bio.Synonym">
     <fields>
       <fieldconfig fieldExpr="value"/>
