@@ -62,6 +62,21 @@ while(<IN>)
 	my $sslp_item = $item_factory->make_item("SSLP");
 	$sslp_item->set('organism', $org_item);
 	$sslp_item->set('primaryIdentifier', $data[$index{SSLP_RGD_ID}]);
+	
+	my $syn_item = $item_factory->make_item("Synonym");
+	$syn_item->set('value', $data[$index{SSLP_RGD_ID}]);
+	$syn_item->set('type', "identifier");
+	$syn_item->set('subject', $sslp_item);
+	$syn_item->as_xml($writer);
+	
+	$sslp_item->set('symbol', $data[$index{SSLP_SYMBOL}]);
+	
+	my $syn2_item = $item_factory->make_item("Synonym");
+	$syn2_item->set('value', $data[$index{SSLP_SYMBOL}]);
+	$syn2_item->set('type', 'symbol');
+	$syn2_item->set('subject', $sslp_item);
+	$syn2_item->as_xml($writer);
+	
 	$sslp_item->set('expectedSize', $data[$index{EXPECTED_SIZE}]) unless $data[$index{EXPECTED_SIZE}] eq '';
 	
 	unless($data[$index{CURATED_REF_PUBMED_ID}] eq '')
