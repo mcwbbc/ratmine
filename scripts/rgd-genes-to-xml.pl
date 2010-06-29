@@ -85,21 +85,22 @@ while(<GENES>)
 			$syn_item->set('value', $gene_info[$index{ENTREZ_GENE}]);
 			$syn_item->set('type', 'ncbiGeneNumber');
 			$syn_item->set('subject', $gene_item);
-			#push(@synonym_items, $syn_item); #set the reverse reference
 			$syn_item->as_xml($writer);
 		}
 		$gene_item->set('geneType', $gene_info[$index{GENE_TYPE}]) unless ($gene_info[$index{GENE_TYPE}] eq '');
 		unless ($gene_info[$index{ENSEMBL_ID}] eq '')
 		{
 			#$gene_item->set('ensemblIdentifier', $gene_info[$index{ENSEMBL_ID}]);
+			my %ensemblIds;
 			foreach my $e (split(',', $gene_info[$index{ENSEMBL_ID}]))
 			{
+				next if (exists $ensemblIds{$e});
 				my $syn_item = $item_factory->make_item('Synonym');
 				$syn_item->set('value', $e);
 				$syn_item->set('type', 'ensemblIdentifier');
 				$syn_item->set('subject', $gene_item);
-				#push(@synonym_items, $syn_item); #set the reverse reference
 				$syn_item->as_xml($writer);
+				$ensemblIds{$e} = 1;
 			}
 		}
 		$gene_item->set('nomenclatureStatus', $gene_info[$index{NOMENCLATURE_STATUS}]) unless ($gene_info[$index{NOMENCLATURE_STATUS}] eq '');
