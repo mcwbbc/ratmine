@@ -1,0 +1,53 @@
+<?xml version="1.0"?>
+<classes>
+	<class name="Project" is-interface="true">
+	  <attribute name="name" type="java.lang.String" />
+	  <attribute name="title" type="java.lang.String" />
+	  <attribute name="surnamePI" type="java.lang.String" />
+	  <attribute name="namePI" type="java.lang.String" />
+	  <attribute name="url" type="java.lang.String" />
+	  <collection name="labs" referenced-type="Lab" reverse-reference="project" />
+	  <collection name="experiments" referenced-type="Experiment" reverse-reference="project" />
+	  <collection name="submissions" referenced-type="Submission" reverse-reference="project" />
+	  <collection name="organisms" referenced-type="Organism" />
+	</class>
+
+	<class name="Lab" extends="DataSource" is-interface="true">
+	  <attribute name="name" type="java.lang.String" />
+	  <attribute name="surname" type="java.lang.String" />
+	  <attribute name="affiliation" type="java.lang.String" />
+	  <reference name="project" referenced-type="Project" reverse-reference="labs" />
+	  <collection name="submissions" referenced-type="Submission" reverse-reference="lab" />
+	</class>
+
+	<class name="Experiment" is-interface="true">
+	  <attribute name="name" type="java.lang.String" />
+	  <reference name="project" referenced-type="Project" reverse-reference="experiments" />
+	  <collection name="submissions" referenced-type="Submission" reverse-reference="experiment" />
+	</class>
+
+	<class name="Submission" extends="DataSet" is-interface="true">
+	  <attribute name="title" type="java.lang.String" />
+	  <attribute name="description" type="java.lang.String" />
+	  <attribute name="design" type="java.lang.String" />
+	  <attribute name="qualityControl" type="java.lang.String" />
+	  <attribute name="replicate" type="java.lang.String" />
+	  <attribute name="experimentDate" type="java.util.Date" />
+	  <attribute name="publicReleaseDate" type="java.util.Date" />     
+	  <attribute name="embargoDate" type="java.util.Date" />     
+	  <attribute name="DCCid" type="java.lang.Integer" />     
+	  <attribute name="experimentType" type="java.lang.String" />     
+	  <reference name="organism" referenced-type="Organism" /> 
+	  <reference name="publication" referenced-type="Publication"/>
+	<!-- <attribute name="fileFormat" type="java.lang.String"/> -->
+	    <reference name="experiment"
+	      referenced-type="Experiment"
+	      reverse-reference="submissions" />
+	    <reference name="lab"
+	      referenced-type="Lab"
+	      reverse-reference="submissions" />
+	    <reference name="project"
+	      referenced-type="Project"
+	      reverse-reference="submissions" />
+	</class>
+</classes>
