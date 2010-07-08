@@ -49,6 +49,7 @@ $org_item->as_xml($writer);
 print "Reading $input_dir...\n";
 my @files = <$input_dir/*.*>;
 print "Found " . @files . " files...\n";
+my %gene_items;
 
 foreach my $input_file (@files)
 {	
@@ -59,7 +60,6 @@ foreach my $input_file (@files)
 	$array_item->set('organism', $org_item);
 	
 	my ($affyMap, $ensemblMap) = &buildGeneMaps($name, $genes_dir);
-	print $$affyMap{'1368624_at'} . " : " . $$ensemblMap{'1368624_at'} . "\n";
 	
 	#process Header
 	open(IN, $input_file) or die "cannot open $input_file\n";
@@ -67,55 +67,36 @@ foreach my $input_file (@files)
 	my %index = &parseHeader($line);
 
 	my @probe_items;
-	my %gene_items;
 	print "Processing Data...$input_file\n";
+	my %probes;
+	
 	while(<IN>)
 	{
 		chomp;
 		my @data = split("\t", $_);
-	
-		my $probe_item = $item_factory->make_item('ProbeSet');
-		$probe_item->set('primaryIdentifier', $data[$index{'Probe_Set_Name'}]);
-		$probe_item->set('organism', $org_item);
 		
+		unless($probes{$data[$index{'Probe_Set_Name'}]})
+		{
+			$probes{$data[$index{'Probe_Set_Name'}]} = &processProbe(\@data, \%index, $affyMap, $ensemblMap);
+			$probes{$data[$index{'Probe_Set_Name'}]}->set('organism', $org_item);
+			$probes{$data[$index{'Probe_Set_Name'}]}->set('arrays', [$array_item]);
+			push(@probe_items, $probes{$data[$index{'Probe_Set_Name'}]})
+		}
+	
 		my $seq_item = $item_factory->make_item('Sequence');
 		$seq_item->set('residues', $data[$index{'Probe_Sequence'}]);
 		$seq_item->as_xml($writer);
 		
-		my @genes;
-		if($$affyMap{$data[$index{'Probe_Set_Name'}]})
-		{
-			unless($gene_items{$data[$index{'Probe_Set_Name'}]})
-			{
-				my $gene_item = $item_factory->make_item('Gene');
-				$gene_item->set('primaryIdentifier', $$affyMap{$data[$index{'Probe_Set_Name'}]});
-				$gene_item->as_xml($writer);
-				$gene_items{$$affyMap{$data[$index{'Probe_Set_Name'}]}} = $gene_item;
-			}
-			
-			push(@genes, $gene_items{$$affyMap{$data[$index{'Probe_Set_Name'}]}});
-		}
+		my $sequences = $probes{$data[$index{'Probe_Set_Name'}]}->get('sequences');
+		push(@$sequences, $seq_item);
+		$probes{$data[$index{'Probe_Set_Name'}]}->set('sequences', $sequences);
 		
-		if($$ensemblMap{$data[$index{'Probe_Set_Name'}]})
-		{
-			unless($gene_items{$data[$index{'Probe_Set_Name'}]})
-			{
-				my $gene_item = $item_factory->make_item('Gene');
-				$gene_item->set('primaryIdentifier', $$ensemblMap{$data[$index{'Probe_Set_Name'}]});
-				$gene_item->as_xml($writer);
-				$gene_items{$$ensemblMap{$data[$index{'Probe_Set_Name'}]}} = $gene_item;
-			}
-			
-			push(@genes, $gene_items{$$ensemblMap{$data[$index{'Probe_Set_Name'}]}});
-		}
-		
-		$probe_item->set('genes', \@genes);
-		$probe_item->set('sequence', $seq_item);
-		$probe_item->set('arrays', [$array_item]);
-		$probe_item->as_xml($writer);
-		
-		push(@probe_items, $probe_item);
 	}#end while
+	
+	foreach my $item (values %probes)
+	{
+		$item->as_xml($writer);
+	}
 	$array_item->set('probeSets', \@probe_items);
 	$array_item->as_xml($writer);
 
@@ -133,11 +114,55 @@ sub parseHeader #parses header line
 	my @header = split(/\t/, $h);
 	for(my $x = 0; $x < @header; $x++)
 	{	
-		$header[$x] =~ s/[\s\.]/_/g; #make thinks unix friendly
+		$header[$x] =~ s/[\s\.]/_/g; #make things unix friendly
 		print $header[$x] . "\n";
 		$i{$header[$x]} = $x;	
 	}
 	return %i;
+}
+
+sub processProbe
+{
+	my ($arg1, $arg2, $affyMap, $ensemblMap) = @_;
+	my @data = @$arg1;
+	my %index = %$arg2;
+	
+	my $probe_item = $item_factory->make_item('ProbeSet');
+	$probe_item->set('primaryIdentifier', $data[$index{'Probe_Set_Name'}]);
+	$probe_item->set('organism', $org_item);
+	
+	
+	my @genes;
+	if($$affyMap{$data[$index{'Probe_Set_Name'}]})
+	{
+		unless($gene_items{$$affyMap{$data[$index{'Probe_Set_Name'}]}})
+		{
+			my $gene_item = $item_factory->make_item('Gene');
+			$gene_item->set('primaryIdentifier', $$affyMap{$data[$index{'Probe_Set_Name'}]});
+			$gene_item->set('organism', $org_item);
+			$gene_item->as_xml($writer);
+			$gene_items{$$affyMap{$data[$index{'Probe_Set_Name'}]}} = $gene_item;
+		}
+		
+		push(@genes, $gene_items{$$affyMap{$data[$index{'Probe_Set_Name'}]}});
+	}
+	
+	if($$ensemblMap{$data[$index{'Probe_Set_Name'}]})
+	{
+		unless($gene_items{$$ensemblMap{$data[$index{'Probe_Set_Name'}]}})
+		{
+			my $gene_item = $item_factory->make_item('Gene');
+			$gene_item->set('primaryIdentifier', $$ensemblMap{$data[$index{'Probe_Set_Name'}]});
+			$gene_item->set('organism', $org_item);
+			$gene_item->as_xml($writer);
+			$gene_items{$$ensemblMap{$data[$index{'Probe_Set_Name'}]}} = $gene_item;
+		}
+		
+		push(@genes, $gene_items{$$ensemblMap{$data[$index{'Probe_Set_Name'}]}});
+	}
+	
+	$probe_item->set('genes', \@genes);	
+	return $probe_item;
 }
 
 sub buildGeneMaps
