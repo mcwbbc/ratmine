@@ -18,6 +18,8 @@ use IO qw(Handle File);
 use Cwd;
 use Getopt::Long;
 use strict;
+use lib '../perlmods';
+use RCM;
 
 my ($ortho_file, $pharm_file, $help, $out_file, $model_file);
 my $t = 0;
@@ -61,8 +63,7 @@ while(<RGD>)
 	chomp;
 	if($_ =~ /^RAT/)
 	{
-		my @header = split(/\t/, $_);
-		%index = &buildHeaderIndex(\@header);
+		%index = &RCM::parseHeader($_);
 	}
 	else
 	{
@@ -89,8 +90,7 @@ while(<PKB>)
 	chomp;
 	if($_ =~ /^Pharm/)
 	{
-		my @header = split(/\t/, $_);
-		%index = &buildHeaderIndex(\@header);
+		%index = &RCM::parseHeader($_);
 	}
 	else
 	{

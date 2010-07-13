@@ -3,12 +3,12 @@
 		<attribute name="taxonId" value="10116"/>
 	</item>
 	
-	<item id="1010" class="" implements="Project">
+	<item id="1000" class="" implements="Project">
 	    <attribute name="name" value="eQTL Data"/>
 	    <attribute name="title" value="Integrated transcriptional profiling and linkage analysis for identification of genes underlying disease"/>
 	    <attribute name="surnamePI" value="Aitman"/>
 	    <attribute name="namePI" value="Timothy"/>
-	    <attribute name="url" value=""/>
+<!--	    <attribute name="url" value=""/> -->
 		<collection name="labs">
 			<reference ref_id="1100"/>
 		</collection>
@@ -17,11 +17,11 @@
 		</collection>
  	</item>
 
-	<item id="1100" class="" implements="Lab">
+	<item id="100" class="" implements="Lab">
 		<attribute name="surname" value="Aitman"/>
 		<attribute name="name" value="Timoth Aitman"/>
 		<attribute name="affiliation" value="MRC Clinical Sciences Centre, Faculty of Medicine, Imperial College, London"/>
-		<attribute name="url" value=""/>
+<!--		<attribute name="url" value=""/> -->
 		<reference name="project" ref_id="1010"/>
 	</item>
 </items>

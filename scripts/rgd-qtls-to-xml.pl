@@ -19,6 +19,8 @@ use InterMine::Util qw(get_property_value);
 use IO qw(Handle File);
 use Getopt::Long;
 use Cwd;
+use lib '../perlmods';
+use RCM;
 
 my ($model_file, $qtls_file, $qtl_xml, $gff_file, $help) = (undef, undef, undef, undef, undef);
 
@@ -69,10 +71,7 @@ while(<QTLS>)
 	chomp;
 	if( $_ !~ /^\d/) #parses header line
 	{
-		my @header = split(/\t/, $_);
-		for(my $i = 0; $i < @header; $i++)
-		{	$index{$header[$i]} = $i;	}
-	
+		%index = &RCM::parseHeader($_);
 	}
 	else
 	{

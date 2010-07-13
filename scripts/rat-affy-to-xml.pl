@@ -20,6 +20,8 @@ use XML::XPath;
 use Getopt::Long;
 use Cwd;
 use warnings;
+use lib '../perlmods'
+use RCM;
 
 my ($model_file, $help, $input_dir, $genes_dir, $output_file);
 
@@ -64,7 +66,7 @@ foreach my $input_file (@files)
 	#process Header
 	open(IN, $input_file) or die "cannot open $input_file\n";
 	my $line = <IN>;
-	my %index = &parseHeader($line);
+	my %index = &RCM::parseHeader($line);
 
 	my @probe_items;
 	print "Processing Data...$input_file\n";
@@ -105,21 +107,6 @@ foreach my $input_file (@files)
 $writer->endTag("items");
 
 ### Subroutines ###
-sub parseHeader #parses header line
-{
-	print "Processing Header...\n";
-	my $h = shift;
-	chomp $h;
-	my %i;
-	my @header = split(/\t/, $h);
-	for(my $x = 0; $x < @header; $x++)
-	{	
-		$header[$x] =~ s/[\s\.]/_/g; #make things unix friendly
-		print $header[$x] . "\n";
-		$i{$header[$x]} = $x;	
-	}
-	return %i;
-}
 
 sub processProbe
 {

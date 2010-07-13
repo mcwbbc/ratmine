@@ -19,6 +19,8 @@ use IO qw(Handle File);
 use XML::XPath;
 use Getopt::Long;
 use Cwd;
+use lib '../perlmods';
+use RCM;
 
 my ($model_file, $help, $input_file, $output_file);
 
@@ -48,7 +50,7 @@ $org_item->as_xml($writer);
 open(IN, $input_file) or die "cannot open $input_file\n";
 #process Header
 my $line = <IN>;
-my %index = parseHeader($line);
+my %index = &RCM::parseHeader($line);
 
 my %pubs;
 my %chromosomes;
@@ -130,21 +132,6 @@ $writer->endTag("items");
 exit(0);
 
 ### Subroutines ###
-
-sub parseHeader #parses header line
-{
-	print "Processing Header...\n";
-	my $h = shift;
-	chomp $h;
-	my %i;
-	my @header = split(/\t/, $h);
-	for(my $x = 0; $x < @header; $x++)
-	{	
-		$header[$x] =~ s/[\s\.]/_/g; #make thinks unix friendly
-		$i{$header[$x]} = $x;	
-	}
-	return %i;
-}
 
 sub printHelp
 {
