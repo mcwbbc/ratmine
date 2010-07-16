@@ -52,7 +52,7 @@ sub resolveID
 	elsif($type eq 'ensembl')
 	{	$k = '_ENSEMBL';	}
 	else
-	{	return nil;	}
+	{	return undef;	}
 	
 	return $self->{$k}->{$id};
 }
