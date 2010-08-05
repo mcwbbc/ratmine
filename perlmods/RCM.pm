@@ -1,5 +1,17 @@
 package RCM;
 
+################
+# RatMine Common Module
+#
+# by Andrew Vallejos
+#
+# Has the same module requirements as
+# the RatMine Perl Scripts
+# 
+#
+################
+
+
 sub parseHeader #parses header line
 {
 	print "Processing Header...\n";
@@ -10,6 +22,7 @@ sub parseHeader #parses header line
 	for(my $x = 0; $x < @header; $x++)
 	{	
 		$header[$x] =~ s/[\s\.]/_/g; #make things unix friendly
+		$header[$x] =~ s/_+$//; #remove trailing underscores
 		print $header[$x] . "\n";
 		$i{$header[$x]} = $x;	
 	}
@@ -30,17 +43,17 @@ sub makeChromosomeItems
 	
 	my @chromosomes = (1..20, 'M', 'X');
 	
-	%chromosome_items;
+	$chromosome_items = ITEMHOLDER->new;
 	foreach my $chr (@chromosomes)
 	{
 		$chrom_item = $item_factory->make_item('Chromosome');
 		$chrom_item->set('primaryIdentifier', $chr);
 		$chrom_item->as_xml($writer) if $writer;
-		$chromosome_items{$chr} = $chrom_item;
+		$chromosome_items->store($chr, $chrom_item);
 
 	}
 	
-	return \%chromosome_items;
+	return $chromosome_items;
 }
 
 sub makeLocationItem

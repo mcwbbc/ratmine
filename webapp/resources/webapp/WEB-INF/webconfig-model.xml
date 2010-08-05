@@ -58,6 +58,21 @@
 		</fields>
 	</class>
 	
+	<class className="org.intermine.model.bio.eQTL">
+		<fields>
+			<fieldconfig fieldExpr="reaperPValue"/>
+			<fieldconfig fieldExpr="sslp.symbol"/>
+			<fieldconfig fieldExpr="sslp.chromosome.primaryIdentifier" />
+			<fieldconfig fieldExpr="sslp.chromosomeLocation.start" />
+			<fieldconfig fieldExpr="sslp.chromosomeLocation.end" />
+			<fieldconfig fieldExpr="probeSet.primaryIdentifier"/>
+			<fieldconfig fieldExpr="probeSet.chromosome.primaryIdentifier" />
+			<fieldconfig fieldExpr="probeSet.chromosomeLocation.start"/>
+			<fieldconfig fieldExpr="probeSet.chromosomeLocation.end"/>
+			<fieldconfig fieldExpr="organism.shortName"/>
+		</fields>
+	</class>
+	
   <class className="org.intermine.model.bio.Gene">
     <fields>
       <fieldconfig fieldExpr="primaryIdentifier"/>
@@ -244,6 +259,14 @@
     </fields>
   </class>
 
+	<class className="org.intermine.model.bio.Expression">
+		<fields>
+			<fieldconfig fieldExpr="tissue"/>
+			<fieldconfig fieldExpr="foldChange"/>
+			<fieldconfig fieldExpr="pval"/>
+		</fields>
+	</class>
+
 	<class className="org.intermine.model.bio.GOAnnotation">
 		<fields>
 			<fieldconfig fieldExpr="ontologyTerm.identifier" />
@@ -310,6 +333,15 @@
 		<fields>
 			<fieldconfig fieldExpr="type"/>
 		</fields>
+	</class>
+	
+	<class className="org.intermine.model.bio.Project">
+	</class>
+	
+	<class className="org.intermine.model.bio.Lab">
+	</class>
+	
+	<class className="org.intermine.model.bio.Experiment">
 	</class>
 	
   <class className="org.intermine.model.bio.Transcript">
