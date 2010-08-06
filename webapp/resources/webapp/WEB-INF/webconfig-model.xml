@@ -240,6 +240,12 @@
   </class>
 
   <class className="org.intermine.model.bio.SSLP">
+		<fields>
+			<fieldconfig fieldExpr="primaryIdentifier"/>
+			<fieldconfig fieldExpr="symbol"/>
+      <fieldconfig fieldExpr="chromosomeLocation" displayer="/model/chromosomeLocDisplayer.jsp" showInResults="false" />
+			<fieldconfig fieldExpr="organism.name"/>
+		</fields>
 	
   </class>
 
