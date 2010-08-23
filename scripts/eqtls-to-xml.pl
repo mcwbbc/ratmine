@@ -91,6 +91,11 @@ foreach my $eqtls_file (@files)
 	close IN;
 
 }
+
+&writeAll($writer, $sslp_items);
+&writeAll($writer, $probe_items);
+
+
 $sub_item->set('dataPoints', \@qtls);
 $sub_item->as_xml($writer);
 $writer->endTag("items");
@@ -139,6 +144,10 @@ sub processLine
 	$sslp_item = $sslp_items->get($data[$$index{peak_marker}]);
 
 	$qtl_item->set('sslp', $sslp_item);
+	my $eqtls = $sslp_item->get('eqtls');
+	push(@$eqtls, $qtl_item);
+	$sslp_item->set('eqtls', $eqtls);
+	$sslp_items->store($data[$$index{peak_marker}], $sslp_item);
 	
 	unless($probe_items->holds($data[$$index{probeset}]))
 	{
@@ -148,6 +157,11 @@ sub processLine
 	$probe_item = $probe_items->get($data[$$index{probeset}]);
 	
 	$qtl_item->set('probeSet', $probe_item);
+	$eqtls = $sslp_item->get('eqtls');
+	push(@$eqtls, $qtl_item);
+	$probe_item->set('eqtls', $eqtls);
+	$probe_items->store($data[$$index{probeset}], $probe_item);
+
 	
 	$qtl_item->set('reaperPValue', $reaper_pval);
 	my $expr_item_fat = $item_factory->make_item('Expression');
@@ -179,7 +193,6 @@ sub makeSSLP
 								$chr_items->get($$data[$$index{Chomosome_Position_of_peak_marker}]), 
 								$$data[$$index{Physical_position_of_peak_marker}]);
 	$item->set('chromosomeLocation', $loc_item);
-	$item->as_xml($writer);
 	
 	return $item;
 }#makeSSLP
@@ -196,7 +209,6 @@ sub makeProbe
 								$chr_items->get($$data[$$index{Chromosome_position_of_probeset}]), 
 								$$data[$$index{Physical_position_of_probeset}]);
 	$item->set('chromosomeLocation', $loc_item);
-	$item->as_xml($writer);
 	
 	return $item;
 }
@@ -212,4 +224,13 @@ sub addStandardStuff
 		$qtl_item->set("$class", $item);
 	}
 	return $qtl_item;
+}
+
+sub writeAll
+{
+	my ($writer, $items) = @_;
+	foreach my $k ($items->contents)
+	{
+		$items->get($k)->as_xml($writer);
+	}
 }
