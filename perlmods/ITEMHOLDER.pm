@@ -62,4 +62,10 @@ sub size
 	
 }
 
+sub contents
+{
+	my $self = shift;
+	return (keys %$self);
+}
+
 1;
