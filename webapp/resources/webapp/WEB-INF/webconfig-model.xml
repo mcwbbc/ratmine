@@ -458,12 +458,13 @@
  	                                 filterLabel="DataSet"
  	                                 description="Pathways enriched for genes in this list - data from KEGG"
  	                                 typeClass="org.intermine.model.bio.Gene" />
-		<bagtabledisplayer id="qtls" title="QTLs"
+<!--		<bagtabledisplayer id="qtls" title="QTLs"
                 			         pathStrings="Gene.overlappingfeatures"
 			                         description="Count of QTLs that overlap with genes in the list."
 			                         displayFields="primaryidentifier"
 			                         exportField="primaryidentifier"
 			                         typeClass="org.intermine.model.bio.Gene"
-			                         columnTitle="Count"/>
+			                         columnTitle="Count"/> 
+-->
 	</widgets>
 </webconfig>
