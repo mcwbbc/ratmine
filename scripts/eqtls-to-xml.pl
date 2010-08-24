@@ -58,6 +58,10 @@ $project_item->set('name', 'eQTL Data');
 
 my $sub_item = $item_factory->make_item('Submission');
 $sub_item->set('title', 'eQTL Data');
+$sub_item->set('experimentDate', '3-2010')
+
+my $pub_item = $item_factory->make_item('Publication');
+$pub_item->set('pubMedId', '15711544')
 $project_item->set('submissions', [$sub_item]);
 $project_item->as_xml($writer);
 
