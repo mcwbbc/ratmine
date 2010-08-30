@@ -62,14 +62,7 @@
 		<fields>
 			<fieldconfig fieldExpr="reaperPValue"/>
 			<fieldconfig fieldExpr="sslp.symbol"/>
-			<fieldconfig fieldExpr="sslp.chromosome.primaryIdentifier" />
-			<fieldconfig fieldExpr="sslp.chromosomeLocation.start" />
-			<fieldconfig fieldExpr="sslp.chromosomeLocation.end" />
 			<fieldconfig fieldExpr="probeSet.primaryIdentifier"/>
-			<fieldconfig fieldExpr="probeSet.chromosome.primaryIdentifier" />
-			<fieldconfig fieldExpr="probeSet.chromosomeLocation.start"/>
-			<fieldconfig fieldExpr="probeSet.chromosomeLocation.end"/>
-			<fieldconfig fieldExpr="organism.shortName"/>
 		</fields>
 	</class>
 	
