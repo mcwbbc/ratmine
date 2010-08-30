@@ -118,6 +118,11 @@ sub processProbe
 	$probe_item->set('primaryIdentifier', $data[$index{'Probe_Set_Name'}]);
 	$probe_item->set('organism', $org_item);
 	
+	my $syn_item = $item_factory->make_item('Synonym');
+	$syn_item->set('value', $data[$index{'Probe_Set_Name'}]);
+	$syn_item->set('type', 'identifier');
+	$probe_item->set('synonyms', [$syn_item]);
+	
 	
 	my @genes;
 	if($$affyMap{$data[$index{'Probe_Set_Name'}]})

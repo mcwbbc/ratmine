@@ -55,20 +55,25 @@ $org_item->as_xml($writer);
 
 my $project_item = $item_factory->make_item('Project');
 $project_item->set('name', 'eQTL Data');
+$project_item->set('namePI', 'Timothy');
+$project_item->set('surnamePI', 'Aitman');
+
 
 my $sub_item = $item_factory->make_item('Submission');
 $sub_item->set('title', 'eQTL Data');
-$sub_item->set('experimentDate', '3-2010')
+$sub_item->set('experimentDate', '20100301');
 
 my $pub_item = $item_factory->make_item('Publication');
-$pub_item->set('pubMedId', '15711544')
+$pub_item->set('pubMedId', '15711544');
+$pub_item->as_xml($writer);
+
+$sub_item->set('publication', $pub_item);
 $project_item->set('submissions', [$sub_item]);
 $project_item->as_xml($writer);
 
 my @files = <${eqtls_dir}*.txt>;
 
 my @qtls;
-my $chr_items = &RCM::makeChromosomeItems($item_factory, $writer);
 my $sslp_items = ITEMHOLDER->new;
 my $probe_items = ITEMHOLDER->new;
 foreach my $eqtls_file (@files)
@@ -87,7 +92,7 @@ foreach my $eqtls_file (@files)
 			next
 		}
 		
-		my $qtl_item = &processLine($item_factory, $_, \%index, $chr_items, $writer);
+		my $qtl_item = &processLine($item_factory, $_, \%index, $writer);
 		$qtl_item = &addStandardStuff($qtl_item, [$org_item, $sub_item]);
 		$qtl_item->as_xml($writer);
 		push(@qtls, $qtl_item);
@@ -120,7 +125,7 @@ HELP
 
 sub processLine
 {
-	my ($item_factory, $line, $index, $chr_items, $writer) = @_;
+	my ($item_factory, $line, $index, $writer) = @_;
 		
 	my $qtl_item = $item_factory->make_item('eQTL');
 	my $sslp_item = $item_factory->make_item('SSLP');
@@ -142,7 +147,7 @@ sub processLine
 
 	unless($sslp_items->holds($data[$$index{peak_marker}]))
 	{
-		my $item = &makeSSLP($sslp_item, \@data, $index, $item_factory, $writer, $chr_items);
+		my $item = &makeSSLP($sslp_item, \@data, $index, $item_factory, $writer);
 		$sslp_items->store($data[$$index{peak_marker}], $item);
 	}
 	$sslp_item = $sslp_items->get($data[$$index{peak_marker}]);
@@ -155,7 +160,7 @@ sub processLine
 	
 	unless($probe_items->holds($data[$$index{probeset}]))
 	{
-		my $item = &makeProbe($probe_item, \@data, $index, $item_factory, $writer, $chr_items);
+		my $item = &makeProbe($probe_item, \@data, $index, $item_factory, $writer);
 		$probe_items->store($data[$$index{probeset}], $item);
 	}
 	$probe_item = $probe_items->get($data[$$index{probeset}]);
@@ -187,16 +192,10 @@ sub processLine
 
 sub makeSSLP
 {
-	my($item, $data, $index, $item_factory, $writer, $chr_items) = @_;
+	my($item, $data, $index, $item_factory, $writer) = @_;
 	
 	#print $data . "\n" . $$data[$$index{peak_marker}] . "\n";
 	$item->set('symbol', $$data[$$index{peak_marker}]);
-	$item->set('chromosome', $chr_items->get($$data[$$index{Chomosome_Position_of_peak_marker}]));
-	my $loc_item = &RCM::makeLocationItem($item_factory, 
-								$writer,
-								$chr_items->get($$data[$$index{Chomosome_Position_of_peak_marker}]), 
-								$$data[$$index{Physical_position_of_peak_marker}]);
-	$item->set('chromosomeLocation', $loc_item);
 	
 	return $item;
 }#makeSSLP
@@ -204,15 +203,9 @@ sub makeSSLP
 sub makeProbe
 {
 
-	my($item, $data, $index, $item_factory, $writer, $chr_items) = @_;
+	my($item, $data, $index, $item_factory, $writer) = @_;
 	
 	$item->set('primaryIdentifier', $$data[$$index{probeset}]);
-	$item->set('chromosome', $chr_items->get($$data[$$index{Chromosome_position_of_probeset}]));
-	my $loc_item = &RCM::makeLocationItem($item_factory, 
-								$writer,
-								$chr_items->get($$data[$$index{Chromosome_position_of_probeset}]), 
-								$$data[$$index{Physical_position_of_probeset}]);
-	$item->set('chromosomeLocation', $loc_item);
 	
 	return $item;
 }
