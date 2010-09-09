@@ -4,6 +4,10 @@
 # the script dumps the XML to STDOUT, as per the example on the InterMine wiki
 # However, the script also creates a gff3 file to the location specified
 
+
+use lib '../perlmods'
+use ITEMHOLDER;
+use RCM;
 use warnings;
 use strict;
 
@@ -52,6 +56,8 @@ my $dataset_item = $item_factory->make_item('DataSet');
 my $organism_trigger = 0;
 my $dataset_trigger = 0;
 my %consequences;
+
+my $chr_items = &RCM::makeChromosomeItems($item_factory, $writer);
 
 my $count = 0;
 while(my $file = pop(@files))
@@ -122,18 +128,6 @@ sub processDbSNPFile
 		
 			#find chromosome
 			my $chrom = $xp->find('//Assembly[@groupLabel="RGSC_v3.4"]/Component/@chromosome')->string_value;
-			my $chromosome_item;
-			if($chromosomes{$chrom})
-			{
-				$chromosome_item = $chromosomes{$chrom};
-			}
-			else
-			{
-				$chromosome_item = $item_factory->make_item('Chromosome');
-				$chromosome_item->set('primaryIdentifier', $chrom);
-				$chromosomes{$chrom} = $chromosome_item;
-				$chromosome_item->as_xml($writer);
-			}
 
 			#find consequence/function
 			#sets multiple functional classes
@@ -152,13 +146,11 @@ sub processDbSNPFile
 			{	$pos++; }
 			elsif($orient eq 'reverse')
 			{	$pos--; }
-			my $loc_item = $item_factory->make_item('Location');
-			$loc_item->set('object', $chromosome_item);
-			$loc_item->set('start', $pos);
-			$loc_item->set('end', $pos);
-			$loc_item->set('subject', $snp_item);
-			$loc_item->as_xml($writer);
-			$snp_item->set('chromosome', $chromosome_item);
+			$snp_item->set('chromosome', $chr_items->get($chrom));
+			my $loc_item = &RCM::make_location_item($item_factory
+										$writer,
+										$chr_items->get($chrom),
+										$pos);
 			$snp_item->set('chromosomeLocation', $loc_item);
 			
 			#set rsSequence
@@ -186,7 +178,7 @@ sub processDbSNPFile
 				$ss_item->set('threePrimeSequence', $three);
 				$ss_item->set('allele', $allele);
 				$ss_item->set('rsSNP', $snp_item);
-				$ss_item->set('chromosome', $chromosome_item);
+				$ss_item->set('chromosome', $chr_items->get($chrom));
 				$ss_item->set('chromosomeLocation', $loc_item);
 
 				#Submitter SNP ID as Synonym
@@ -261,8 +253,7 @@ sub downloadFiles
 	my $input_directory = shift;
 	
 	#Specific to Rat
-	my @chromes = (1..20);
-	push(@chromes, 'X');
+	my @chromes = (1..20, 'X');
 	
 	my $url = 'ftp://ftp.ncbi.nih.gov/snp/organisms/rat_10116/XML/';
 	foreach my $chrom (@chromes)

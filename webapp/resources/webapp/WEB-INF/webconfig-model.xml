@@ -1,4 +1,12 @@
 <webconfig>
+	
+	<class className="org.intermine.model.bio.Array">
+		<fields>
+			<fieldconfig fieldExpr="primaryIdentifier"/>
+			<fieldconfig fieldExpr="vendor"/>
+		</fields>
+	</class>
+	
   <class className="org.intermine.model.bio.Author">
     <fields>
       <fieldconfig fieldExpr="name"/>
@@ -239,7 +247,6 @@
       <fieldconfig fieldExpr="chromosomeLocation" displayer="/model/chromosomeLocDisplayer.jsp" showInResults="false" />
 			<fieldconfig fieldExpr="organism.name"/>
 		</fields>
-	
   </class>
 
   <class className="org.intermine.model.bio.SSLPAllele">

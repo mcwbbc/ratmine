@@ -20,7 +20,8 @@ use XML::XPath;
 use Getopt::Long;
 use Cwd;
 use warnings;
-use lib '../perlmods'
+
+use lib '../perlmods';
 use RCM;
 
 my ($model_file, $help, $input_dir, $genes_dir, $output_file);
@@ -122,6 +123,7 @@ sub processProbe
 	$syn_item->set('value', $data[$index{'Probe_Set_Name'}]);
 	$syn_item->set('type', 'identifier');
 	$probe_item->set('synonyms', [$syn_item]);
+	$syn_item->as_xml($writer);
 	
 	
 	my @genes;
