@@ -1,5 +1,8 @@
 package RCM;
 
+use lib '.';
+use ITEMHOLDER;
+
 ################
 # RatMine Common Module
 #
@@ -41,7 +44,7 @@ sub makeChromosomeItems
 {
 	my ($item_factory, $writer) = @_;
 	
-	my @chromosomes = (1..20, 'M', 'X');
+	my @chromosomes = (1..20, 'M', 'X', 'Y');
 	
 	$chromosome_items = ITEMHOLDER->new;
 	foreach my $chr (@chromosomes)
