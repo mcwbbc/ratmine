@@ -4,7 +4,7 @@
 # the script dumps the XML to STDOUT, as per the example on the InterMine wiki
 # However, the script also creates a gff3 file to the location specified
 
-use warnings;
+#use warnings;
 use strict;
 
 BEGIN {
@@ -62,6 +62,8 @@ my $org_item = $item_factory->make_item('Organism');
 $org_item->set('taxonId', $taxon_id);
 $org_item->as_xml($writer);
 
+my $chr_items = &RCM::makeChromosomeItems($item_factory, $writer);
+
 # read the genes file
 open QTLS, $qtls_file;
 my %index;
@@ -99,20 +101,18 @@ while(<QTLS>)
 		$qtl_item->set('name', $qtl_info[$index{QTL_NAME}]);
 		#$qtl_item->set('synonyms', [$syn_item, $syn_item2]);
 		
-		unless($qtl_info[$index{'3.4_MAP_POS_START'}] eq '')
-		{
-			my @gff_line; #Create a GFF3 compatable line for each record
-			push(@gff_line, $qtl_info[$index{CHROMOSOME_FROM_REF}]); #chromsome location
-			push(@gff_line, "RatGenomeDatabase"); #source
-			push(@gff_line, "Qtl"); #SO term
-			push(@gff_line, $qtl_info[$index{'3.4_MAP_POS_START'}]); #start position
-			push(@gff_line, $qtl_info[$index{'3.4_MAP_POS_STOP'}]); #stop position
-			push(@gff_line, '.'); #score, left blank since QTLs have two different scores
-			push(@gff_line, '.'); #strand, irrelevant
-			push(@gff_line, '.'); #phase, irrelevant
-			push(@gff_line, "ID=$qtl_info[$index{QTL_RGD_ID}]"); #attributes line
+		my $chrom = $chr_items->get($qtl_info[$index{CHROMOSOME_FROM_REF}]);
+		$qtl_item->set('chromosome', $chrom) unless $chrom;
 		
-			push(@gff, join("\t", @gff_line)); #add line to gff list
+		if($qtl_info[$index{'3_4_MAP_POS_START'}] =~ /\d/)
+		{
+			my $loc_item = &RCM::makeLocationItem($item_factory,
+										$writer,
+										$chr_items->get($qtl_info[$index{CHROMOSOME_FROM_REF}]),
+										$qtl_info[$index{'3_4_MAP_POS_START'}],
+										$qtl_info[$index{'3_4_MAP_POS_STOP'}]);
+			
+			$qtl_item->set('chromosomeLocation', $loc_item);
 		}
 		
 		
@@ -208,7 +208,3 @@ foreach my $s (keys %strains)
 }
 
 $writer->endTag("items");
-
-open(GFF, ">$gff_file");
-foreach my $line (@gff) {	print GFF "$line\n";	}
-close GFF;
