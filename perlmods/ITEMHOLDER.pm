@@ -68,4 +68,14 @@ sub contents
 	return (keys %$self);
 }
 
+sub as_xml
+{
+	my ($self, $writer) = @_;
+	
+	foreach my $i (&contents($self))
+	{
+		$self->{$i}->as_xml($writer);
+	}
+}
+
 1;

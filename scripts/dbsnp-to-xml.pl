@@ -158,6 +158,7 @@ sub processDbSNPFile
 			{	$pos--; }
 			$snp_item->set('chromosome', $chr_items->get($chrom));
 			my $loc_item = &RCM::makeLocationItem($item_factory,
+										$snp_item,
 										$writer,
 										$chr_items->get($chrom),
 										$pos);
