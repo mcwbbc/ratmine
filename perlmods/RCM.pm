@@ -61,13 +61,14 @@ sub makeChromosomeItems
 
 sub makeLocationItem
 {
-	my ($item_factory, $writer, $chrom_item, $start, $end) = @_;
+	my ($item_factory, $subject, $writer, $chrom_item, $start, $end) = @_;
 	
 	$end = $start unless defined($end);
 	my $loc_item = $item_factory->make_item('Location');
 	$loc_item->set('object', $chrom_item);
 	$loc_item->set('start', $start);
 	$loc_item->set('end', $end);
+	$loc_item->set('subject', $subject);
 	$loc_item->as_xml($writer);
 	
 	return $loc_item;

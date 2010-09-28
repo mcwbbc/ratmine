@@ -107,6 +107,7 @@ while(<QTLS>)
 		if($qtl_info[$index{'3_4_MAP_POS_START'}] =~ /\d/)
 		{
 			my $loc_item = &RCM::makeLocationItem($item_factory,
+										$qtl_item,
 										$writer,
 										$chr_items->get($qtl_info[$index{CHROMOSOME_FROM_REF}]),
 										$qtl_info[$index{'3_4_MAP_POS_START'}],

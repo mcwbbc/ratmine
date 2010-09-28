@@ -19,6 +19,7 @@ use Getopt::Long;
 use Cwd;
 use lib '../perlmods';
 use RCM;
+use ITEMHOLDER;
 
 
 my ($model_file, $genes_file, $gene_xml, $help);
@@ -56,7 +57,7 @@ $dataset_item->as_xml($writer);
 # read the genes file
 open GENES, $genes_file;
 my %index;
-my %pubs;
+my $pub_items = ITEMHOLDER->new;
 while(<GENES>)
 {
 	chomp;
@@ -109,31 +110,30 @@ while(<GENES>)
 		#add synonyms to genes
 		#$gene_item->set('synonyms', \@synonym_items);
 		#process the publications:
-    	if ($gene_info[$index{CURATED_REF_PUBMED_ID}] ne '') {
-      		#print "Got some pubmed ids: (".$gene_info[$index{CURATED_REF_PUBMED_ID}].")\n";
-	      	my @publication_info = split(/,/, $gene_info[$index{CURATED_REF_PUBMED_ID}]);
-	      	my @currentPubs = ();
-	      	foreach (@publication_info) {
-	        #reuse publication object if we already have it in the $pubs array
-	        	if (exists $pubs{$_}) {
-	          		push(@currentPubs, $pubs{$_});
-	        	}
-	        	#otherwise, create a new one via the item factory and add it to the $pubs array
-	        	else {
-	          		my $pub1 = $item_factory->make_item("Publication");
-	          		$pub1->set("pubMedId", $_);
-	          		$pubs{$_} = $pub1;
-	          		$pub1->as_xml($writer);
-	          		push(@currentPubs, $pub1);
-	        	}#end if-else
-	      	}#end foreach
-	      	$gene_item->set("publications", \@currentPubs);
-    	}#end if
+		
+		unless($gene_info[$index{CURATED_REF_PUBMED_ID}] eq '')
+		{
+			my @curPubs;
+			foreach my $pId (split(",", $gene_info[$index{CURATED_REF_PUBMED_ID}]))
+			{
+				unless( $pub_items->holds($pId) )
+				{
+					my $pub = $item_factory->make_item('Publication');
+					$pub->set('pubMedId', $pId);
+					$pub_items->store($pId, $pub);
+				}
+				push( @curPubs, $pub_items->get($pId) );
+			}
+			$gene_item->set('publications', \@curPubs);
+		}
+		
 		$gene_item->as_xml($writer);
 	} #end if-else	
 
 }#end while
 close GENES;
+$pub_items->as_xml($writer);
+
 $writer->endTag("items");
 
 ###Subroutintes###
@@ -141,16 +141,16 @@ $writer->endTag("items");
 sub printHelp
 {
 	print <<HELP;
-#
-# perl rgd-genes-to-xml.pl 
-#
-# Purpose:
-#	Convert the GENES_RAT file from RGD into InterMine XML
-#
-#	Options:
-#	--model=file\tMine model file
-#	--rgd_genes\t\tGENES_RAT file from RGD FTP site
-#	--output_file\t\tInterMine XML file 
-#	--help\t\tPrint this message
+
+perl rgd-genes-to-xml.pl 
+
+Purpose:
+Convert the GENES_RAT file from RGD into InterMine XML
+
+Arguments:
+ --model		Mine model file
+ --rgd_genes		GENES_RAT file from RGD FTP site
+ --output_file		InterMine XML file 
+ --help			Print this message
 HELP
 }

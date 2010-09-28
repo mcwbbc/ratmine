@@ -32,6 +32,7 @@ GetOptions( 'model=s' => \$model_file,
 if($help or !$model_file or !$input_file)
 {
 	&printHelp;
+	exit(0);
 }
 
 my $model = new InterMine::Model(file => $model_file);
@@ -51,9 +52,9 @@ open(IN, $input_file) or die "cannot open $input_file\n";
 #process Header
 my $line = <IN>;
 my %index = &RCM::parseHeader($line);
+my $chromosome_items = &RCM::makeChromosomeItems($item_factory, $writer);
 
-my %pubs;
-my %chromosomes;
+my $pub_items = ITEMHOLDER->new;
 
 print "Processing Data...\n";
 while(<IN>)
@@ -86,47 +87,39 @@ while(<IN>)
 		my @curPubs;
 		foreach my $pId (split(",", $data[$index{CURATED_REF_PUBMED_ID}]))
 		{
-			unless(exists $pubs{$pId})
+			unless( $pub_items->holds($pId) )
 			{
 				my $pub = $item_factory->make_item('Publication');
 				$pub->set('pubMedId', $pId);
-				$pub->as_xml($writer);
-				$pubs{$pId} = $pub;
+				$pub_items->store($pId, $pub);
 			}
-			push(@curPubs, $pubs{$pId});
+			push( @curPubs, $pub_items->get($pId) );
 		}
 		$sslp_item->set('publications', \@curPubs);
 	}
 	
-	unless($data[$index{CHROMOSOME}] eq '')
+		
+	$sslp_item->set('chromosome', $chromosome_items->get($data[$index{CHROMOSOME}]))
+		unless $data[$index{CHROMOSOME}] eq '';
+	
+	unless($data[$index{CHROMOSOME}] eq '' or $data[$index{RGSC_genome_assembly_v3_4}] eq '')
 	{
-		unless(exists $chromosomes{$data[$index{CHROMOSOME}]})
-		{
-			my $chrom_item = $item_factory->make_item('Chromosome');
-			$chrom_item->set('primaryIdentifier', $data[$index{CHROMOSOME}]);
-			$chrom_item->as_xml($writer);
-			$chromosomes{$data[$index{CHROMOSOME}]} = $chrom_item;
-		}
-		
-		$sslp_item->set('chromosome', $chromosomes{$data[$index{CHROMOSOME}]});
-		
-		unless($data[$index{RGSC_genome_assembly_v3_4}] eq '')
-		{
-			#print "\n$data[$index{'RGSC_genome_assembly_v3_4'}]\n";
-			my($start, $end) = split('-', $data[$index{RGSC_genome_assembly_v3_4}]);
-			my $loc = $item_factory->make_item('Location');
-			#print "$start\t$end\n";
-			$loc->set('start', $start);
-			$loc->set('end', $end);
-			$loc->set('object', $chromosomes{$data[$index{CHROMOSOME}]});
-			$loc->set('subject', $sslp_item);
-			$loc->as_xml($writer);
-			$sslp_item->set('chromosomeLocation', $loc);
-		}
+		#print "\n$data[$index{'RGSC_genome_assembly_v3_4'}]\n";
+		my($start, $end) = split('-', $data[$index{RGSC_genome_assembly_v3_4}]);
+		my $loc = &RCM::makeLocationItem($item_factory,
+											$sslp_item,
+											$writer,
+											$chromosome_items->get($data[$index{CHROMOSOME}]),
+											$start,
+											$end);
+		$sslp_item->set('chromosomeLocation', $loc);
+
 	}
 	$sslp_item->as_xml($writer);
 }#end while(<IN>)
 close IN;
+
+$pub_items->as_xml($writer);
 $writer->endTag("items");
 
 exit(0);
@@ -136,6 +129,13 @@ exit(0);
 sub printHelp
 {
 print<<HELP;
-Help!
+perl rgd-sslp-to-xml.pl
+
+arguments:
+model	model file
+input	RGD flat file
+output	XML output file
+help	prints this message
+			
 HELP
 }
