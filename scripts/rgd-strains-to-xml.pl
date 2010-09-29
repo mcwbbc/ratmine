@@ -74,9 +74,8 @@ while(<STRAINS>)
 		%index = &RCM::parseHeader($_);
 		$hf++;
 	}
-	else
+	elsif($_ =~ /^\d/) #ignore multiline records
 	{
-		next if $_ !~ /^d/; #ignore multiline records
 		s/\026/ /g; #replaces 'Syncronous Idle' (Octal 026) character with space
 		s/\022/ /g; #replaces 'Device Control' (Octal 022) character with space
 		my @strain_info = split("\t", $_);
