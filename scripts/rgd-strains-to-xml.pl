@@ -65,15 +65,18 @@ if ($strain_obo)
 }
 
 print "Creating XML...\n";
+my $hf = 0;
 while(<STRAINS>)
 {
 	chomp;
-	if( $_ !~ /^\d/) #parses header line
+	if( $_ !~ /^\d/ and $hf == 0) #parses header line
 	{
 		%index = &RCM::parseHeader($_);
+		$hf++;
 	}
 	else
 	{
+		next if $_ !~ /^d/; #ignore multiline records
 		s/\026/ /g; #replaces 'Syncronous Idle' (Octal 026) character with space
 		s/\022/ /g; #replaces 'Device Control' (Octal 022) character with space
 		my @strain_info = split("\t", $_);
