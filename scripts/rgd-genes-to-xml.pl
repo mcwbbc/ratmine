@@ -10,7 +10,6 @@ BEGIN {
 }
 
 use XML::Writer;
-use InterMine::Item;
 use InterMine::ItemFactory;
 use InterMine::Model;
 use InterMine::Util qw(get_property_value);
@@ -51,7 +50,7 @@ my $org_item = $item_factory->make_item('Organism');
 $org_item->set('taxonId', $taxon_id);
 $org_item->as_xml($writer);
 my $dataset_item = $item_factory->make_item('DataSet');
-$dataset_item->set('title', $data_source);
+$dataset_item->set('name', $data_source);
 $dataset_item->as_xml($writer);
 
 # read the genes file
@@ -84,7 +83,6 @@ while(<GENES>)
 			$gene_item->set('ncbiGeneNumber', $gene_info[$index{ENTREZ_GENE}]);
 			my $syn_item = $item_factory->make_item('Synonym');
 			$syn_item->set('value', $gene_info[$index{ENTREZ_GENE}]);
-			$syn_item->set('type', 'ncbiGeneNumber');
 			$syn_item->set('subject', $gene_item);
 			$syn_item->as_xml($writer);
 		}
@@ -98,7 +96,6 @@ while(<GENES>)
 				next if (exists $ensemblIds{$e});
 				my $syn_item = $item_factory->make_item('Synonym');
 				$syn_item->set('value', $e);
-				$syn_item->set('type', 'ensemblIdentifier');
 				$syn_item->set('subject', $gene_item);
 				$syn_item->as_xml($writer);
 				$ensemblIds{$e} = 1;
@@ -106,10 +103,6 @@ while(<GENES>)
 		}
 		$gene_item->set('nomenclatureStatus', $gene_info[$index{NOMENCLATURE_STATUS}]) unless ($gene_info[$index{NOMENCLATURE_STATUS}] eq '');
 		$gene_item->set('fishBand', $gene_info[$index{FISH_BAND}]) unless ($gene_info[$index{FISH_BAND}] eq '');
-    	
-		#add synonyms to genes
-		#$gene_item->set('synonyms', \@synonym_items);
-		#process the publications:
 		
 		unless($gene_info[$index{CURATED_REF_PUBMED_ID}] eq '')
 		{
