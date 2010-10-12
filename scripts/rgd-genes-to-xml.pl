@@ -9,10 +9,10 @@ BEGIN {
   push (@INC, ($0 =~ m:(.*)/.*:)[0] . '../intermine/perl/lib');
 }
 
-use XML::Writer;
-use InterMine::ItemFactory;
+#use XML::Writer;
+use InterMine::Item::Document;
 use InterMine::Model;
-use InterMine::Util qw(get_property_value);
+#use InterMine::Util qw(get_property_value);
 use IO qw(Handle File);
 use Getopt::Long;
 use Cwd;
@@ -41,7 +41,7 @@ my $writer = new XML::Writer(DATA_MODE => 1, DATA_INDENT => 3, OUTPUT => $output
 # The item factory needs the model so that it can check that new objects have
 # valid classnames and fields
 my $model = new InterMine::Model(file => $model_file);
-my $item_factory = new InterMine::ItemFactory(model => $model);
+my $item_factory = new InterMine::Item::Document(model => $model);
 $writer->startTag("items");
 
 ####
