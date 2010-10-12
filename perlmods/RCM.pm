@@ -42,14 +42,14 @@ writes out the chromosome items if $writer is passed
 
 sub makeChromosomeItems
 {
-	my ($item_factory, $writer) = @_;
+	my ($item_document, $writer) = @_;
 	
 	my @chromosomes = (1..20, 'M', 'X', 'Y');
 	
 	$chromosome_items = ITEMHOLDER->new;
 	foreach my $chr (@chromosomes)
 	{
-		$chrom_item = $item_factory->make_item('Chromosome');
+		$chrom_item = $item_document->make_item('Chromosome');
 		$chrom_item->set('primaryIdentifier', $chr);
 		$chrom_item->as_xml($writer) if $writer;
 		$chromosome_items->store($chr, $chrom_item);
@@ -61,14 +61,14 @@ sub makeChromosomeItems
 
 sub makeLocationItem
 {
-	my ($item_factory, $subject, $writer, $chrom_item, $start, $end) = @_;
+	my ($item_document, $feature, $writer, $chrom_item, $start, $end) = @_;
 	
 	$end = $start unless defined($end);
-	my $loc_item = $item_factory->make_item('Location');
-	$loc_item->set('object', $chrom_item);
+	my $loc_item = $item_document->make_item('Location');
+	$loc_item->set('locatedOn', $chrom_item);
 	$loc_item->set('start', $start);
 	$loc_item->set('end', $end);
-	$loc_item->set('subject', $subject);
+	$loc_item->set('feature', $feature);
 	$loc_item->as_xml($writer);
 	
 	return $loc_item;

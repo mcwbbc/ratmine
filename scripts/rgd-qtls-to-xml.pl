@@ -11,30 +11,29 @@ BEGIN {
   push (@INC, ($0 =~ m:(.*)/.*:)[0] . '../intermine/perl/lib');
 }
 
-use XML::Writer;
-use InterMine::Item;
-use InterMine::ItemFactory;
+#use XML::Writer;
+use InterMine::Item::Document;
 use InterMine::Model;
-use InterMine::Util qw(get_property_value);
+#use InterMine::Util qw(get_property_value);
 use IO qw(Handle File);
 use Getopt::Long;
 use Cwd;
 use lib '../perlmods';
 use RCM;
+use ITEMHOLDER;
 
-my ($model_file, $qtls_file, $qtl_xml, $gff_file, $help) = (undef, undef, undef, undef, undef);
+my ($model_file, $qtls_file, $qtl_xml, $help) = (undef, undef, undef, undef);
 
 GetOptions(
 	'model=s' => \$model_file,
 	'qtl_input=s' => \$qtls_file,
-	'xml_output=s' => \$qtl_xml,
-	'gff_output=s' => \$gff_file);
+	'xml_output=s' => \$qtl_xml);
 
 unless ($help eq '' and $model_file ne '' and -e $model_file)
 {
 	print "\nrgd-qtls-to-xml.pl\n";
 	print "Convert the QTLS_RAT flat file from RGD into InterMine XML\n";
-	print "rgd-qtls-to-xml.pl --model model.xml --qtl_input QTLS_RAT --xml_output qtls.xml --gff_output qtls.gff\n";
+	print "rgd-qtls-to-xml.pl --model model.xml --qtl_input QTLS_RAT --xml_output qtls.xml \n";
 	exit(0);
 }
 
@@ -43,9 +42,9 @@ my $taxon_id = 10116;
 my $output = new IO::File(">$qtl_xml");
 my $writer = new XML::Writer(DATA_MODE => 1, DATA_INDENT => 3, OUTPUT => $output);
 
-my %pubs = ();
-my %genes = ();
-my %strains = ();
+my $pubs = ITEMHOLDER->new;
+my $genes = ITEMHOLDER->new;
+my $strains = ITEMHOLDER->new;
 my @gff;
 
 
@@ -53,7 +52,7 @@ my @gff;
 # The item factory needs the model so that it can check that new objects have
 # valid classnames and fields
 my $model = new InterMine::Model(file => $model_file);
-my $item_factory = new InterMine::ItemFactory(model => $model);
+my $item_factory = new InterMine::Item::Document(model => $model);
 $writer->startTag("items");
 
 ####
@@ -78,20 +77,20 @@ while(<QTLS>)
 	else
 	{
     	my @qtl_info = split(/\t/, $_);
-		my $qtl_item = $item_factory->make_item('Qtl');
+		my $qtl_item = $item_factory->make_item('QTL');
 		$qtl_item->set('organism', $org_item);
 		$qtl_item->set('primaryIdentifier', $qtl_info[$index{QTL_RGD_ID}]);
 		$qtl_item->set('symbol', $qtl_info[$index{QTL_SYMBOL}]);
 		
 		my $syn_item = $item_factory->make_item('Synonym');
 		$syn_item->set('value', $qtl_info[$index{QTL_SYMBOL}]);
-		$syn_item->set('type', 'symbol');
+		#$syn_item->set('type', 'symbol');
 		$syn_item->set('subject', $qtl_item);
 		$syn_item->as_xml($writer);
 
 		my $syn_item2 = $item_factory->make_item('Synonym');
 		$syn_item2->set('value', $qtl_info[$index{QTL_NAME}]);
-		$syn_item2->set('type', 'name');
+		#$syn_item2->set('type', 'name');
 		$syn_item2->set('subject', $qtl_item);
 		$syn_item2->as_xml($writer);
 				
@@ -113,7 +112,7 @@ while(<QTLS>)
 										$qtl_info[$index{'3_4_MAP_POS_START'}],
 										$qtl_info[$index{'3_4_MAP_POS_STOP'}]);
 			
-			$qtl_item->set('chromosomeLocation', $loc_item);
+			$qtl_item->set('locations', [$loc_item]);
 		}
 		
 		
@@ -121,73 +120,69 @@ while(<QTLS>)
 		if ($qtl_info[$index{CURATED_REF_PUBMED_ID}] ne '') {
 	      	my @publication_info = split(/;/, $qtl_info[$index{CURATED_REF_PUBMED_ID}]);
 	      	my @currentPubs = ();
-	      	foreach (@publication_info) {
-	        #reuse publication object if we already have it in the $pubs array
-	        	if (exists $pubs{$_}) {
-	          		push(@currentPubs, $pubs{$_});
-	        	}
-	        	#otherwise, create a new one via the item factory and add it to the $pubs array
-	        	else {
+	      	foreach my $p (@publication_info) {
+	        	#reuse publication object if we already have it in the $pubs array
+	        	unless($pubs->holds($p)) {
 	          		my $pub1 = $item_factory->make_item("Publication");
-	          		$pub1->set("pubMedId", $_);
-	          		$pubs{$_} = $pub1;
-	          		push(@currentPubs, $pub1);
+	          		$pub1->set("pubMedId", $p);
+	          		$pubs->store($p, $pub1);
 	          		$pub1->as_xml($writer);
 	        	}#end if-else
+	      		push(@currentPubs, $pubs->get($p));
 	      	}#end foreach
 	      	$qtl_item->set("publications", \@currentPubs);
     	}#end if
 
 		#Add Strains
-		if($qtl_info[$index{STRAIN_RGD_IDS}])
+		if($qtl_info[$index{STRAIN_RGD_IDS}] ne '')
 		{
 			my @strain_info = split(/;/, $qtl_info[$index{STRAIN_RGD_IDS}]);
 			my @strainItems = ();
 			foreach my $s (@strain_info)
 			{
-				if(exists $strains{$s})
+				my $strain_item;
+				unless($strains->holds($s))
 				{
-					my $qtls = $strains{$s}->get("qtls");
-					push(@$qtls, $qtl_item);
-					$strains{$s}->set("qtls", $qtls);
-					push(@strainItems, $strains{$s});
-				}
-				else
-				{
-					my $strain_item = $item_factory->make_item("Strain");
+					$strain_item = $item_factory->make_item("Strain");
 					$strain_item->set("primaryIdentifier", $s);
-					$strain_item->set("qtls", [$qtl_item]);
-					push(@strainItems, $strain_item);
-					$strains{$s} = $strain_item;
-				}#end if-else
+					#$strain_item->set("qtls", [$qtl_item]);
+					$strains->store($s, $strain_item);
+				}
+				$strain_item = $strains->get($s);
+				my $qtls = $strain_item->get("qtls");
+				push(@$qtls, $qtl_item);
+				
+				$strain_item->set('qtls', $qtls);
+				#$strains->store($s, $strain_item);
+	
+				push(@strainItems, $strain_item);
 			}#foreach
 			$qtl_item->set('strains', \@strainItems);
 		}#if
 
 
 		#Add Candidate Genes
-		if($qtl_info[$index{CANDIDATE_GENE_RGD_IDS}])
+		if($qtl_info[$index{CANDIDATE_GENE_RGD_IDS}] ne '')
 		{
 			my @gene_info = split(/;/, $qtl_info[$index{CANDIDATE_GENE_RGD_IDS}]);
 			my @geneItems = ();
 			foreach my $g (@gene_info)
 			{
-				if(exists $genes{$g})
-				{ 
-					my $qtls = $genes{$g}->get("parentQTLs");
-					push(@$qtls, $qtl_item);
-					$genes{$g}->set("parentQTLs", $qtls);
-					push(@geneItems, $genes{$g});
-				}
-				else
+				my $gene_item;
+				unless($genes->holds($g))
 				{
-					my $gene_item = $item_factory->make_item("Gene");
+					$gene_item = $item_factory->make_item("Gene");
 					$gene_item->set('primaryIdentifier', $g);
-					$gene_item->set('parentQTLs', [$qtl_item]);
-					$gene_item->set('organism', $org_item);
-					push(@geneItems, $gene_item);
-					$genes{$g} = $gene_item;
-				}#end if-else
+					$genes->store($g, $gene_item);
+				}
+				$gene_item = $genes->get($g);
+				my $qtls = $gene_item->get('parentQTLs');
+				push(@$qtls, $qtl_item);
+				
+				$gene_item->set('parentQTLs', $qtls);
+				#$genes->store($g, $gene_item);
+				
+				push(@geneItems, $gene_item);
 			}#end foreach
 			$qtl_item->set('candidateGenes', \@geneItems);
 		}#end if
@@ -198,14 +193,9 @@ while(<QTLS>)
 close QTLS;
 
 #print out Genes then Strains
-foreach my $g (keys %genes)
-{
-	$genes{$g}->as_xml($writer);
-}
+$genes->as_xml($writer);
 
-foreach my $s (keys %strains)
-{
-	$strains{$s}->as_xml($writer);
-}
+$strains->as_xml($writer);
+
 
 $writer->endTag("items");
