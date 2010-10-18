@@ -21,15 +21,14 @@ sub parseHeader #parses header line
 	my $h = shift;
 	chomp $h;
 	my %i;
-	my @header = split(/\t/, $h);
-	for(my $x = 0; $x < @header; $x++)
+	my @header = map
 	{	
-		$header[$x] =~ s/[\s\.]/_/g; #make things unix friendly
-		$header[$x] =~ s/_+$//; #remove trailing underscores
-		print $header[$x] . "\n";
-		$i{$header[$x]} = $x;	
-	}
-	return %i;
+		s/[\s\.]/_/g; #make things unix friendly
+		s/_+$//; #remove trailing underscores
+		print $_ . "\n";
+		$_;	
+	} split(/\t/, $h);
+	return \@header;
 }
 
 =cut
@@ -49,14 +48,17 @@ sub makeChromosomeItems
 	$chromosome_items = ITEMHOLDER->new;
 	foreach my $chr (@chromosomes)
 	{
-		$chrom_item = $item_document->make_item('Chromosome');
-		$chrom_item->set('primaryIdentifier', $chr);
+		$chrom_item = $item_document->add_item('Chromosome', 'primaryIdentifier' => $chr);
 		$chrom_item->as_xml($writer) if $writer;
 		$chromosome_items->store($chr, $chrom_item);
-
 	}
 	
 	return $chromosome_items;
+}
+
+sub getChromosomes
+{
+	return (1..20, 'M', 'X', 'Y');
 }
 
 sub makeLocationItem
