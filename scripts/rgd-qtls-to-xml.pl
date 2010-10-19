@@ -52,9 +52,9 @@ my $item_doc = new InterMine::Item::Document(model => $model, output => $qtl_xml
 #User Additions
 my $org_item = $item_doc->add_item('Organism', 'taxonId' => $taxon_id);
 
-my $chr_items = {
-	 			map { $_ => $item_doc->add_item('Chromosome', primaryIdentifier => $_) } RCM::getChromosomes
-				};
+my $chrom_items;
+$chrom_items = RCM::addChromosomes($item_doc);
+
 # read the genes file
 open(my $QTLS, '<', $qtls_file);
 my $index;
@@ -76,7 +76,7 @@ while(<$QTLS>)
 					symbol => $qtl_info{QTL_SYMBOL},
 					trait => $qtl_info{TRAIT_NAME},
 					name => $qtl_info{QTL_NAME});
-;	
+	
 	$qtl_attr{lod} = $qtl_info{LOD} if $qtl_info{LOD};
 	$qtl_attr{pValue} = $qtl_info{P_VALUE} if $qtl_info{P_VALUE};
 			
@@ -85,8 +85,9 @@ while(<$QTLS>)
 	my $chrom = $chr_items->{$qtl_info{CHROMOSOME_FROM_REF}};
 	$qtl_attr{chromosome} = $chrom unless $chrom;
 	
-	if( my($start, $end) = @qtl_info{ '3_4_MAP_POS_START', '3_4_MAP_POS_STOP'})
+	if( $qtl_info{'3_4_MAP_POS_START'} )
 	{
+		my($start, $end) = @qtl_info{ '3_4_MAP_POS_START', '3_4_MAP_POS_STOP'};
 		$qtl_attr{locations} = [ $item_doc->add_item( 'Location',
 												locatedOn => $chrom,
 												start => $start,

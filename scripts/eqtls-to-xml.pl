@@ -16,9 +16,8 @@ BEGIN {
   push (@INC, ($0 =~ m:(.*)/.*:)[0] . '../../intermine/perl/lib');
 }
 
-use XML::Writer;
 use InterMine::Item;
-use InterMine::ItemFactory;
+use InterMine::Document;
 use InterMine::Model;
 use InterMine::Util qw(get_property_value);
 use IO qw(Handle File);
