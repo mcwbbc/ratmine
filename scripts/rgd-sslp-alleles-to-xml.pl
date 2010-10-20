@@ -6,19 +6,19 @@
 
 use strict;
 
+
 BEGIN {
-  push (@INC, ($0 =~ m:(.*)/.*:)[0] . '../intermine/perl/lib');
+  push (@INC, ($0 =~ m:(.*)/.*:)[0] . '../../intermine/perl/InterMine-Util/lib');
 }
 
-use XML::Writer;
-use InterMine::Item;
-use InterMine::ItemFactory;
+use InterMine::Item::Document;
 use InterMine::Model;
 use InterMine::Util qw(get_property_value);
 use IO qw(Handle File);
-use XML::XPath;
 use Getopt::Long;
-use Cwd;
+use lib '../perlmods';
+use RCM;
+use List::MoreUtils qw/zip/;
 
 my ($model_file, $help, $input_file, $output_file);
 
@@ -27,66 +27,69 @@ GetOptions( 'model=s' => \$model_file,
 			'output=s' => \$output_file,
 			'help' => \$help);
 			
-if($help or !$model_file or !$input_file)
+if($help or !$model_file or ! -e $input_file)
 {
 	&printHelp;
+	exit(0);
 }
 
 my $model = new InterMine::Model(file => $model_file);
-my $item_factory = new InterMine::ItemFactory(model => $model);
+my $item_doc = new InterMine::Item::Document(model => $model, output => $output_file, auto_write => 1);
 
-my $org_item = $item_factory->make_item('Organism');
-$org_item->set('taxonId', '10116');
+my $taxon_id = '10116';
+my $org_item = $item_doc->add_item('Organism', taxonId => $taxon_id);
 
-my $output = new IO::File(">$output_file");
-my $writer = new XML::Writer(DATA_MODE => 1, DATA_INDENT => 3, OUTPUT => $output);
-
-$writer->startTag("items");
-$org_item->as_xml($writer);
-
-open(IN, $input_file) or die "cannot open $input_file\n";
+open(my $IN, '<', $input_file) or die "cannot open $input_file\n";
 #process Header
-my $line = <IN>;
+my $line = <$IN>;
 my @header = split(/\t/, $line);
 
 my %strains;
 print "Processing Data...\n";
-while(<IN>)
+while(<$IN>)
 {
 	chomp;
 	my @data = split("\t", $_);
 	
-	my $sslp_item = $item_factory->make_item('SSLP');
+	my $sslp_item;
 	for(my $x = 0; $x < @data; $x++)
 	{
 		if($x == 0)
 		{
 			#print "Set SSLP $data[$x]...\n";
-			$sslp_item->set('primaryIdentifier', $data[$x]);
-			$sslp_item->as_xml($writer);
+			$sslp_item = $item_doc->add_item('SSLP', primaryIdentifier => $data[$x]);
 		}
 		elsif($x > 1 and $data[$x] =~ /^\d+$/)
 		{
 			unless($strains{$header[$x]})
 			{
 				print "Set Strain...\n";
-				my $strain_item = $item_factory->make_item('Strain');
-				$strain_item->set('symbol', $header[$x]);
-				$strain_item->as_xml($writer);
+				my $strain_item = $item_doc->add_item('Strain', symbol => $header[$x]);
 				$strains{$header[$x]} = $strain_item;
 			}
 			#print "Create Allele...\n";
 			#print "$strains{$header[$x]}\t$sslp_item\t$data[$x]\n";
-			my $allele_item = $item_factory->make_item('SSLPAllele');
-			$allele_item->set('strain', $strains{$header[$x]});
-			$allele_item->set('sslp', $sslp_item);
-			$allele_item->set('length', $data[$x]);
-			$allele_item->as_xml($writer);	
+			$item_doc->add_item('Allele', strain => $strains{$header[$x]},
+												sslp => $sslp_item,
+												length => $data[$x]);
 		}
 	} #end for
 }#end while
-
-close IN;
-$writer->endTag("items");
+close $IN;
+$item_doc->close();
 
 ### Subroutines ###
+
+sub printHelp
+{
+	
+	print <<HELP
+perl rgd-sslp-alleles-to-xml.pl
+	
+model	path to model file
+input	path to input data file
+output	path to output xml
+help	prints this message
+				
+HELP
+}
