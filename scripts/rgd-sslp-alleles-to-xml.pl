@@ -57,7 +57,7 @@ while(<$IN>)
 		if($x == 0)
 		{
 			#print "Set SSLP $data[$x]...\n";
-			$sslp_item = $item_doc->add_item('SSLP', primaryIdentifier => $data[$x]);
+			$sslp_item = $item_doc->add_item('SimpleSequenceLengthVariation', primaryIdentifier => $data[$x]);
 		}
 		elsif($x > 1 and $data[$x] =~ /^\d+$/)
 		{
@@ -70,7 +70,7 @@ while(<$IN>)
 			#print "Create Allele...\n";
 			#print "$strains{$header[$x]}\t$sslp_item\t$data[$x]\n";
 			$item_doc->add_item('Allele', strain => $strains{$header[$x]},
-												sslp => $sslp_item,
+												sslv => $sslp_item,
 												length => $data[$x]);
 		}
 	} #end for

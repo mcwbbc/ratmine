@@ -91,7 +91,7 @@ while(<$IN>)
 
 	}
 	
-	my $sslp_item = $item_doc->add_item(SSLP => %sslp_attr);
+	my $sslp_item = $item_doc->add_item(SimpleSequenceLengthVariation => %sslp_attr);
 	$item_doc->add_item('Synonym', value => $data{SSLP_SYMBOL}, subject => $sslp_item);
 	$item_doc->add_item('Synonym', value => $data{SSLP_RGD_ID}, subject => $sslp_item);
 	
