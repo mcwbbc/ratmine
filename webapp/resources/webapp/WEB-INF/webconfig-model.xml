@@ -19,16 +19,7 @@
       <fieldconfig fieldExpr="primaryIdentifier"></fieldconfig>
    </fields>
 </class>
-<class className="org.intermine.model.bio.Chromosome">
-   <longdisplayers>
-      <displayer src="attributeLinkDisplayer.tile"></displayer>
-   </longdisplayers>
-   <fields>
-      <fieldconfig fieldExpr="primaryIdentifier"></fieldconfig>
-      <fieldconfig fieldExpr="organism.name"></fieldconfig>
-      <fieldconfig displayer="/model/sequenceShortDisplayerWithField.jsp" fieldExpr="length"></fieldconfig>
-   </fields>
-</class>
+
 <class className="org.intermine.model.bio.Comment">
    <fields>
       <fieldconfig fieldExpr="type"></fieldconfig>
@@ -59,28 +50,7 @@
    </fields>
 </class>	
 	
-<class className="org.intermine.model.bio.Gene">
-   <longdisplayers>
-      <displayer src="attributeLinkDisplayer.tile"></displayer>
-      <displayer src="geneMicroArrayDisplayer.tile"></displayer>
-      <displayer src="/model/locatedSequenceFeatureImage.jsp"></displayer>
-   </longdisplayers>
-   <fields>
-      <fieldconfig fieldExpr="primaryIdentifier"></fieldconfig>
-      <fieldconfig fieldExpr="secondaryIdentifier"></fieldconfig>
-      <fieldconfig fieldExpr="symbol"></fieldconfig>
-      <fieldconfig fieldExpr="name"></fieldconfig>
-      <fieldconfig displayer="/model/sequenceShortDisplayerWithField.jsp" fieldExpr="length"></fieldconfig>
-      <fieldconfig showInResults="false" displayer="/model/chromosomeLocDisplayer.jsp" fieldExpr="chromosomeLocation"></fieldconfig>
-      <fieldconfig showInSummary="false" fieldExpr="chromosome.primaryIdentifier" showInInlineCollection="false"></fieldconfig>
-      <fieldconfig showInSummary="false" fieldExpr="chromosomeLocation.start" showInInlineCollection="false"></fieldconfig>
-      <fieldconfig showInSummary="false" fieldExpr="chromosomeLocation.end" showInInlineCollection="false"></fieldconfig>
-      <fieldconfig fieldExpr="organism.shortName"></fieldconfig>
-   </fields>
-   <bagdisplayers>
-      <displayer src="orthologueLinkDisplayer.tile"></displayer>
-   </bagdisplayers>
-</class>
+
 <class className="org.intermine.model.bio.Genotype">
    <fields>
       <fieldconfig fieldExpr="allele"></fieldconfig>
@@ -241,21 +211,8 @@
       <fieldconfig fieldExpr="qualifier"></fieldconfig>
    </fields>
 </class>	
-<class className="org.intermine.model.bio.SNP">
-   <fields>
-      <fieldconfig fieldExpr="primaryIdentifier"></fieldconfig>
-      <fieldconfig showInResults="false" fieldExpr="chromosomeLocation" displayer="/model/chromosomeLocDisplayer.jsp"></fieldconfig>
-      <fieldconfig fieldExpr="allele"></fieldconfig>
-   </fields>
-</class>
-<class className="org.intermine.model.bio.rsSNP">
-   <fields>
-      <fieldconfig fieldExpr="primaryIdentifier"></fieldconfig>
-      <fieldconfig showInResults="false" fieldExpr="chromosomeLocation" displayer="/model/chromosomeLocDisplayer.jsp"></fieldconfig>
-      <fieldconfig fieldExpr="exemplarSNP.primaryIdentifier"></fieldconfig>
-      <fieldconfig fieldExpr="allele"></fieldconfig>
-   </fields>
-</class>	
+
+	
 <class className="org.intermine.model.bio.Strain">
    <longdisplayers>
       <displayer src="attributeLinkDisplayer.tile"></displayer>
@@ -274,15 +231,9 @@
       <fieldconfig fieldExpr="type"></fieldconfig>
    </fields>
 </class>	
-<class className="org.intermine.model.bio.Project">
-   <fields></fields>
-</class>	
-<class className="org.intermine.model.bio.Lab">
-   <fields></fields>
-</class>	
-<class className="org.intermine.model.bio.Experiment">
-   <fields></fields>
-</class>	
+	
+	
+	
 
 <!-- exporters -->
   <tableExportConfig id="sequence" actionPath="/exportAction?type=sequenceExporter"
