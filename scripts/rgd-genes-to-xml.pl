@@ -6,20 +6,18 @@
 use strict;
 
 BEGIN {
-  push (@INC, ($0 =~ m:(.*)/.*:)[0] . '../intermine/perl/lib');
+  push (@INC, ($0 =~ m:(.*)/.*:)[0] . '../../intermine/perl/InterMine-Util/lib');
 }
 
-use XML::Writer;
-use InterMine::Item;
-use InterMine::ItemFactory;
+#use XML::Writer;
+use InterMine::Item::Document;
 use InterMine::Model;
 use InterMine::Util qw(get_property_value);
 use IO qw(Handle File);
 use Getopt::Long;
-use Cwd;
 use lib '../perlmods';
 use RCM;
-use ITEMHOLDER;
+use List::MoreUtils qw/zip/;
 
 
 my ($model_file, $genes_file, $gene_xml, $help);
@@ -36,105 +34,88 @@ if($help or !($model_file and $genes_file))
 
 my $data_source = 'Rat Genome Database';
 my $taxon_id = 10116;
-my $output = new IO::File(">$gene_xml");
-my $writer = new XML::Writer(DATA_MODE => 1, DATA_INDENT => 3, OUTPUT => $output);
 
 # The item factory needs the model so that it can check that new objects have
 # valid classnames and fields
 my $model = new InterMine::Model(file => $model_file);
-my $item_factory = new InterMine::ItemFactory(model => $model);
-$writer->startTag("items");
+my $item_doc = new InterMine::Item::Document(model => $model, output => $gene_xml, auto_write => 1);
 
 ####
 #User Additions
-my $org_item = $item_factory->make_item('Organism');
-$org_item->set('taxonId', $taxon_id);
-$org_item->as_xml($writer);
-my $dataset_item = $item_factory->make_item('DataSet');
-$dataset_item->set('title', $data_source);
-$dataset_item->as_xml($writer);
+my $org_item = $item_doc->add_item('Organism', taxonId => $taxon_id);
+my $dataset_item = $item_doc->add_item('DataSet', name => $data_source);
+
+my $chrom_items;
+$chrom_items = RCM::addChromosomes($item_doc);
 
 # read the genes file
-open GENES, $genes_file;
-my %index;
-my $pub_items = ITEMHOLDER->new;
-while(<GENES>)
+open(my $GENES, '<', $genes_file) or die ("cannot open $genes_file");
+my $index;
+my %pubs;
+while(<$GENES>)
 {
 	chomp;
-	if( $_ !~ /^\d/) #parses header line
+	if(/^\D/) #parses header line
 	{
-		%index = &RCM::parseHeader($_)
+		$index = RCM::parseHeader($_);
+		next
 	}
-	else
-	{
     #    print "\n   ------------ Line: ".$count."  --------------  \n";
-		$_ =~ s/\026/ /g; #replaces 'Syncronous Idle' (Octal 026) character with space
-		my @gene_info = split(/\t/, $_);
-		my @synonym_items;
-		my $gene_item = $item_factory->make_item('Gene');
-		$gene_item->set('organism', $org_item);
-		$gene_item->set('dataSets', [$dataset_item]);
-		$gene_item->set('primaryIdentifier', $gene_info[$index{GENE_RGD_ID}]);
-		$gene_item->set('secondaryIdentifier', $gene_info[$index{GENE_RGD_ID}]); #add RGD: to number
-		$gene_item->set('symbol', $gene_info[$index{SYMBOL}]);
-		$gene_item->set('name', $gene_info[$index{NAME}]) unless ($gene_info[$index{NAME}] eq '');	
-		$gene_item->set('description', $gene_info[$index{GENE_DESC}]) unless ($gene_info[$index{GENE_DESC}] eq '');
-		unless ($gene_info[$index{ENTREZ_GENE}] eq '' or $gene_info[$index{GENE_TYPE}] =~ /splice|allele/i)
+	$_ =~ s/\026/ /g; #replaces 'Syncronous Idle' (Octal 026) character with space
+	
+	my @fields = split(/\t/);
+   	my %gene_info = zip(@$index, @fields);
+	
+	my %gene_attr = ( organism => $org_item,
+					dataSets => [$dataset_item],
+					primaryIdentifier => $gene_info{GENE_RGD_ID},
+					secondaryIdentifier => "RGD:$gene_info{GENE_RGD_ID}",
+					symbol => $gene_info{SYMBOL});
+	$gene_attr{name} = $gene_info{NAME} if $gene_info{NAME};
+	$gene_attr{description} = $gene_info{GENE_DESC} if $gene_info{GENE_DESC};
+
+	$gene_attr{ncbiGeneNumber} = $gene_info{ENTREZ_GENE} if ($gene_info{ENTREZ_GENE} and 
+																$gene_info{GENE_TYPE} !~ /splice|allele/i);
+	$gene_attr{geneType} = $gene_info{GENE_TYPE} if $gene_info{GENE_TYPE};
+	$gene_attr{nomenclatureStatus} = $gene_info{NOMENCLATURE_STATUS} if $gene_info{NOMENCLATURE_STATUS};
+	$gene_attr{fishBand} = $gene_info{FISH_BAND} if $gene_info{FISH_BAND};
+
+
+	if (my $ids = $gene_info{CURATED_REF_PUBMED_ID}) 
+	{
+      	for my $id (split(/,/, $ids))
 		{
-			$gene_item->set('ncbiGeneNumber', $gene_info[$index{ENTREZ_GENE}]);
-			my $syn_item = $item_factory->make_item('Synonym');
-			$syn_item->set('value', $gene_info[$index{ENTREZ_GENE}]);
-			$syn_item->set('type', 'ncbiGeneNumber');
-			$syn_item->set('subject', $gene_item);
-			$syn_item->as_xml($writer);
+			$pubs{$id} = $item_doc->add_item('Publication', pubMedId => $id) unless ($pubs{$id});
+			push @{$gene_attr{publications}}, $pubs{$id};
 		}
-		$gene_item->set('geneType', $gene_info[$index{GENE_TYPE}]) unless ($gene_info[$index{GENE_TYPE}] eq '');
-		unless ($gene_info[$index{ENSEMBL_ID}] eq '')
+	}
+	
+	my $gene_item = $item_doc->add_item(Gene => %gene_attr);
+	
+	my %ensemblIds; #prevents duplicate ids for a single record
+	if( my $ids = $gene_info{ENSEMBL_ID} )
+	{
+		foreach my $id (split(',', $ids))
 		{
-			#$gene_item->set('ensemblIdentifier', $gene_info[$index{ENSEMBL_ID}]);
-			my %ensemblIds;
-			foreach my $e (split(',', $gene_info[$index{ENSEMBL_ID}]))
-			{
-				next if (exists $ensemblIds{$e});
-				my $syn_item = $item_factory->make_item('Synonym');
-				$syn_item->set('value', $e);
-				$syn_item->set('type', 'ensemblIdentifier');
-				$syn_item->set('subject', $gene_item);
-				$syn_item->as_xml($writer);
-				$ensemblIds{$e} = 1;
-			}
+			next if (exists $ensemblIds{$id});
+			my $syn_item = $item_doc->add_item('Synonym',
+												value => '$id',
+												subject => $gene_item);
+			$ensemblIds{$id} = 1;
 		}
-		$gene_item->set('nomenclatureStatus', $gene_info[$index{NOMENCLATURE_STATUS}]) unless ($gene_info[$index{NOMENCLATURE_STATUS}] eq '');
-		$gene_item->set('fishBand', $gene_info[$index{FISH_BAND}]) unless ($gene_info[$index{FISH_BAND}] eq '');
-    	
-		#add synonyms to genes
-		#$gene_item->set('synonyms', \@synonym_items);
-		#process the publications:
-		
-		unless($gene_info[$index{CURATED_REF_PUBMED_ID}] eq '')
-		{
-			my @curPubs;
-			foreach my $pId (split(",", $gene_info[$index{CURATED_REF_PUBMED_ID}]))
-			{
-				unless( $pub_items->holds($pId) )
-				{
-					my $pub = $item_factory->make_item('Publication');
-					$pub->set('pubMedId', $pId);
-					$pub_items->store($pId, $pub);
-				}
-				push( @curPubs, $pub_items->get($pId) );
-			}
-			$gene_item->set('publications', \@curPubs);
-		}
-		
-		$gene_item->as_xml($writer);
-	} #end if-else	
+	}
+	
+	unless ($gene_info{ENTREZ_GENE} eq '' or $gene_info{GENE_TYPE} =~ /splice|allele/i)
+	{
+		my $syn_item = $item_doc->add_item('Synonym',
+												value => $gene_info{ENTREZ_GENE},
+												subject => $gene_item);
+	}
+	
 
 }#end while
-close GENES;
-$pub_items->as_xml($writer);
-
-$writer->endTag("items");
+close $GENES;
+$item_doc->close();
 
 ###Subroutintes###
 

@@ -3,23 +3,20 @@
 # purpose: to create a target items xml file for intermine from Affy Metrix Tab files
 # the script dumps the XML to STDOUT, as per the example on the InterMine wiki
 # However, the script also creates a gff3 file to the location specified
-
 use strict;
 
 BEGIN {
-  push (@INC, ($0 =~ m:(.*)/.*:)[0] . '../intermine/perl/lib');
+  push (@INC, ($0 =~ m:(.*)/.*:)[0] . '../../intermine/perl/InterMine-Util/lib');
 }
 
-use XML::Writer;
-use InterMine::Item;
-use InterMine::ItemFactory;
+use InterMine::Item::Document;
 use InterMine::Model;
 use InterMine::Util qw(get_property_value);
 use IO qw(Handle File);
-use XML::XPath;
 use Getopt::Long;
-use Cwd;
-use warnings;
+use lib '../perlmods';
+use RCM;
+use List::MoreUtils qw/zip/;
 
 use lib '../perlmods';
 use RCM;
@@ -34,130 +31,100 @@ GetOptions( 'model=s' => \$model_file,
 			
 if($help or !$model_file or !$input_dir)
 {
-	&printHelp;
+	printHelp();
+	exit(0);
 }
 
 my $model = new InterMine::Model(file => $model_file);
-my $item_factory = new InterMine::ItemFactory(model => $model);
+my $item_doc= new InterMine::Item::Document(model => $model, output => $output_file, auto_write => 1);
 
-my $output = new IO::File(">$output_file");
-my $writer = new XML::Writer(DATA_MODE => 1, DATA_INDENT => 3, OUTPUT => $output);
-
-$writer->startTag("items");
-
-my $org_item = $item_factory->make_item('Organism');
-$org_item->set('taxonId', '10116');
-$org_item->as_xml($writer);
+my $org_item = $item_doc->add_item('Organism', taxonId => '10116');
 
 print "Reading $input_dir...\n";
 my @files = <$input_dir/*.*>;
 print "Found " . @files . " files...\n";
+
 my %gene_items;
 
 foreach my $input_file (@files)
 {	
-	my $array_item = $item_factory->make_item('Array');
 	my $name = $1 if $input_file =~ /[\\\/]([^\\\/]+?)\./;
-	$array_item->set('primaryIdentifier', $name);
-	$array_item->set('vendor', 'AffyMetrix');
-	$array_item->set('organism', $org_item);
+	
+	my $array_item = $item_doc->add_item('Array', primaryIdentifier => $name,
+											vendor => 'AffyMetrix',
+											organism => $org_item);
 	
 	my ($affyMap, $ensemblMap) = &buildGeneMaps($name, $genes_dir);
 	
 	#process Header
-	open(IN, $input_file) or die "cannot open $input_file\n";
-	my $line = <IN>;
-	my %index = &RCM::parseHeader($line);
+	open(my $IN, '<', $input_file) or die "cannot open $input_file\n";
 
 	my @probe_items;
 	print "Processing Data...$input_file\n";
 	my %probes;
 	
-	while(<IN>)
+	my $index;
+	while(<$IN>)
 	{
 		chomp;
-		my @data = split("\t", $_);
-		
-		unless($probes{$data[$index{'Probe_Set_Name'}]})
+		if(/^Probe Set Name/)
 		{
-			$probes{$data[$index{'Probe_Set_Name'}]} = &processProbe(\@data, \%index, $affyMap, $ensemblMap);
-			$probes{$data[$index{'Probe_Set_Name'}]}->set('organism', $org_item);
-			$probes{$data[$index{'Probe_Set_Name'}]}->set('arrays', [$array_item]);
-			push(@probe_items, $probes{$data[$index{'Probe_Set_Name'}]})
+			$index = &RCM::parseHeader($_);
+			next;
 		}
-	
-		my $seq_item = $item_factory->make_item('Sequence');
-		$seq_item->set('residues', $data[$index{'Probe_Sequence'}]);
-		$seq_item->as_xml($writer);
 		
-		my $sequences = $probes{$data[$index{'Probe_Set_Name'}]}->get('sequences');
-		push(@$sequences, $seq_item);
-		$probes{$data[$index{'Probe_Set_Name'}]}->set('sequences', $sequences);
+		my @fields = split(/\t/);
+	   	my %affy_info = zip(@$index, @fields);
+	
+		my %affy_attr;
+		my $id = $affy_info{Probe_Set_Name};
+		my @genes;
+		unless($probes{$id})
+		{
+			%affy_attr = (primaryIdentifier => $id,
+							organism => $org_item,
+							arrays => [$array_item]);
+			
+			if($$affyMap{$id})
+			{
+				unless($gene_items{$$affyMap{$id}})
+				{
+					my $gene_item = $item_doc->add_item('Gene', 
+													primaryIdentifier =>$$affyMap{$id},
+													organism => $org_item);
+					$gene_items{$$affyMap{$id}} = $gene_item;
+				}
+
+				push(@genes, $gene_items{$$affyMap{$id}});
+			}
+			
+			if($$ensemblMap{$id})
+			{
+				unless($gene_items{$$ensemblMap{$id}})
+				{
+					my $gene_item = $item_doc->add_item('Gene', 
+													primaryIdentifier =>$$ensemblMap{$id},
+													organism => $org_item);
+					$gene_items{$$ensemblMap{$id}} = $gene_item;
+				}
+
+				push(@genes, $gene_items{$$ensemblMap{$id}});
+			}
+			$affy_attr{genes} = \@genes;
+		}
+		
+		my $probe_item = $item_doc->add_item(Probe => %affy_attr);
+		$item_doc->add_item('Sequence', residues => $affy_info{Probe_Sequence},
+											probe => $probe_item);
 		
 	}#end while
 	
-	foreach my $item (values %probes)
-	{
-		$item->as_xml($writer);
-	}
-	$array_item->set('probeSets', \@probe_items);
-	$array_item->as_xml($writer);
-
-	close IN;
+	close $IN;
 }
-$writer->endTag("items");
+$item_doc->close();
 
 ### Subroutines ###
 
-sub processProbe
-{
-	my ($arg1, $arg2, $affyMap, $ensemblMap) = @_;
-	my @data = @$arg1;
-	my %index = %$arg2;
-	
-	my $probe_item = $item_factory->make_item('ProbeSet');
-	$probe_item->set('primaryIdentifier', $data[$index{'Probe_Set_Name'}]);
-	$probe_item->set('organism', $org_item);
-	
-	my $syn_item = $item_factory->make_item('Synonym');
-	$syn_item->set('value', $data[$index{'Probe_Set_Name'}]);
-	$syn_item->set('type', 'identifier');
-	$probe_item->set('synonyms', [$syn_item]);
-	$syn_item->as_xml($writer);
-	
-	
-	my @genes;
-	if($$affyMap{$data[$index{'Probe_Set_Name'}]})
-	{
-		unless($gene_items{$$affyMap{$data[$index{'Probe_Set_Name'}]}})
-		{
-			my $gene_item = $item_factory->make_item('Gene');
-			$gene_item->set('primaryIdentifier', $$affyMap{$data[$index{'Probe_Set_Name'}]});
-			$gene_item->set('organism', $org_item);
-			$gene_item->as_xml($writer);
-			$gene_items{$$affyMap{$data[$index{'Probe_Set_Name'}]}} = $gene_item;
-		}
-		
-		push(@genes, $gene_items{$$affyMap{$data[$index{'Probe_Set_Name'}]}});
-	}
-	
-	if($$ensemblMap{$data[$index{'Probe_Set_Name'}]})
-	{
-		unless($gene_items{$$ensemblMap{$data[$index{'Probe_Set_Name'}]}})
-		{
-			my $gene_item = $item_factory->make_item('Gene');
-			$gene_item->set('primaryIdentifier', $$ensemblMap{$data[$index{'Probe_Set_Name'}]});
-			$gene_item->set('organism', $org_item);
-			$gene_item->as_xml($writer);
-			$gene_items{$$ensemblMap{$data[$index{'Probe_Set_Name'}]}} = $gene_item;
-		}
-		
-		push(@genes, $gene_items{$$ensemblMap{$data[$index{'Probe_Set_Name'}]}});
-	}
-	
-	$probe_item->set('genes', \@genes);	
-	return $probe_item;
-}
 
 sub buildGeneMaps
 {
@@ -198,4 +165,18 @@ sub processGeneFile
 	}
 	close IN;
 	return $ref;
+}
+
+sub printHelp
+{
+	print <<HELP
+perl rat-affy-to-xml.pl
+
+Arguments
+model	Path to model XML
+input	Path to input dir
+genes	Path to gene mapping dir
+output	Path to output XML file
+help	Print this message
+HELP
 }

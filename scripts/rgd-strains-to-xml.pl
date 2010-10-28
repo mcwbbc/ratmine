@@ -6,19 +6,18 @@
 use strict;
 
 BEGIN {
-  push (@INC, ($0 =~ m:(.*)/.*:)[0] . '../intermine/perl/lib');
+  push (@INC, ($0 =~ m:(.*)/.*:)[0] . '../../intermine/perl/InterMine-Util/lib');
 }
 
-use XML::Writer;
-use InterMine::Item;
-use InterMine::ItemFactory;
+#use XML::Writer;
+use InterMine::Item::Document;
 use InterMine::Model;
 use InterMine::Util qw(get_property_value);
 use IO qw(Handle File);
 use Getopt::Long;
-use Cwd;
 use lib '../perlmods';
 use RCM;
+use List::MoreUtils qw/zip/;
 
 my ($model_file, $strains_file, $strains_xml, $help, $strain_obo);
 GetOptions( 'model=s' => \$model_file,
@@ -29,82 +28,80 @@ GetOptions( 'model=s' => \$model_file,
 			
 if($help or !($model_file and $strains_file))
 {
-	&printHelp;
+	printHelp();
 	exit(0);
 }
 
 my $data_source = 'Rat Genome Database';
 my $taxon_id = 10116;
-my $output = new IO::File(">$strains_xml");
-my $writer = new XML::Writer(DATA_MODE => 1, DATA_INDENT => 3, OUTPUT => $output);
 
 # The item factory needs the model so that it can check that new objects have
 # valid classnames and fields
 my $model = new InterMine::Model(file => $model_file);
-my $item_factory = new InterMine::ItemFactory(model => $model);
-$writer->startTag("items");
+my $item_doc = new InterMine::Item::Document(model => $model, output => $strains_xml, auto_write => 0);
 
-my $org_item = $item_factory->make_item('Organism');
-$org_item->set('taxonId', $taxon_id);
-$org_item->as_xml($writer);
-my $dataset_item = $item_factory->make_item('DataSet');
-$dataset_item->set('title', $data_source);
-$dataset_item->as_xml($writer);
+my $org_item = $item_doc->add_item('Organism', taxonId => $taxon_id);
+
+my $dataset_item = $item_doc->add_item('DataSet', name => $data_source);
+
 
 # read the genes file
-open STRAINS, $strains_file;
-my %index;
+open(my $STRAINS, '<', $strains_file);
 my %pubs;
-my %rsIndex = ();
+my %rsIndex;
 
 if ($strain_obo)
 {
 	print "Creating Obo Index...\n";
-	%rsIndex = &createOboMap($strain_obo);
+	%rsIndex = createOboMap($strain_obo);
 
 }
 
 print "Creating XML...\n";
+
+my $index;
 my $hf = 0;
-while(<STRAINS>)
+while(<$STRAINS>)
 {
 	chomp;
-	if( $_ !~ /^\d/ and $hf == 0) #parses header line
+	if(/^\D/ and $hf == 0) #parses header line
 	{
-		%index = &RCM::parseHeader($_);
+		$index = RCM::parseHeader($_);
 		$hf++;
+		next;
 	}
-	elsif($_ =~ /^\d/) #ignore multiline records
+	elsif(/^\d/) #ignore multiline records
 	{
 		s/\026/ /g; #replaces 'Syncronous Idle' (Octal 026) character with space
 		s/\022/ /g; #replaces 'Device Control' (Octal 022) character with space
-		my @strain_info = split("\t", $_);
-		my $strain_item = $item_factory->make_item('Strain');
-		$strain_item->set('organism', $org_item); 
-		$strain_item->set('dataset', $dataset_item);
 		
-		$strain_item->set('primaryIdentifier', $strain_info[$index{'RGD_ID'}]);
-		$strain_item->set('symbol', $strain_info[$index{'STRAIN_SYMBOL'}]) unless($strain_info[$index{'STRAIN_SYMBOL'}] eq '');
-		$strain_item->set('name', $strain_info[$index{'FULL_NAME'}]) unless($strain_info[$index{'FULL_NAME'}] eq '');
-		$strain_item->set('origin', $strain_info[$index{'ORIGIN'}]) unless($strain_info[$index{'ORIGIN'}] eq '');
-		$strain_item->set('source', $strain_info[$index{'SOURCE'}]) unless($strain_info[$index{'SOURCE'}] eq '');
-		$strain_item->set('type', $strain_info[$index{'STRAIN_TYPE'}]) unless($strain_info[$index{'STRAIN_TYPE'}] eq '');
+		my @fields = split(/\t/);
+	   	my %strain_info = zip(@$index, @fields);
 		
-		if($rsIndex{$strain_info[$index{'RGD_ID'}]})
+		my %strain_attr = ( organism => $org_item,
+							dataset => $dataset_item,
+							primaryIdentifier => $strain_info{RGD_ID});
+		$strain_attr{symbol} = $strain_info{STRAIN_SYMBOL} if $strain_info{STRAIN_SYMBOL};
+		$strain_attr{name} = $strain_info{FULL_NAME} if $strain_info{FULL_NAME};
+		$strain_attr{origin} = $strain_info{ORIGIN} if $strain_info{ORIGIN};
+		$strain_attr{source} = $strain_info{SOURCE} if $strain_info{SOURCE};
+		$strain_attr{type} = $strain_info{STRAIN_TYPE} if $strain_info{STRAIN_TYPE};
+		
+		my $strain_item = $item_doc->add_item(Strain => %strain_attr);
+		
+		if($rsIndex{$strain_info{RGD_ID}})
 		{
-			my $rs_item = $item_factory->make_item('RSTerm');
-			$rs_item->set('identifier', $rsIndex{$strain_info[$index{'RGD_ID'}]});
-			$rs_item->set('strain', $strain_item);
-			$rs_item->as_xml($writer);
+			my $rs_item = $item_doc->add_item('RSTerm', identifier => $rsIndex{$strain_info{RGD_ID}},
+											strain => $strain_item);
+											
 			$strain_item->set('rsTerm', $rs_item);
 		}
-		$strain_item->as_xml($writer);
 	} #end if-else
 	
 }#end while
-close STRAINS;
-$writer->endTag("items");
-
+close $STRAINS;
+$item_doc->write;
+$item_doc->close;
 ###Subroutines###
 
 sub printHelp

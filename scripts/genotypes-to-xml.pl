@@ -1,19 +1,24 @@
+#!/usr/bin/perl
+# genotypes-to-xml.pl
+# purpose is to map snps to strains
+
+
 no warnings;
 use strict;
 
 BEGIN {
-  push (@INC, ($0 =~ m:(.*)/.*:)[0] . '../intermine/perl/lib');
+  push (@INC, ($0 =~ m:(.*)/.*:)[0] . '../../intermine/perl/InterMine-Util/lib');
 }
 
-use XML::Writer;
-use InterMine::Item;
-use InterMine::ItemFactory;
+#use XML::Writer;
+use InterMine::Item::Document;
 use InterMine::Model;
 use InterMine::Util qw(get_property_value);
 use IO qw(Handle File);
-use Cwd;
 use Getopt::Long;
-use strict;
+use lib '../perlmods';
+use RCM;
+use List::MoreUtils qw/zip/;
 
 my ($genotype_file, $ensembl2rs, $model_file, $out_file, $help);
 my $t = 0;
@@ -25,120 +30,98 @@ GetOptions( 'model=s' => \$model_file,
 			'help' => \$help);
 			
 # Begin with setting up the environment
-my $output = new IO::File(">$out_file");
-my $writer = new XML::Writer(DATA_MODE => 1, DATA_INDENT => 3, OUTPUT => $output);
-
 my $model = new InterMine::Model(file => $model_file);
-my $item_factory = new InterMine::ItemFactory(model => $model);
+my $item_doc = new InterMine::Item::Document(model => $model, output => $out_file, auto_write => 1);
 
-my $taxon = '10116';
-my $org_item = $item_factory->make_item('Organism');
-$org_item->set('taxonId', $taxon);
+my $taxon_id = '10116';
+my $org_item = $item_doc->add_item('Organism', taxonId => $taxon_id);
 
 #build rs to ensembl mapping
-my $rsEnsemblMap = &buildRs2Ensembl($ensembl2rs);
+my $rsEnsemblMap = buildRs2Ensembl($ensembl2rs);
 
 #Start processing main file
 
-open(IN, $genotype_file);
+open(my $IN, '<', $genotype_file) or die("cannot open $genotype_file\n");
 
-my $header = <IN>; #get rid of header line
-
-$writer->startTag("items");
-$org_item->as_xml($writer);
+my $header = <$IN>; #get rid of header line
 
 my %strainItems;
 my %snpItems;
-while(<IN>)
+while(<$IN>)
 {
 	chomp;
 	my @data = split('\t', $_);
 
 	my $snpId = $$rsEnsemblMap{$data[0]};
-	if($snpId ne '')
+	if($snpId)
 	{	
-		my $genotype_item = $item_factory->make_item('Genotype');
-
 		unless($snpItems{$snpId})
 		{
-			my $snp_item = $item_factory->make_item('rsSNP');
-			$snp_item->set('primaryIdentifier', $snpId);
+			my $snp_item = $item_doc->add_item('rsSNP', primaryIdentifier => $snpId);
 			$snpItems{$snpId} = $snp_item;
 		}
 
 		unless($strainItems{$data[2]})
 		{
-			my $strain_item = $item_factory->make_item('Strain');
-			$strain_item->set('primaryIdentifier', $data[2]);
-			$strain_item->as_xml($writer);
+			my $strain_item = $item_doc->add_item('Strain', primaryIdentifier => $data[2]);
 			$strainItems{$data[2]} = $strain_item;
 		}#unless
 		
-		$genotype_item->set('strain', $strainItems{$data[2]});
-		$genotype_item->set('snp', $snpItems{$snpId});
-		$genotype_item->set('allele', $data[1]);
-		$genotype_item->as_xml($writer);
-		
-		my $genotypes = $snpItems{$snpId}->get("genotypes");
-		push(@$genotypes, $genotype_item);
-
-		$snpItems{$snpId}->set('genotypes', $genotypes);	
-
+		$item_doc->add_item('Genotype', strain => $strainItems{$data[2]},
+										snp => $snpItems{$snpId},
+										allele => $data[1]);
 	}#if
 
 }#while IN
 
-close IN;
-foreach my $s (values %snpItems)
-{
-	$s->as_xml($writer);
-}
-$writer->endTag("items");
+close $IN;
+$item_doc->close;
+exit(0);
 
 ### Subroutines ###
 
 sub buildRs2Ensembl
 {
 	my $file = shift;
-	open(IN, $file) or die "cannot open $file";
+	open(my $IN, '<', $file) or die "cannot open $file";
 	my %map;
-	while(<IN>)
+	while(<$IN>)
 	{
 		chomp;
 		my($rs, $ensembl) = split("\t", $_);
 		$map{$ensembl} = $rs if $ensembl =~ /^EN/;
 	}
-	close IN;
+	close $IN;
 	return \%map;
 }
 
 sub buildStar2Ensembl
 {
 	my $file = shift;
-	open(IN, $file);
+	open(my $IN, '<', $file);
 	my %map;
-	while(<IN>)
+	while(<$IN>)
 	{
 		chomp;
 		my($star, $ensembl) = split(",", $_);
 		$map{$star} = $ensembl;
 	}
-	close IN;
+	close $IN;
 	return \%map;
 }
 
 sub buildStrainMap
 {
 	my $file = shift;
-	open(IN, $file);
+	open(my $IN, '<', $file);
 	my %map;
-	while(<IN>)
+	while(<$IN>)
 	{
 		#print "$_";
 		chomp;
 		my @entry = split(",", $_);
 		$map{$entry[2]} = $entry[1];
 	}
-	close IN;
+	close $IN;
 	return \%map;
 }

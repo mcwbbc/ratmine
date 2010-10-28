@@ -10,7 +10,7 @@
 	    <attribute name="namePI" value="Timothy"/>
 <!--	    <attribute name="url" value=""/> -->
 		<collection name="labs">
-			<reference ref_id="1100"/>
+			<reference ref_id="100"/>
 		</collection>
 		<collection name="organisms">
 			<reference ref_id="0"/>
@@ -22,6 +22,6 @@
 		<attribute name="name" value="Timoth Aitman"/>
 		<attribute name="affiliation" value="MRC Clinical Sciences Centre, Faculty of Medicine, Imperial College, London"/>
 <!--		<attribute name="url" value=""/> -->
-		<reference name="project" ref_id="1010"/>
+		<reference name="project" ref_id="1000"/>
 	</item>
 </items>

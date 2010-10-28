@@ -1,7 +1,5 @@
 package RCM;
 
-use lib '.';
-use ITEMHOLDER;
 
 ################
 # RatMine Common Module
@@ -21,15 +19,14 @@ sub parseHeader #parses header line
 	my $h = shift;
 	chomp $h;
 	my %i;
-	my @header = split(/\t/, $h);
-	for(my $x = 0; $x < @header; $x++)
+	my @header = map
 	{	
-		$header[$x] =~ s/[\s\.]/_/g; #make things unix friendly
-		$header[$x] =~ s/_+$//; #remove trailing underscores
-		print $header[$x] . "\n";
-		$i{$header[$x]} = $x;	
-	}
-	return %i;
+		s/[\s\.]/_/g; #make things unix friendly
+		s/_+$//; #remove trailing underscores
+		print $_ . "\n";
+		$_;	
+	} split(/\t/, $h);
+	return \@header;
 }
 
 =cut
@@ -40,37 +37,18 @@ writes out the chromosome items if $writer is passed
 
 =cut
 
-sub makeChromosomeItems
+sub getChromosomes
 {
-	my ($item_factory, $writer) = @_;
-	
-	my @chromosomes = (1..20, 'M', 'X', 'Y');
-	
-	$chromosome_items = ITEMHOLDER->new;
-	foreach my $chr (@chromosomes)
-	{
-		$chrom_item = $item_factory->make_item('Chromosome');
-		$chrom_item->set('primaryIdentifier', $chr);
-		$chrom_item->as_xml($writer) if $writer;
-		$chromosome_items->store($chr, $chrom_item);
-
-	}
-	
-	return $chromosome_items;
+	return (1..20, 'M', 'X', 'Y');
 }
 
-sub makeLocationItem
+sub addChromosomes
 {
-	my ($item_factory, $subject, $writer, $chrom_item, $start, $end) = @_;
-	
-	$end = $start unless defined($end);
-	my $loc_item = $item_factory->make_item('Location');
-	$loc_item->set('object', $chrom_item);
-	$loc_item->set('start', $start);
-	$loc_item->set('end', $end);
-	$loc_item->set('subject', $subject);
-	$loc_item->as_xml($writer);
-	
-	return $loc_item;
+	my $item_doc = shift;
+	my $chr = {
+		map { $_ => $item_doc->add_item('Chromosome', primaryIdentifier => $_) } getChromosomes
+	};
+	return $chr;
 }
+
 1;
