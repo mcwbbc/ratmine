@@ -57,7 +57,7 @@ while(<$GENES>)
 	chomp;
 	if(/^\D/) #parses header line
 	{
-		$index = &RCM::parseHeader($_);
+		$index = RCM::parseHeader($_);
 		next
 	}
     #    print "\n   ------------ Line: ".$count."  --------------  \n";

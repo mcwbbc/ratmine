@@ -2,24 +2,21 @@
 # rgd-to-pharmgkb.pl
 # by Andrew Vallejos
 
-use warnings;
 use strict;
 
 BEGIN {
-  push (@INC, ($0 =~ m:(.*)/.*:)[0] . '../intermine/perl/lib');
+  push (@INC, ($0 =~ m:(.*)/.*:)[0] . '../../intermine/perl/InterMine-Util/lib');
 }
 
-use XML::Writer;
-use InterMine::Item;
-use InterMine::ItemFactory;
+#use XML::Writer;
+use InterMine::Item::Document;
 use InterMine::Model;
 use InterMine::Util qw(get_property_value);
 use IO qw(Handle File);
-use Cwd;
 use Getopt::Long;
-use strict;
 use lib '../perlmods';
 use RCM;
+use List::MoreUtils qw/zip/;
 
 my ($ortho_file, $pharm_file, $help, $out_file, $model_file);
 my $t = 0;
@@ -37,83 +34,75 @@ if($help or !($ortho_file and $pharm_file))
 }
 
 # Begin with setting up the environment
-my $output = new IO::File(">$out_file");
-my $writer = new XML::Writer(DATA_MODE => 1, DATA_INDENT => 3, OUTPUT => $output);
-
 my $model = new InterMine::Model(file => $model_file);
-my $item_factory = new InterMine::ItemFactory(model => $model);
+my $item_doc = new InterMine::Item::Document(model => $model, output => $out_file, auto_write => 1);
 
-my $taxon = '10116';
-my $org_item = $item_factory->make_item('Organism');
-$org_item->set('taxonId', $taxon);
+my $taxon_id = '10116';
+my $org_item = $item_doc->add_item('Organism', taxonId => $taxon_id);
 
 #build rgd to human index
-open(RGD, $ortho_file);
-my %index;
+open(my $RGD, '<', $ortho_file) or die("cannot open $ortho_file\n");
+my $index;
 my %rgd_mapping;
-
-$writer->startTag("items");
-$org_item->as_xml($writer);
 
 #build RGD to Human Orthologue Index
 print "Reading Orthologue File...\n";
-while(<RGD>)
+while(<$RGD>)
 {
-	next if $_ =~ /^#/;
+	next if /^#/;
 	chomp;
-	if($_ =~ /^RAT/)
+	if(/^RAT/)
 	{
-		%index = &RCM::parseHeader($_);
+		$index = RCM::parseHeader($_);
+		next;
 	}
-	else
-	{
-		my @line = split(/\t/, $_);
-		my $rgd_id = $line[$index{RAT_GENE_RGD_ID}];
-		my $gene_id = $line[$index{HUMAN_ORTHOLOG_ENTREZ}];
-		my $symbol = $line[$index{RAT_GENE_SYMBOL}];
-		foreach my $g (split(/\|/, $gene_id)) {
-			$rgd_mapping{$g}{id} = $rgd_id;
-			$rgd_mapping{$g}{symbol} = $symbol;
-		}
+	my @fields = split(/\t/);
+   	my %line = zip(@$index, @fields);
+
+	my $rgd_id = $line{RAT_GENE_RGD_ID};
+	my $gene_id = $line{HUMAN_ORTHOLOG_ENTREZ};
+	my $symbol = $line{RAT_GENE_SYMBOL};
+	foreach my $g (split(/\|/, $gene_id)) {
+		$rgd_mapping{$g}{id} = $rgd_id;
+		$rgd_mapping{$g}{symbol} = $symbol;
 	}
+
 }#end while <RGD>
-close RGD;
+close $RGD;
 
 print "Closing Orthologue File...\nOpening Pharm File...\n";
 
-%index = ();
-open(PKB, $pharm_file);
+open(my $PKB, '<', $pharm_file);
 my %pharm_items;
 my %rgd_flags;
-while(<PKB>)
+while(<$PKB>)
 {
 	chomp;
-	if($_ =~ /^Pharm/)
+	if(/^Pharm/)
 	{
-		%index = &RCM::parseHeader($_);
+		$index = RCM::parseHeader($_);
+		next;
 	}
-	else
-	{
-		my @line = split(/\t/, $_);
-		my $pharm_id = $line[$index{'PharmGKB Accession Id'}];
-		my $gene_id = $line[$index{'Entrez Id'}];
-		unless (exists($rgd_flags{ $rgd_mapping{$gene_id}{id} }))
-		{
-			if($rgd_mapping{$gene_id}{id})
-			{
-				#push(@{$rgd_mapping{$gene_id}{pharmids}}, $pharm_id);
-				my $gene_item = $item_factory->make_item('Gene');
-				$gene_item->set('primaryIdentifier', $rgd_mapping{$gene_id}{id});
-				$gene_item->set('pharmGKBidentifier', $pharm_id);
-				$gene_item->set('organism', $org_item);
-				$gene_item->as_xml($writer);
-				$rgd_flags{ $rgd_mapping{$gene_id}{id} } = 'true';
-				#print !exists($rgd_mapping{$gene_id}{flag}) ."\n"; exit(0);
-			}
-		}
-		#print "$pharm_id\t$gene_id\t$rgd_mapping{$gene_id}{id}\t$rgd_mapping{$gene_id}{symbol}\n";
 
-	} #else
+	my @fields = split(/\t/);
+   	my %line = zip(@$index, @fields);
+
+	my $pharm_id = $line{'PharmGKB Accession Id'};
+	my $gene_id = $line{'Entrez Id'};
+	unless (exists($rgd_flags{ $rgd_mapping{$gene_id}{id} }))
+	{
+		if($rgd_mapping{$gene_id}{id})
+		{
+			#push(@{$rgd_mapping{$gene_id}{pharmids}}, $pharm_id);
+			my $gene_item = $item_doc->add_item('Gene', primaryIdentifier => $rgd_mapping{$gene_id}{id},
+															pharmGKBidentifier => $pharm_id,
+															organism => $org_item);
+			$rgd_flags{ $rgd_mapping{$gene_id}{id} } = 'true';
+			#print !exists($rgd_mapping{$gene_id}{flag}) ."\n"; exit(0);
+		}
+	}
+	#print "$pharm_id\t$gene_id\t$rgd_mapping{$gene_id}{id}\t$rgd_mapping{$gene_id}{symbol}\n";
+
 }#end while <PKB>
 
 =cut
@@ -151,9 +140,8 @@ foreach my $gid (keys %rgd_mapping)
 #print $test[1] . "\n";
 #print "$t\n";
 #print "@{$pharm_items{$test[1]}} \n";
-close PKB;
+close $PKB;
 print "Closing PharmFile...\n";
-$writer->endTag("items");
 exit(0);
 
 #####Subroutines########
