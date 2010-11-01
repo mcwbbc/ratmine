@@ -121,7 +121,7 @@ while(<$QTLS>)
 	{
       	for my $id (split(/;/, $ids))
 		{
-			$pubs{$id} = $item_doc->add_item('Gene', primaryIdentifier => $id) unless ($genes{$id});
+			$genes{$id} = $item_doc->add_item('Gene', primaryIdentifier => $id) unless ($genes{$id});
 			push @{$qtl_attr{candidateGenes}}, $genes{$id};
 		}
 	}
