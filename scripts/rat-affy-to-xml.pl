@@ -45,6 +45,7 @@ my @files = <$input_dir/*.*>;
 print "Found " . @files . " files...\n";
 
 my %gene_items;
+my %probes;
 
 foreach my $input_file (@files)
 {	
@@ -61,7 +62,6 @@ foreach my $input_file (@files)
 
 	my @probe_items;
 	print "Processing Data...$input_file\n";
-	my %probes;
 	
 	my $index;
 	while(<$IN>)
@@ -111,11 +111,13 @@ foreach my $input_file (@files)
 				push(@genes, $gene_items{$$ensemblMap{$id}});
 			}
 			$affy_attr{genes} = \@genes;
+			
+			my $probe_item = $item_doc->add_item(Probe => %affy_attr);
+			$probes{$id} = $probe_item;
 		}
 		
-		my $probe_item = $item_doc->add_item(Probe => %affy_attr);
 		$item_doc->add_item('Sequence', residues => $affy_info{Probe_Sequence},
-											probe => $probe_item);
+											probe => $probes{$id});
 		
 	}#end while
 	
