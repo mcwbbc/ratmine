@@ -10,16 +10,17 @@ package org.intermine.bio.web.widget;
  *
  */
 
+import org.intermine.api.profile.InterMineBag;
 import org.intermine.objectstore.ObjectStore;
 import org.intermine.pathquery.Constraints;
 import org.intermine.pathquery.PathQuery;
-import org.intermine.api.profile.InterMineBag;
 import org.intermine.web.logic.widget.WidgetURLQuery;
 
 
 /**
  * {@inheritDoc}
  * @author Julie Sullivan
+ * @updated Andrew Vallejos
  */
 public class DoStatURLQuery implements WidgetURLQuery
 {
@@ -46,37 +47,31 @@ public class DoStatURLQuery implements WidgetURLQuery
 
         PathQuery q = new PathQuery(os.getModel());
         String bagType = bag.getType();
-        String pathStrings = "";
 
-        String prefix = (bagType.equals("Protein") ? "Protein.genes" : "Gene");
+        String prefix = ("Protein".equals(bagType) ? "Protein.genes" : "Gene");
 
-        if (bagType.equals("Protein")) {
-            pathStrings = "Protein.primaryAccession,";
+        if ("Protein".equals(bagType)) {
+            q.addViews("Protein.primaryAccession");
         }
 
-        pathStrings += prefix + ".primaryIdentifier,"
-            + prefix + ".symbol,"
-            + prefix + ".organism.name,"
-            + prefix + ".doAnnotation.ontologyTerm.identifier,"
-            + prefix + ".doAnnotation.ontologyTerm.name,"
-            + prefix + ".doAnnotation.ontologyTerm.relations.parentTerm.identifier,"
-            + prefix + ".doAnnotation.ontologyTerm.relations.parentTerm.name";
+        q.addViews(prefix + ".primaryIdentifier",
+            + prefix + ".symbol",
+            + prefix + ".organism.name",
+            + prefix + ".doAnnotation.ontologyTerm.identifier",
+            + prefix + ".doAnnotation.ontologyTerm.name",
+            + prefix + ".doAnnotation.ontologyTerm.relations.parentTerm.identifier",
+            + prefix + ".doAnnotation.ontologyTerm.relations.parentTerm.name");
 
-        q.setView(pathStrings);
-        q.setOrderBy(pathStrings);
-
-        q.addConstraint(bagType, Constraints.in(bag.getName()));
+        q.addConstraint(Constraints.in(bagType, bag.getName()));
 
         // can't be a NOT relationship!
-        String pathString = prefix + ".doAnnotation.qualifier";
-        q.addConstraint(pathString, Constraints.isNull());
+        q.addConstraint(pathString, Constraints.isNull(prefix + ".doAnnotation.qualifier"));
 
-        // go term
-        pathString = prefix + ".doAnnotation.ontologyTerm.relations.parentTerm";
-        q.addConstraint(pathString, Constraints.lookup(key), "C", "DOTerm");
-
-        q.setConstraintLogic("A and B and C");
-        q.syncLogicExpression("and");
+        if (!showAll) {
+	        //  go term
+	        q.addConstraint(Constraints.lookup(prefix + ".doAnnotation.ontologyTerm.parents",
+	                key, "DOTerm"));
+   		}
         return q;
     }
 }
