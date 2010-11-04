@@ -165,7 +165,7 @@
    </fields>
    <tabledisplayer src="/model/sequenceShortDisplayer.jsp"></tabledisplayer>
 </class>
-<class className="org.intermine.model.bio.SSLP">
+<class className="org.intermine.model.bio.SimpleSequenceLengthVariation">
    <fields>
       <fieldconfig fieldExpr="primaryIdentifier"></fieldconfig>
       <fieldconfig fieldExpr="symbol"></fieldconfig>
