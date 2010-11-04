@@ -46,10 +46,9 @@ import org.intermine.web.logic.widget.EnrichmentWidgetLdr;
 public class DoStatLdr extends EnrichmentWidgetLdr
 {
     private static final Logger LOG = Logger.getLogger(GoStatLdr.class);
-    private Collection<String> organisms;
+    private Collection<String> taxonIds;
     private InterMineBag bag;
     private String namespace;
-    private Collection<String> organismsLower = new ArrayList<String>();
     private Model model;
 
     /**
@@ -61,14 +60,8 @@ public class DoStatLdr extends EnrichmentWidgetLdr
     public DoStatLdr (InterMineBag bag, ObjectStore os, String extraAttribute) {
         this.bag = bag;
         namespace = extraAttribute;
-        organisms = BioUtil.getOrganisms(os, bag, false);
+        taxonIds = BioUtil.getOrganisms(os, bag, falsem "taxonId");
         model = os.getModel();
-        for (String s : organisms) {
-            if (s != null) {
-                organismsLower.add(s.toLowerCase());
-            }
-        }
-
     }
 
     // adds main ontologies to array.  these will be excluded from the query
@@ -89,17 +82,17 @@ public class DoStatLdr extends EnrichmentWidgetLdr
         QueryClass qcGoAnnotation = null;
         QueryClass qcGoChild = null;
         QueryClass qcGoParent = null;
-        QueryClass qcRelations = null;
 
         try {
             qcGoAnnotation = new QueryClass(Class.forName(model.getPackageName()
-                                                          + ".DOAnnotation"));
+                    + ".GOAnnotation"));
             qcGoParent = new QueryClass(Class.forName(model.getPackageName() + ".OntologyTerm"));
             qcGoChild = new QueryClass(Class.forName(model.getPackageName() + ".OntologyTerm"));
-            qcRelations = new QueryClass(Class.forName(model.getPackageName()
-                                                       + ".OntologyRelation"));
         } catch (ClassNotFoundException e) {
-            LOG.error(e);
+            LOG.error("Error rendering DO enrichment widget", e);
+            // don't throw an exception, return NULL instead.  The widget will display 'no results'.
+            // the javascript that renders widgets assumes a valid widget and thus can't handle
+            // an exception thrown here.
             return null;
         }
         QueryClass qcProtein = new QueryClass(Protein.class);
@@ -107,7 +100,7 @@ public class DoStatLdr extends EnrichmentWidgetLdr
 
         QueryField qfQualifier = new QueryField(qcGoAnnotation, "qualifier");
         QueryField qfGeneId = new QueryField(qcGene, "id");
-        QueryField qfOrganismName = new QueryField(qcOrganism, "name");
+        QueryField qfTaxonId = new QueryField(qcOrganism, "taxonId");
         QueryField qfProteinId = new QueryField(qcProtein, "id");
         QueryField qfPrimaryIdentifier = null;
         QueryField qfId = null;
@@ -149,27 +142,28 @@ public class DoStatLdr extends EnrichmentWidgetLdr
         cs.addConstraint(new ContainsConstraint(c3, ConstraintOp.CONTAINS, qcGoChild));
 
         // goannotation contains go terms
-        QueryCollectionReference c4 = new QueryCollectionReference(qcGoChild, "relations");
+        QueryCollectionReference c4 = new QueryCollectionReference(qcGoChild, "parents");
         cs.addConstraint(new ContainsConstraint(c4, ConstraintOp.CONTAINS, qcRelations));
-
-
-        QueryObjectReference c5 = new QueryObjectReference(qcRelations, "parentTerm");
-        cs.addConstraint(new ContainsConstraint(c5, ConstraintOp.CONTAINS, qcGoParent));
-
-        // goterm.relations include parent and child relationships
-        // we are only interested in when this goterm is a child
-        QueryObjectReference c6 = new QueryObjectReference(qcRelations, "childTerm");
-        cs.addConstraint(new ContainsConstraint(c6, ConstraintOp.CONTAINS, qcGoChild));
 
         // go term is of the specified namespace
         QueryExpression c7 = new QueryExpression(QueryExpression.LOWER, qfNamespace);
         cs.addConstraint(new SimpleConstraint(c7, ConstraintOp.EQUALS,
                                               new QueryValue(namespace.toLowerCase())));
 
-        // organisms in bag = organism.names
+        Collection<Integer> taxonIdInts = new ArrayList<Integer>();
         // constrained only for memory reasons
-        QueryExpression c8 = new QueryExpression(QueryExpression.LOWER, qfOrganismName);
-        cs.addConstraint(new BagConstraint(c8, ConstraintOp.IN, organismsLower));
+        for (String taxonId : taxonIds) {
+            try {
+                taxonIdInts.add(new Integer(taxonId));
+            } catch (NumberFormatException e) {
+                LOG.error("Error rendering do stat widget, invalid taxonIds: " + taxonIds);
+                // don't throw an exception, return NULL instead.  The widget will display 'no
+                // results'. the javascript that renders widgets assumes a valid widget and thus
+                // can't handle an exception thrown here.
+                return null;
+            }
+        }
+        cs.addConstraint(new BagConstraint(qfTaxonId, ConstraintOp.IN, taxonIdInts));
 
         // can't be a NOT relationship!
         cs.addConstraint(new SimpleConstraint(qfQualifier, ConstraintOp.IS_NULL));
@@ -194,7 +188,6 @@ public class DoStatLdr extends EnrichmentWidgetLdr
         q.addFrom(qcOrganism);
         q.addFrom(qcGoParent);
         q.addFrom(qcGoChild);
-        q.addFrom(qcRelations);
 
         if (bagType.equals("Protein")) {
             q.addFrom(qcProtein);
