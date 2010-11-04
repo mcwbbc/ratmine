@@ -55,12 +55,12 @@ public class MpStatURLQuery implements WidgetURLQuery
         }
 
         q.addViews(prefix + ".primaryIdentifier",
-            + prefix + ".symbol",
-            + prefix + ".organism.name",
-            + prefix + ".mpAnnotation.ontologyTerm.identifier",
-            + prefix + ".mpAnnotation.ontologyTerm.name",
-            + prefix + ".mpAnnotation.ontologyTerm.relations.parentTerm.identifier",
-            + prefix + ".mpAnnotation.ontologyTerm.relations.parentTerm.name");
+            prefix + ".symbol",
+            prefix + ".organism.name",
+            prefix + ".mpAnnotation.ontologyTerm.identifier",
+            prefix + ".mpAnnotation.ontologyTerm.name",
+            prefix + ".mpAnnotation.ontologyTerm.relations.parentTerm.identifier",
+            prefix + ".mpAnnotation.ontologyTerm.relations.parentTerm.name");
 
         q.addConstraint(Constraints.in(bagType, bag.getName()));
 

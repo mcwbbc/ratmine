@@ -55,12 +55,12 @@ public class DoStatURLQuery implements WidgetURLQuery
         }
 
         q.addViews(prefix + ".primaryIdentifier",
-            + prefix + ".symbol",
-            + prefix + ".organism.name",
-            + prefix + ".doAnnotation.ontologyTerm.identifier",
-            + prefix + ".doAnnotation.ontologyTerm.name",
-            + prefix + ".doAnnotation.ontologyTerm.relations.parentTerm.identifier",
-            + prefix + ".doAnnotation.ontologyTerm.relations.parentTerm.name");
+            prefix + ".symbol",
+            prefix + ".organism.name",
+            prefix + ".doAnnotation.ontologyTerm.identifier",
+            prefix + ".doAnnotation.ontologyTerm.name",
+            prefix + ".doAnnotation.ontologyTerm.relations.parentTerm.identifier",
+            prefix + ".doAnnotation.ontologyTerm.relations.parentTerm.name");
 
         q.addConstraint(Constraints.in(bagType, bag.getName()));
 

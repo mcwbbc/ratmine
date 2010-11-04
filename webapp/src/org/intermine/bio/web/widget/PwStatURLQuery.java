@@ -55,12 +55,12 @@ public class PwStatURLQuery implements WidgetURLQuery
         }
 
         q.addViews(prefix + ".primaryIdentifier",
-            + prefix + ".symbol",
-            + prefix + ".organism.name",
-            + prefix + ".pwAnnotation.ontologyTerm.identifier",
-            + prefix + ".pwAnnotation.ontologyTerm.name",
-            + prefix + ".pwAnnotation.ontologyTerm.relations.parentTerm.identifier",
-            + prefix + ".pwAnnotation.ontologyTerm.relations.parentTerm.name");
+            prefix + ".symbol",
+            prefix + ".organism.name",
+            prefix + ".pwAnnotation.ontologyTerm.identifier",
+            prefix + ".pwAnnotation.ontologyTerm.name",
+            prefix + ".pwAnnotation.ontologyTerm.relations.parentTerm.identifier",
+            prefix + ".pwAnnotation.ontologyTerm.relations.parentTerm.name");
 
         q.addConstraint(Constraints.in(bagType, bag.getName()));
 
