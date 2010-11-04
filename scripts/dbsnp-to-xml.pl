@@ -96,7 +96,7 @@ sub processDbSNPFile
 		{
 
 			my ($build, $date) = ($1, $2);
-			$dataset_item = $item_doc->add_item('DataSet', title => "dbSNP build:$build, $date");
+			$dataset_item = $item_doc->add_item('DataSet', name => "dbSNP build:$build, $date");
 			$df = 1;
 		}
 	
@@ -147,6 +147,7 @@ sub processDbSNPFile
 			{	$pos--; }
 			
 			print "Loading location...\n" if $vf;
+			print "$pos: $chrom\n" if $vf;
 			my %loc_attr = (start => $pos,
 							end => $pos,
 							locatedOn => $chr_items->{$chrom});

@@ -82,7 +82,7 @@ while(<$QTLS>)
 			
 	#$qtl_item->set('synonyms', [$syn_item, $syn_item2]);
 	
-	my $chrom = $chr_items->{$qtl_info{CHROMOSOME_FROM_REF}};
+	my $chrom = $chrom_items->{$qtl_info{CHROMOSOME_FROM_REF}};
 	$qtl_attr{chromosome} = $chrom unless $chrom;
 	
 	if( $qtl_info{'3_4_MAP_POS_START'} )
@@ -121,7 +121,7 @@ while(<$QTLS>)
 	{
       	for my $id (split(/;/, $ids))
 		{
-			$pubs{$id} = $item_doc->add_item('Gene', primaryIdentifier => $id) unless ($genes{$id});
+			$genes{$id} = $item_doc->add_item('Gene', primaryIdentifier => $id) unless ($genes{$id});
 			push @{$qtl_attr{candidateGenes}}, $genes{$id};
 		}
 	}
