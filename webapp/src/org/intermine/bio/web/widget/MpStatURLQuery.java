@@ -65,7 +65,7 @@ public class MpStatURLQuery implements WidgetURLQuery
         q.addConstraint(Constraints.in(bagType, bag.getName()));
 
         // can't be a NOT relationship!
-        q.addConstraint(pathString, Constraints.isNull(prefix + ".mpAnnotation.qualifier"));
+        q.addConstraint(Constraints.isNull(prefix + ".mpAnnotation.qualifier"));
 
         if (!showAll) {
 	        //  go term
