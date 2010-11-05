@@ -60,7 +60,7 @@ public class MpStatLdr extends EnrichmentWidgetLdr
     public MpStatLdr (InterMineBag bag, ObjectStore os, String extraAttribute) {
         this.bag = bag;
         namespace = extraAttribute;
-        taxonIds = BioUtil.getOrganisms(os, bag, falsem "taxonId");
+        taxonIds = BioUtil.getOrganisms(os, bag, false, "taxonId");
         model = os.getModel();
     }
 
@@ -143,7 +143,7 @@ public class MpStatLdr extends EnrichmentWidgetLdr
 
         // goannotation contains go terms
         QueryCollectionReference c4 = new QueryCollectionReference(qcGoChild, "parents");
-        cs.addConstraint(new ContainsConstraint(c4, ConstraintOp.CONTAINS, qcRelations));
+        cs.addConstraint(new ContainsConstraint(c4, ConstraintOp.CONTAINS, qcGoParent));
 
         // go term is of the specified namespace
         QueryExpression c7 = new QueryExpression(QueryExpression.LOWER, qfNamespace);

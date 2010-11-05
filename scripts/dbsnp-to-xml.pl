@@ -115,7 +115,7 @@ sub processDbSNPFile
 			$snp_attr{dataSets} = [$dataset_item];
 			#find Rs Id
 			my $id = $xp->find('//Rs/@rsId')->string_value;
-			$snp_attr{primaryIdentifier} => "rs$id";
+			$snp_attr{primaryIdentifier} = "rs$id";
 			$snp_attr{organism} = $org_item;
 			
 			#find consequence/function

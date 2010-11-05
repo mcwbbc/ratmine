@@ -263,7 +263,7 @@
 
 	<!-- widgets -->
 	<widgets>
-		
+<!--		
 	      <graphdisplayer id="chromosome_distribution" title="Chromosome Distribution"
 	        domainLabel="Chromosome"
 	        rangeLabel="Count"
@@ -348,6 +348,7 @@
  	                                 filterLabel="DataSet"
  	                                 description="Pathways enriched for genes in this list - data from KEGG"
  	                                 typeClass="org.intermine.model.bio.Gene" />
+-->
 <!--		<bagtabledisplayer id="qtls" title="QTLs"
                 			         pathStrings="Gene.overlappingfeatures"
 			                         description="Count of QTLs that overlap with genes in the list."
