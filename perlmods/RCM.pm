@@ -44,7 +44,7 @@ sub getChromosomes
 
 sub addChromosomes
 {
-	my ($item_doc, $org_item) = shift;
+	my ($item_doc, $org_item) = @_;
 	my $chr = {
 		map { $_ => $item_doc->add_item('Chromosome', primaryIdentifier => $_, organism => $org_item) } getChromosomes
 	};
