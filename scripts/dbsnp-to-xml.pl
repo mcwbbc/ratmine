@@ -55,7 +55,7 @@ my %consequences;
 my $df = 0; #datset flag
 my $dataset_item;
 
-my $chr_items = RCM::addChromosomes($item_doc);
+my $chr_items = RCM::addChromosomes($item_doc, $org_item);
 
 my $count = 0;
 while(my $file = pop(@files))

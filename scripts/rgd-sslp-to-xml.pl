@@ -42,7 +42,7 @@ my $org_item = $item_doc->add_item('Organism', taxonId => $taxon_id);
 #process Header
 
 my $chrom_items;
-$chrom_items = RCM::addChromosomes($item_doc);
+$chrom_items = RCM::addChromosomes($item_doc, $org_item);
 
 my %pubs;
 print "Processing Data...\n";
