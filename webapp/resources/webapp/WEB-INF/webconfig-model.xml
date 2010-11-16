@@ -274,7 +274,7 @@
 	        extraAttributeClass="org.intermine.bio.web.logic.BioUtil"
 	        typeClass="org.intermine.model.bio.Gene,org.intermine.model.bio.LocatedSequenceFeature"
 	       />
-
+-->
 	      <enrichmentwidgetdisplayer id="protein_features" title="UniProt Features"
 	                                 link="org.intermine.bio.web.widget.UniProtFeaturesURLQuery"
 	                                 dataSetLoader="org.intermine.bio.web.widget.UniProtFeaturesLdr"
@@ -289,7 +289,7 @@
 	                                 description="UniProt keywords enriched for proteins in this list."
 	                                 typeClass="org.intermine.model.bio.Protein" />
 
-
+<!--
 	      <enrichmentwidgetdisplayer id="go_enrichment" title="Gene Ontology Enrichment"
 	                                 link="org.intermine.bio.web.widget.GoStatURLQuery"
 	                                 dataSetLoader="org.intermine.bio.web.widget.GoStatLdr"
