@@ -87,7 +87,7 @@ while(<$QTLS>)
 	
 	if( $qtl_info{'3_4_MAP_POS_START'} )
 	{
-		my($start, $end) = @qtl_info{ '3_4_MAP_POS_START', '3_4_MAP_POS_STOP'};
+		my($start, $end) = ($qtl_info{'3_4_MAP_POS_START'}, $qtl_info{'3_4_MAP_POS_STOP'});
 		$qtl_attr{locations} = [ $item_doc->add_item( 'Location',
 												locatedOn => $chrom,
 												start => $start,
