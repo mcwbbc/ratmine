@@ -51,7 +51,10 @@
 </class>	
 
 <class className="org.intermine.model.bio.Gene">
-
+   <longdisplayers>
+      <displayer src="attributeLinkDisplayer.tile"></displayer>
+      <displayer src="/model/locatedSequenceFeatureImage.jsp"></displayer>
+   </longdisplayers>
 </class>
 
 <class className="org.intermine.model.bio.Genotype">
