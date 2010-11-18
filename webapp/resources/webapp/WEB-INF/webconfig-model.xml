@@ -49,7 +49,10 @@
       <fieldconfig fieldExpr="qualifier"></fieldconfig>
    </fields>
 </class>	
-	
+
+<class className="org.intermine.model.bio.Gene">
+
+</class>
 
 <class className="org.intermine.model.bio.Genotype">
    <fields>
@@ -175,7 +178,7 @@
 </class>
 <class className="org.intermine.model.bio.Allele">
    <fields>
-      <fieldconfig fieldExpr="sslp.primaryIdentifier"></fieldconfig>
+      <fieldconfig fieldExpr="simpleSequenceLengthVariation.primaryIdentifier"></fieldconfig>
       <fieldconfig fieldExpr="length"></fieldconfig>
       <fieldconfig fieldExpr="strain.primaryIdentifier"></fieldconfig>
       <fieldconfig fieldExpr="strain.symbol"></fieldconfig>
@@ -263,7 +266,7 @@
 
 	<!-- widgets -->
 	<widgets>
-<!--		
+		
 	      <graphdisplayer id="chromosome_distribution" title="Chromosome Distribution"
 	        domainLabel="Chromosome"
 	        rangeLabel="Count"
@@ -272,9 +275,8 @@
 	        description="Actual: number of items in this list found on each chromosome.  Expected: given the total number of items on the chromosome and the number of items in this list, the number of items expected to be found on each chromosome."
 	        graphType="BarChart"
 	        extraAttributeClass="org.intermine.bio.web.logic.BioUtil"
-	        typeClass="org.intermine.model.bio.Gene,org.intermine.model.bio.LocatedSequenceFeature"
+	        typeClass="org.intermine.model.bio.Gene,org.intermine.model.bio.SequenceFeature"
 	       />
--->
 	      <enrichmentwidgetdisplayer id="protein_features" title="UniProt Features"
 	                                 link="org.intermine.bio.web.widget.UniProtFeaturesURLQuery"
 	                                 dataSetLoader="org.intermine.bio.web.widget.UniProtFeaturesLdr"
@@ -288,8 +290,6 @@
 	                                 label="Keyword"
 	                                 description="UniProt keywords enriched for proteins in this list."
 	                                 typeClass="org.intermine.model.bio.Protein" />
-
-<!--
 	      <enrichmentwidgetdisplayer id="go_enrichment" title="Gene Ontology Enrichment"
 	                                 link="org.intermine.bio.web.widget.GoStatURLQuery"
 	                                 dataSetLoader="org.intermine.bio.web.widget.GoStatLdr"
@@ -348,7 +348,6 @@
  	                                 filterLabel="DataSet"
  	                                 description="Pathways enriched for genes in this list - data from KEGG"
  	                                 typeClass="org.intermine.model.bio.Gene" />
--->
 <!--		<bagtabledisplayer id="qtls" title="QTLs"
                 			         pathStrings="Gene.overlappingfeatures"
 			                         description="Count of QTLs that overlap with genes in the list."
