@@ -85,16 +85,6 @@ while(<$QTLS>)
 	my $chrom = $chrom_items->{$qtl_info{CHROMOSOME_FROM_REF}};
 	$qtl_attr{chromosome} = $chrom unless $chrom;
 	
-	if( $qtl_info{'3_4_MAP_POS_START'} )
-	{
-		my($start, $end) = ($qtl_info{'3_4_MAP_POS_START'}, $qtl_info{'3_4_MAP_POS_STOP'});
-		$qtl_attr{locations} = [ $item_doc->add_item( 'Location',
-												locatedOn => $chrom,
-												start => $start,
-												end => $end
-												)];
-	}
-	
 	
 	#Add Publications
 	if (my $ids = $qtl_info{CURATED_REF_PUBMED_ID}) 
@@ -127,6 +117,16 @@ while(<$QTLS>)
 	}
 	
 	my $qtl_item = $item_doc->add_item( QTL => %qtl_attr);
+	
+	if( $qtl_info{'3_4_MAP_POS_START'} )
+	{
+		my($start, $end) = ($qtl_info{'3_4_MAP_POS_START'}, $qtl_info{'3_4_MAP_POS_STOP'});
+		$item_doc->add_item( 'Location',
+								locatedOn => $chrom,
+								start => $start,
+								end => $end,
+								feature => $qtl_item)];
+	}
 	
 	my $syn_item = $item_doc->add_item('Synonym', value => $qtl_info{QTL_SYMBOL},
 											subject => $qtl_item);
