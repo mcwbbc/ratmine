@@ -125,7 +125,7 @@ while(<$QTLS>)
 								locatedOn => $chrom,
 								start => $start,
 								end => $end,
-								feature => $qtl_item)];
+								feature => $qtl_item);
 	}
 	
 	my $syn_item = $item_doc->add_item('Synonym', value => $qtl_info{QTL_SYMBOL},

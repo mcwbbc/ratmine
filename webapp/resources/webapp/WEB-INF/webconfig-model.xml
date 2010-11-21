@@ -245,6 +245,12 @@
 	
 	<class className="org.intermine.model.bio.Experiment">
 	</class>
+
+  <class className="org.intermine.model.bio.Synonym">
+	<fields>
+		<fieldconfig fieldExpr="value"/>
+	</fields>
+  </class>
 	
   <class className="org.intermine.model.bio.Transcript">
     <fields>
