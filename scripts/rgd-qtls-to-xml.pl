@@ -83,7 +83,7 @@ while(<$QTLS>)
 	#$qtl_item->set('synonyms', [$syn_item, $syn_item2]);
 	
 	my $chrom = $chrom_items->{$qtl_info{CHROMOSOME_FROM_REF}};
-	$qtl_attr{chromosome} = $chrom unless $chrom;
+	$qtl_attr{chromosome} = $chrom if $chrom;
 	
 	
 	#Add Publications
