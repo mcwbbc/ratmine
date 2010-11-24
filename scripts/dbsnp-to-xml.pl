@@ -151,8 +151,6 @@ sub processDbSNPFile
 			my %loc_attr = (start => $pos,
 							end => $pos,
 							locatedOn => $chr_items->{$chrom});
-			my $loc_item = $item_doc->add_item(Location => %loc_attr);
-			$snp_attr{locations} = ([$loc_item]);
 			
 			#set rsSequence
 			my $rs5 = $xp->find('/Rs/Sequence/Seq5')->string_value;
@@ -165,6 +163,10 @@ sub processDbSNPFile
 		
 			print "Loading rsSNP...\n" if $vf;
 			my $snp_item = $item_doc->add_item(rsSNP => %snp_attr);
+			my %rs_loc = %loc_attr;
+			$rs_loc{feature} = $snp_item;
+			$item_doc->add_item(Location => %rs_loc);
+			
 			#create ssSNPs
 			my %ssSNPs;
 			my $ssSet = $xp->find('/Rs/Ss');
@@ -178,11 +180,13 @@ sub processDbSNPFile
 				$ss_attr{allele} = $node->find('Sequence/Observed')->string_value;
 				$ss_attr{rsSNP} = $snp_item;
 				$ss_attr{chromosome} = $chr_items->{$chrom};
-				$ss_attr{locations} = [$item_doc->add_item(Location => %loc_attr)];
 				$ss_attr{submittedId} = $node->find('@locSnpId')->string_value;
 				
 				print "Loading ssSNP...\n" if $vf;
 				my $ss_item = $item_doc->add_item(ssSNP => %ss_attr);
+				my %ss_loc = %loc_attr;
+				$ss_loc{feature} = $ss_iteml
+				$item_doc->add_item(Location => %ss_loc);
 				
 				$ssSNPs{$ssId} = $ss_item;
 			}
