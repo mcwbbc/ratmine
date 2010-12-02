@@ -85,7 +85,7 @@ public class MpStatLdr extends EnrichmentWidgetLdr
 
         try {
             qcGoAnnotation = new QueryClass(Class.forName(model.getPackageName()
-                    + ".GOAnnotation"));
+                    + ".MPAnnotation"));
             qcGoParent = new QueryClass(Class.forName(model.getPackageName() + ".OntologyTerm"));
             qcGoChild = new QueryClass(Class.forName(model.getPackageName() + ".OntologyTerm"));
         } catch (ClassNotFoundException e) {
