@@ -185,7 +185,7 @@ sub processDbSNPFile
 				print "Loading ssSNP...\n" if $vf;
 				my $ss_item = $item_doc->add_item(ssSNP => %ss_attr);
 				my %ss_loc = %loc_attr;
-				$ss_loc{feature} = $ss_iteml
+				$ss_loc{feature} = $ss_item;
 				$item_doc->add_item(Location => %ss_loc);
 				
 				$ssSNPs{$ssId} = $ss_item;
@@ -198,7 +198,6 @@ sub processDbSNPFile
 	
 			print "Write...\n" if $vf;
 			$item_doc->write();
-			$loc_item = $loc_item->destroy;
 			$snp_item = $snp_item->destroy;
 			foreach my $ssSnp (values %ssSNPs) {
 				$ssSnp->destroy;
