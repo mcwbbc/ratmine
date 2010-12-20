@@ -55,6 +55,17 @@
       <displayer src="attributeLinkDisplayer.tile"></displayer>
       <displayer src="/model/locatedSequenceFeatureImage.jsp"></displayer>
    </longdisplayers>
+    <fields>
+      <fieldconfig fieldExpr="primaryIdentifier"></fieldconfig>
+      <fieldconfig fieldExpr="symbol"></fieldconfig>
+      <fieldconfig fieldExpr="name"></fieldconfig>
+      <fieldconfig displayer="/model/sequenceShortDisplayerWithField.jsp" fieldExpr="length"></fieldconfig>
+      <fieldconfig showInResults="false" displayer="/model/chromosomeLocDisplayer.jsp" fieldExpr="chromosomeLocation"></fieldconfig>
+      <fieldconfig showInSummary="false" fieldExpr="chromosome.primaryIdentifier" showInInlineCollection="false"></fieldconfig>
+      <fieldconfig showInSummary="false" fieldExpr="chromosomeLocation.start" showInInlineCollection="false"></fieldconfig>
+      <fieldconfig showInSummary="false" fieldExpr="chromosomeLocation.end" showInInlineCollection="false"></fieldconfig>
+      <fieldconfig fieldExpr="organism.name"></fieldconfig>
+   </fields>
 </class>
 
 <class className="org.intermine.model.bio.Genotype">
