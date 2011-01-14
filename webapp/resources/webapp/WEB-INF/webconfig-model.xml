@@ -249,6 +249,12 @@
 	</class>
 	
 	<class className="org.intermine.model.bio.Project">
+		<fields>
+			<fieldconfig fieldExpr="name"></fieldconfig>
+			<fieldconfig fieldExpr="surnamePI"></fieldconfig>
+			<fieldconfig fieldExpr="title"></fieldconfig>
+			<fieldconfig fieldExpr="url"></fieldconfig>
+		</fields>
 	</class>
 	
 	<class className="org.intermine.model.bio.Lab">

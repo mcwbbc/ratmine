@@ -99,7 +99,7 @@ while(<$GENES>)
 		{
 			next if (exists $ensemblIds{$id});
 			my $syn_item = $item_doc->add_item('Synonym',
-												value => '$id',
+												value => "$id",
 												subject => $gene_item);
 			$ensemblIds{$id} = 1;
 		}

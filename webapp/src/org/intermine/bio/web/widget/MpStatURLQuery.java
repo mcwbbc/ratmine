@@ -9,6 +9,7 @@ package org.intermine.bio.web.widget;
  * information or http://www.gnu.org/copyleft/lesser.html.
  *
  */
+ import java.util.Arrays;
 
 import org.intermine.api.profile.InterMineBag;
 import org.intermine.objectstore.ObjectStore;
@@ -68,9 +69,9 @@ public class MpStatURLQuery implements WidgetURLQuery
         q.addConstraint(Constraints.isNull(prefix + ".mpAnnotation.qualifier"));
 
         if (!showAll) {
-	        //  go term
-	        q.addConstraint(Constraints.lookup(prefix + ".mpAnnotation.ontologyTerm.parents",
-	                key, "MPTerm"));
+	        String[] keys = key.split(",");
+	        q.addConstraint(Constraints.oneOfValues(prefix + ".mpAnnotation.ontologyTerm.parents.identifier",
+	                Arrays.asList(key)));
    		}
         return q;
     }

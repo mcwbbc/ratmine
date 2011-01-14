@@ -53,7 +53,7 @@
 	  <c:set var="type" value="RGD_curated_genes"/>
 	</c:if>
 
-	<c:if test="${type == 'Qtls'}">
+	<c:if test="${type == 'QTLs'}">
 	  <c:set var="name" value="${object.symbol}"/>
 	  <c:set var="symbol" value="${object.symbol}"/>
 	  <c:set var="type" value="QTLS"/>
