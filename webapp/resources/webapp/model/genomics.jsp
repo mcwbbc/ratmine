@@ -47,7 +47,7 @@
         <ul>
           <li>
             <im:querylink text="All <i>Rattus norvegicus</i> genes (browse)" skipBuilder="true">
-              <query name="" model="genomic" view="Gene.secondaryIdentifier Gene.name Gene.primaryIdentifier Gene.symbol Gene.chromosome.identifier Gene.chromosomeLocation.start Gene.chromosomeLocation.end">
+              <query name="" model="genomic" view="Gene.secondaryIdentifier Gene.name Gene.primaryIdentifier Gene.symbol Gene.chromosome.primaryIdentifier Gene.chromosomeLocation.start Gene.chromosomeLocation.end">
                 <node path="Gene" type="Gene">
                 </node>
                 <node path="Gene.organism" type="Organism">
