@@ -1,5 +1,14 @@
 <webconfig>
-	
+
+<class className="org.intermine.model.bio.Allele">
+   <fields>
+      <fieldconfig fieldExpr="simpleSequenceLengthVariation.primaryIdentifier"></fieldconfig>
+      <fieldconfig fieldExpr="length"></fieldconfig>
+      <fieldconfig fieldExpr="strain.primaryIdentifier"></fieldconfig>
+      <fieldconfig fieldExpr="strain.symbol"></fieldconfig>
+   </fields>
+</class>
+
 <class className="org.intermine.model.bio.Array">
    <fields>
       <fieldconfig fieldExpr="primaryIdentifier"></fieldconfig>
@@ -26,6 +35,13 @@
       <fieldconfig fieldExpr="text"></fieldconfig>
    </fields>
 </class>
+
+<class className="org.intermine.model.bio.ConsequenceType">
+	<fields>
+		<fieldconfig fieldExpr="type"/>
+	</fields>
+</class>
+
 <class className="org.intermine.model.bio.DataSet">
    <fields>
       <fieldconfig fieldExpr="name"></fieldconfig>
@@ -49,6 +65,17 @@
       <fieldconfig fieldExpr="qualifier"></fieldconfig>
    </fields>
 </class>	
+
+<class className="org.intermine.model.bio.Experiment">
+</class>
+
+<class className="org.intermine.model.bio.Expression">
+   <fields>
+      <fieldconfig fieldExpr="tissue"></fieldconfig>
+      <fieldconfig fieldExpr="foldChange"></fieldconfig>
+      <fieldconfig fieldExpr="pval"></fieldconfig>
+   </fields>
+</class>
 
 <class className="org.intermine.model.bio.Gene">
    <longdisplayers>
@@ -76,6 +103,42 @@
    </fields>
 </class>
 
+<class className="org.intermine.model.bio.GOAnnotation">
+   <fields>
+      <fieldconfig fieldExpr="ontologyTerm.identifier"></fieldconfig>
+      <fieldconfig fieldExpr="ontologyTerm.name"></fieldconfig>
+      <fieldconfig fieldExpr="qualifier"></fieldconfig>
+   </fields>
+</class>
+	
+<class className="org.intermine.model.bio.GOAnnotation">
+   <fields>
+      <fieldconfig fieldExpr="ontologyTerm.identifier"></fieldconfig>
+      <fieldconfig fieldExpr="ontologyTerm.name"></fieldconfig>
+      <fieldconfig fieldExpr="qualifier"></fieldconfig>
+   </fields>
+</class>	
+
+<class className="org.intermine.model.bio.Interaction">
+	<fields>
+		<fieldconfig fieldExpr="gene.primaryIdentifier"></fieldconfig>
+		<fieldconfig fieldExpr="shortName"></fieldconfig>
+		<fieldconfig fieldExpr="confidenceText"></fieldconfig>
+		<fieldconfig fieldExpr="confidence"></fieldconfig>
+		<fieldconfig fieldExpr="role"></fieldconfig>
+	</fields>
+</class>
+
+<class className="org.intermine.model.bio.InteractionExperiment">
+	<fields>
+		<fieldconfig fieldExpr="description"></fieldconfig>
+		<fieldconfig fieldExpr="name"></fieldconfig>
+	</fields>
+</class>
+
+<class className="org.intermine.model.bio.Lab">
+</class>
+
 <class className="org.intermine.model.bio.Location">
    <fields>
       <fieldconfig fieldExpr="locatedOn.primaryIdentifier"></fieldconfig>
@@ -85,21 +148,14 @@
    </fields>
 </class>
 
-<class className="org.intermine.model.bio.SequenceFeature">
-   <longdisplayers>
-      <displayer src="attributeLinkDisplayer.tile"></displayer>
-   </longdisplayers>
+<class className="org.intermine.model.bio.MPAnnotation">
    <fields>
-      <fieldconfig fieldExpr="primaryIdentifier"></fieldconfig>
-      <fieldconfig displayer="/model/sequenceShortDisplayerWithField.jsp" fieldExpr="length"></fieldconfig>
-      <fieldconfig showInResults="false" displayer="/model/chromosomeLocDisplayer.jsp" fieldExpr="chromosomeLocation"></fieldconfig>
-      <fieldconfig showInSummary="false" fieldExpr="chromosome.primaryIdentifier" showInInlineCollection="false"></fieldconfig>
-      <fieldconfig showInSummary="false" fieldExpr="chromosomeLocation.start" showInInlineCollection="false"></fieldconfig>
-      <fieldconfig showInSummary="false" fieldExpr="chromosomeLocation.end" showInInlineCollection="false"></fieldconfig>
-      <fieldconfig fieldExpr="organism.name"></fieldconfig>
+      <fieldconfig fieldExpr="ontologyTerm.identifier"></fieldconfig>
+      <fieldconfig fieldExpr="ontologyTerm.name"></fieldconfig>
+      <fieldconfig fieldExpr="qualifier"></fieldconfig>
    </fields>
-   <bagdisplayers></bagdisplayers>
-</class>
+</class>	
+	
 <class className="org.intermine.model.bio.OntologyTerm">
    <fields>
       <fieldconfig fieldExpr="identifier"></fieldconfig>
@@ -120,6 +176,7 @@
       <fieldconfig fieldExpr="type"></fieldconfig>
    </fields>
 </class>
+
 <class className="org.intermine.model.bio.Organism">
    <longdisplayers>
       <displayer src="attributeLinkDisplayer.tile"></displayer>
@@ -129,12 +186,23 @@
       <fieldconfig fieldExpr="taxonId"></fieldconfig>
    </fields>
 </class>
+
 <class className="org.intermine.model.bio.Pathway">
    <fields>
       <fieldconfig fieldExpr="identifier"></fieldconfig>
       <fieldconfig fieldExpr="name"></fieldconfig>
    </fields>
 </class>
+
+<class className="org.intermine.model.bio.Project">
+	<fields>
+		<fieldconfig fieldExpr="name"></fieldconfig>
+		<fieldconfig fieldExpr="surnamePI"></fieldconfig>
+		<fieldconfig fieldExpr="title"></fieldconfig>
+		<fieldconfig fieldExpr="url"></fieldconfig>
+	</fields>
+</class>
+
 <class className="org.intermine.model.bio.Protein">
    <longdisplayers>
       <displayer src="attributeLinkDisplayer.tile"></displayer>
@@ -146,6 +214,7 @@
       <fieldconfig displayer="/model/sequenceShortDisplayerWithField.jsp" fieldExpr="length"></fieldconfig>
    </fields>
 </class>
+
 <class className="org.intermine.model.bio.Publication">
    <longdisplayers>
       <displayer src="attributeLinkDisplayer.tile"></displayer>
@@ -160,6 +229,15 @@
       <fieldconfig fieldExpr="pubMedId"></fieldconfig>
    </fields>
 </class>
+
+<class className="org.intermine.model.bio.PWAnnotation">
+   <fields>
+      <fieldconfig fieldExpr="ontologyTerm.identifier"></fieldconfig>
+      <fieldconfig fieldExpr="ontologyTerm.name"></fieldconfig>
+      <fieldconfig fieldExpr="qualifier"></fieldconfig>
+   </fields>
+</class>
+
 <class className="org.intermine.model.bio.QTL">
    <longdisplayers>
       <displayer src="attributeLinkDisplayer.tile"></displayer>
@@ -190,46 +268,23 @@
       <fieldconfig fieldExpr="organism.name"></fieldconfig>
    </fields>
 </class>
-<class className="org.intermine.model.bio.Allele">
+
+<class className="org.intermine.model.bio.SequenceFeature">
+   <longdisplayers>
+      <displayer src="attributeLinkDisplayer.tile"></displayer>
+   </longdisplayers>
    <fields>
-      <fieldconfig fieldExpr="simpleSequenceLengthVariation.primaryIdentifier"></fieldconfig>
-      <fieldconfig fieldExpr="length"></fieldconfig>
-      <fieldconfig fieldExpr="strain.primaryIdentifier"></fieldconfig>
-      <fieldconfig fieldExpr="strain.symbol"></fieldconfig>
+      <fieldconfig fieldExpr="primaryIdentifier"></fieldconfig>
+      <fieldconfig displayer="/model/sequenceShortDisplayerWithField.jsp" fieldExpr="length"></fieldconfig>
+      <fieldconfig showInResults="false" displayer="/model/chromosomeLocDisplayer.jsp" fieldExpr="chromosomeLocation"></fieldconfig>
+      <fieldconfig showInSummary="false" fieldExpr="chromosome.primaryIdentifier" showInInlineCollection="false"></fieldconfig>
+      <fieldconfig showInSummary="false" fieldExpr="chromosomeLocation.start" showInInlineCollection="false"></fieldconfig>
+      <fieldconfig showInSummary="false" fieldExpr="chromosomeLocation.end" showInInlineCollection="false"></fieldconfig>
+      <fieldconfig fieldExpr="organism.name"></fieldconfig>
    </fields>
+   <bagdisplayers></bagdisplayers>
 </class>
 
-<class className="org.intermine.model.bio.Expression">
-   <fields>
-      <fieldconfig fieldExpr="tissue"></fieldconfig>
-      <fieldconfig fieldExpr="foldChange"></fieldconfig>
-      <fieldconfig fieldExpr="pval"></fieldconfig>
-   </fields>
-</class>
-<class className="org.intermine.model.bio.GOAnnotation">
-   <fields>
-      <fieldconfig fieldExpr="ontologyTerm.identifier"></fieldconfig>
-      <fieldconfig fieldExpr="ontologyTerm.name"></fieldconfig>
-      <fieldconfig fieldExpr="qualifier"></fieldconfig>
-   </fields>
-</class>
-
-<class className="org.intermine.model.bio.MPAnnotation">
-   <fields>
-      <fieldconfig fieldExpr="ontologyTerm.identifier"></fieldconfig>
-      <fieldconfig fieldExpr="ontologyTerm.name"></fieldconfig>
-      <fieldconfig fieldExpr="qualifier"></fieldconfig>
-   </fields>
-</class>	
-<class className="org.intermine.model.bio.PWAnnotation">
-   <fields>
-      <fieldconfig fieldExpr="ontologyTerm.identifier"></fieldconfig>
-      <fieldconfig fieldExpr="ontologyTerm.name"></fieldconfig>
-      <fieldconfig fieldExpr="qualifier"></fieldconfig>
-   </fields>
-</class>	
-
-	
 <class className="org.intermine.model.bio.Strain">
    <longdisplayers>
       <displayer src="attributeLinkDisplayer.tile"></displayer>
@@ -242,34 +297,13 @@
    </fields>
 </class>
 
-	<class className="org.intermine.model.bio.ConsequenceType">
-		<fields>
-			<fieldconfig fieldExpr="type"/>
-		</fields>
-	</class>
-	
-	<class className="org.intermine.model.bio.Project">
-		<fields>
-			<fieldconfig fieldExpr="name"></fieldconfig>
-			<fieldconfig fieldExpr="surnamePI"></fieldconfig>
-			<fieldconfig fieldExpr="title"></fieldconfig>
-			<fieldconfig fieldExpr="url"></fieldconfig>
-		</fields>
-	</class>
-	
-	<class className="org.intermine.model.bio.Lab">
-	</class>
-	
-	<class className="org.intermine.model.bio.Experiment">
-	</class>
-
-  <class className="org.intermine.model.bio.Synonym">
+<class className="org.intermine.model.bio.Synonym">
 	<fields>
 		<fieldconfig fieldExpr="value"/>
 	</fields>
-  </class>
+</class>
 	
-  <class className="org.intermine.model.bio.Transcript">
+<class className="org.intermine.model.bio.Transcript">
     <fields>
       <fieldconfig fieldExpr="primaryIdentifier"/>
       <fieldconfig fieldExpr="exonCount"/>
@@ -282,7 +316,7 @@
     <longdisplayers>
       <displayer src="attributeLinkDisplayer.tile"/>
     </longdisplayers>
-  </class>
+</class>
 
 <!-- exporters -->
   <tableExportConfig id="sequence" actionPath="/exportAction?type=sequenceExporter"
