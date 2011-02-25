@@ -81,7 +81,7 @@
    <longdisplayers>
       <displayer src="attributeLinkDisplayer.tile"></displayer>
       <displayer src="/model/locatedSequenceFeatureImage.jsp"></displayer>
-	  <displayer src="cytoscapeInteractionsDisplayer.tile"/></displayer>
+<!--	  <displayer src="cytoscapeInteractionsDisplayer.tile"></displayer> -->
    </longdisplayers>
     <fields>
       <fieldconfig fieldExpr="primaryIdentifier"></fieldconfig>
