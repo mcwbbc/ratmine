@@ -20,7 +20,7 @@
         type="org.intermine.bio.web.OrthologueLinkController"/>
 
 <action path="/initCytoscapeInteractionsDisplayer"
-        type="org.intermine.bio.web.struts.CytoscapeInteractionsController"/>
+        type="org.intermine.bio.web.struts.CytoscapeNetworkController"/>
 
 <action path="/cytoscapeNetworkExport"
         type="org.intermine.bio.web.struts.CytoscapeNetworkExportAction"/>

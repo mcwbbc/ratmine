@@ -48,9 +48,9 @@
   </c:if>
 
     <c:if test="${type == 'Genes'}">
+	  <c:set var="loc" value="Gene:Chr${object.chromosome.primaryIdentifier}:${object.chromosomeLocation.start}..${object.chromosomeLocation.end}"/>
 	  <c:set var="name" value="RGD${object.primaryIdentifier}"/>
-	  <c:set var="symbol" value="Sequence:${object.symbol}"/>
-	  <c:set var="type" value="RGD_curated_genes"/>
+	  <c:set var="type" value="ARGD_curated_genes;type=EntrezGenes"/>
 	</c:if>
 
 	<c:if test="${type == 'QTLs'}">
@@ -63,9 +63,9 @@
 <!-- type = ${type} -->
 
 	<html:link
-href="http://rgd.mcw.edu/gb/gbrowse/rgd_904/?name=${name};label=${type}" target="_blank">
+href="http://rgd.mcw.edu/gb/gbrowse/rgd_904/?name=${name};type=${type}" target="_blank">
       <div>
-        <html:img style="border: 1px solid black" src="http://www.rgd.mcw.edu/gb/gbrowse_img/rgd_904/?type=${type};name=${symbol};width=500;options=${options}" title="GBrowse"/>
+        <html:img style="border: 1px solid black" src="http://rgd.mcw.edu/fgb2/gbrowse_img/rgd_904/?type=${type};name=${loc};width=500;embed=0" title="GBrowse"/>
       </div>
 	</html:link>
 </c:if>
