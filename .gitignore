@@ -2,7 +2,7 @@
 dist/
 dump*
 build/
-project.xml
+project.xml*
 .svn/
 ${mine-dir}-dbmodel.jar
 postprocess/output
