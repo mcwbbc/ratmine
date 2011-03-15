@@ -97,7 +97,7 @@ while(<$QTLS>)
 	}
 	
 	#Add Strains
-	if (my $ids = $qtl_info{STRAIN_RGD_ID}) 
+	if (my $ids = $qtl_info{STRAIN_RGD_IDS}) 
 	{
       	for my $id (split(/;/, $ids))
 		{
