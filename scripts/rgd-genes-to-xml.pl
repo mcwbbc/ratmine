@@ -52,6 +52,7 @@ my $dataset_item = $item_doc->add_item('DataSet', name => $data_source);
 open(my $GENES, '<', $genes_file) or die ("cannot open $genes_file");
 my $index;
 my %pubs;
+my %prots;
 while(<$GENES>)
 {
 	chomp;
@@ -81,21 +82,32 @@ while(<$GENES>)
 	$gene_attr{fishBand} = $gene_info{FISH_BAND} if $gene_info{FISH_BAND};
 
 
-	if (my $ids = $gene_info{CURATED_REF_PUBMED_ID}) 
+	if(my $ids = $gene_info{CURATED_REF_PUBMED_ID}) 
 	{
-      	for my $id (split(/,/, $ids))
+      	foreach my $id (split(/[,;]/, $ids))
 		{
 			$pubs{$id} = $item_doc->add_item('Publication', pubMedId => $id) unless ($pubs{$id});
 			push @{$gene_attr{publications}}, $pubs{$id};
 		}
 	}
 	
+	if(my $ids = $gene_info{UNIPROT_ID})
+	{
+		foreach my $acc (split(/[,;]/, $ids)) 
+		{
+			$prots{$acc} = 	$item_doc->add_item('Protein', primaryAccession => $acc, organism => $org_item) unless($prots{$acc});
+			push @{$gene_attr{proteins}}, $prots{$acc};
+		}
+	}
+
 	my $gene_item = $item_doc->add_item(Gene => %gene_attr);
+
+
 	
 	my %ensemblIds; #prevents duplicate ids for a single record
 	if( my $ids = $gene_info{ENSEMBL_ID} )
 	{
-		foreach my $id (split(',', $ids))
+		foreach my $id (split(/[,;]/, $ids))
 		{
 			next if (exists $ensemblIds{$id});
 			my $syn_item = $item_doc->add_item('Synonym',
