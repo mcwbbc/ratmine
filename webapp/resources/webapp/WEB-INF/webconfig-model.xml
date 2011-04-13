@@ -223,12 +223,13 @@
    <fields>
       <fieldconfig fieldExpr="firstAuthor"></fieldconfig>
       <fieldconfig fieldExpr="title"></fieldconfig>
-      <fieldconfig fieldExpr="year"></fieldconfig>
       <fieldconfig fieldExpr="journal"></fieldconfig>
+	  <fieldconfig fieldExpr="year"></fieldconfig>
       <fieldconfig fieldExpr="volume"></fieldconfig>
       <fieldconfig fieldExpr="pages"></fieldconfig>
       <fieldconfig fieldExpr="pubMedId"></fieldconfig>
    </fields>
+   <bagdisplayers></bagdisplayers>
 </class>
 
 <class className="org.intermine.model.bio.PWAnnotation">
