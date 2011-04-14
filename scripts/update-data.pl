@@ -26,11 +26,12 @@ use Getopt::Long;
 use LWP::UserAgent;
 use strict;
 
-my ($conf, $project, $help, $verbose);
+my ($conf, $project, $help, $verbose, $dry);
 
 GetOptions( 'config=s' => \$conf,
 			'project=s' => \$project,
 			'verbose' => \$verbose,
+			'dry-run' => \$dry,
 			'help' => \$help );
 			
 if ($help or !($conf and $project))
@@ -117,20 +118,20 @@ sub updateData
 				}
 			}#end if(!$destination)
 			
-			&downloadFile($remote, $destination);
+			&downloadFile($remote, $destination, $dry);
 		}#end if ($remote)
 		
 		my $scriptset = $node->find('scripts/script');
 		foreach my $scriptnode ($scriptset->get_nodelist)
 		{
-			&runScript($scriptnode, $model, $destination, $source, $localfile);
+			&runScript($scriptnode, $model, $destination, $source, $localfile, $dry);
 		}
 	}#end foreach $node
 }#end updateData
 
 sub runScript
 {
-	my($node, $model, $destination, $source, $localfile) = @_;
+	my($node, $model, $destination, $source, $localfile, $dry) = @_;
 	
 	my $script = $node->find('@script')->string_value;
 	if ($script)
@@ -166,6 +167,8 @@ sub runScript
 		}#end foreach
 	
 		print "$script $options\n" if $verbose;
+		return if $dry;
+
 		my $results =  `$script $options`;
 		print $results if $verbose;
 	}#end if ($script)
@@ -173,8 +176,9 @@ sub runScript
 
 sub downloadFile
 {
-	my ($remoteFile, $localFile) = @_;
-	
+	my ($remoteFile, $localFile, $dry) = @_;
+	return if $dry;
+
 	my $ua = LWP::UserAgent->new;
 	my $req = HTTP::Request->new(GET => $remoteFile);
 	my $res = $ua->request($req, $localFile);

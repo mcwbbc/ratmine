@@ -114,5 +114,14 @@
     <tile-name>model/MP.jsp</tile-name>
     <aspect-source name="Mammalian Phenotype Annotation" url="http://www.informatics.jax.org/searches/MP_form.shtml"/>
   </aspect>
+
+  <aspect name="Publication">
+	<subtitle></subtitle>
+	<icon-image>model/images/book.png</icon-image>
+    <large-image>model/images/book.png</large-image>
+    <intro-text>
+			Publications are loaded from data sources and supplimented through NCBI.
+    </intro-text>
+  </aspect>
   
 </aspects>
