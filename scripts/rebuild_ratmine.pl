@@ -35,3 +35,4 @@ print `ant default remove-webapp release-webapp`;
 
 #step 5 precompute templates
 print `ant precompute-templates`;
+print `ant default remove-webapp release-webapp`;
