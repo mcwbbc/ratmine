@@ -156,7 +156,14 @@
       <fieldconfig fieldExpr="qualifier"></fieldconfig>
    </fields>
 </class>	
-	
+
+<class className="org.intermine.model.bio.Ontology">
+   <fields>
+      <fieldconfig fieldExpr="name"></fieldconfig>
+      <fieldconfig fieldExpr="url"></fieldconfig>
+   </fields>
+</class>
+
 <class className="org.intermine.model.bio.OntologyTerm">
    <fields>
       <fieldconfig fieldExpr="identifier"></fieldconfig>
@@ -164,6 +171,7 @@
       <fieldconfig doNotTruncate="true" fieldExpr="description"></fieldconfig>
    </fields>
 </class>
+
 <class className="org.intermine.model.bio.OntologyRelation">
    <fields>
       <fieldconfig fieldExpr="relationship"></fieldconfig>
