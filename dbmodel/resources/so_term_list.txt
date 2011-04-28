@@ -14,3 +14,7 @@ sequence_variant
 sequence_collection
 SNP
 QTL
+contig
+gap
+pseudogene
+tRNA
