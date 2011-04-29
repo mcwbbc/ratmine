@@ -16,7 +16,7 @@
     </td>
   </tr>
   <tr>
-    <td>
+    <td valign="top">
       <div class="body">
         <!--insert hidden here -->
 	  <h4>
