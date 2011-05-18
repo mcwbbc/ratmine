@@ -18,3 +18,4 @@ contig
 gap
 pseudogene
 tRNA
+mRNA

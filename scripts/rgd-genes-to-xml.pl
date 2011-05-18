@@ -20,20 +20,20 @@ use RCM;
 use List::MoreUtils qw/zip/;
 
 
-my ($model_file, $genes_file, $gene_xml, $help);
+my ($model_file, $genes_file, $gene_xml, $help, $taxon_id);
 GetOptions( 'model=s' => \$model_file,
 			'rgd_genes=s' => \$genes_file,
 			'output_file=s' => \$gene_xml,
+			'taxon_id=s' => \$taxon_id,
 			'help' => \$help);
 
 if($help or !($model_file and $genes_file))
 {
-	&printHelp;
+	printHelp();
 	exit(0);
 }
 
 my $data_source = 'Rat Genome Database';
-my $taxon_id = 10116;
 
 # The item factory needs the model so that it can check that new objects have
 # valid classnames and fields
