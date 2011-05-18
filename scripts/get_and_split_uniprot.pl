@@ -65,7 +65,7 @@ sub printHelp
 #
 #	Options:
 #	--taxon=id\tTaxon ID for organism
-#	--outputDir=location\tOutput directory
+#	--output_dir=location\tOutput directory
 #	--go\t\tCreate GOA File
 #	--help\t\tPrint this message
 HELP
