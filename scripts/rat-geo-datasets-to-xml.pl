@@ -163,7 +163,7 @@ sub createDatasetItems
 		$item_attr{description} = $hashed_info->{$key}->{dataset_description};
 		$item_attr{title} = $hashed_info->{$key}->{dataset_title};
 		$item_attr{design} = $hashed_info->{$key}->{dataset_type};
-		$item_attr{publicReleaseDate} = $hashed_info->{$key}->{dataset_update_date};
+		#$item_attr{publicReleaseDate} = $hashed_info->{$key}->{dataset_update_date};
 		
 		my $pub_item = getPublicationItem($hashed_info->{$key}->{dataset_pubmed_id});
 		
