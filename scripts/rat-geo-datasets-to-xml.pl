@@ -50,7 +50,7 @@ my $model = new InterMine::Model(file => $model_file);
 my $item_doc = new InterMine::Item::Document(model => $model, output => $output, auto_write => 1);
 
 #global hashes to track unique
-my %database_items;
+my $database_item;
 my %dataset_items;
 my %pub_items;
 
@@ -146,7 +146,7 @@ sub createDatabaseItems
 		$item_attr{description} = $hashed_info->{$key}->{Database_name};
 		$item_attr{url} = $hashed_info->{$key}->{Database_web_link};
 		$item = $item_doc->add_item(DataSource => %item_attr);
-		$dataset_items{$key} = $item;
+		$database_item = $item;
 	}
 }
 
@@ -162,13 +162,15 @@ sub createDatasetItems
 		$item_attr{name} = $key;
 		$item_attr{description} = $hashed_info->{$key}->{dataset_description};
 		$item_attr{title} = $hashed_info->{$key}->{dataset_title};
-		$item_attr{design} = $hashed_info->{$key}->{dataset_type};
+		$item_attr{type} = $hashed_info->{$key}->{dataset_type};
+		$item_attr{valueType} = $hashed_info->{$key}->{dataset_value_type};
 		#$item_attr{publicReleaseDate} = $hashed_info->{$key}->{dataset_update_date};
 		
 		my $pub_item = getPublicationItem($hashed_info->{$key}->{dataset_pubmed_id});
 		
 		$item_attr{publication} = $pub_item if $pub_item;
-		$item = $item_doc->add_item(Submission => %item_attr);
+		$item_attr{dataSource} = $database_item;
+		$item = $item_doc->add_item(GEODataSet => %item_attr);
 		$dataset_items{$key} = $item;
 	}
 }
