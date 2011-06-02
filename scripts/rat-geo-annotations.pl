@@ -69,17 +69,17 @@ while(<$IN>)
 	if($ont eq 'MA')
 	{
 		my $ont_item = getMAItem($id);
-		$item_doc->add_item('MAAnnotation', dataSets => [$gds_items{$gds}], ontologyTerm => $ont_item);
+		$item_doc->add_item('MAAnnotation', subjectDataSet => $gds_items{$gds}, ontologyTerm => $ont_item);
 	}
 	elsif($ont eq 'CL')
 	{
 		my $ont_item = getCLItem($id);
-		$item_doc->add_item('CLAnnotation', dataSets => [$gds_items{$gds}], ontologyTerm => $ont_item);
+		$item_doc->add_item('CLAnnotation', subjectDataSet => $gds_items{$gds}, ontologyTerm => $ont_item);
 	}
 	elsif($ont eq 'RS')
 	{
 		my $ont_item = getRSItem($id);
-		$item_doc->add_item('RSAnnotation', dataSets => [$gds_items{$gds}], ontologyTerm => $ont_item);
+		$item_doc->add_item('RSAnnotation', subjectDataSet => $gds_items{$gds}, ontologyTerm => $ont_item);
 	}
 	
 } #while
