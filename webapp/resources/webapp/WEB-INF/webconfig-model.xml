@@ -48,6 +48,7 @@
       <fieldconfig doNotTruncate="true" fieldExpr="url"></fieldconfig>
    </fields>
 </class>
+
 <class className="org.intermine.model.bio.DataSource">
    <longdisplayers>
       <displayer src="/model/dataSourceLong.jsp"></displayer>
@@ -102,6 +103,18 @@
       <fieldconfig fieldExpr="strain.symbol"></fieldconfig>
       <fieldconfig fieldExpr="strain.name"></fieldconfig>
    </fields>
+</class>
+
+<class className="org.intermine.model.bio.GEODataSet">
+	<fields>
+		<fieldconfig fieldExpr="name"></fieldconfig>
+		<fieldconfig fieldExpr="title"></fieldconfig>
+	</fields>
+	<longdisplayers>
+		<displayer src="attributeLinkDisplayer.tile"></displayer>
+	</longdisplayers>
+	<bagdisplayers>
+	</bagdisplayers>
 </class>
 
 <class className="org.intermine.model.bio.GOAnnotation">
@@ -315,7 +328,6 @@
 <class className="org.intermine.model.bio.Transcript">
     <fields>
       <fieldconfig fieldExpr="primaryIdentifier"/>
-      <fieldconfig fieldExpr="exonCount"/>
       <fieldconfig fieldExpr="length" displayer="/model/sequenceShortDisplayerWithField.jsp" />
       <fieldconfig fieldExpr="chromosomeLocation" displayer="/model/chromosomeLocDisplayer.jsp" showInResults="false"/>
       <fieldconfig fieldExpr="chromosome.primaryIdentifier" showInInlineCollection="false" showInSummary="false" />
@@ -419,11 +431,11 @@
                                  typeClass="org.intermine.model.bio.Gene" />
 
     <enrichmentwidgetdisplayer id="ma_enrichment" title="Mouse Gross Anatomy Enrichment"
-                               link="org.intermine.bio.web.widget.MaURLQuery"
-                               dataSetLoader="org.intermine.bio.web.widget.MaLdr"
+                               link="org.intermine.bio.web.widget.MaStatURLQuery"
+                               dataSetLoader="org.intermine.bio.web.widget.MaStatLdr"
                                 label="Mouse Gross Anatomy"
-                                filters="All datasets"
-                                filterLabel="DataSet"
+                                filters="mouse anatomy"
+                                filterLabel="Ontology"
                                 description="Mouse Anatomy enriched for objects in this list"
                                 typeClass="org.intermine.model.bio.GEODataSet" />
 
