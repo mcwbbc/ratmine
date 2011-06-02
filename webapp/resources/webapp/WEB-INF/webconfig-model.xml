@@ -42,6 +42,14 @@
 	</fields>
 </class>
 
+<class className="org.intermine.model.bio.CLAnnotation">
+   <fields>
+      <fieldconfig fieldExpr="ontologyTerm.identifier"></fieldconfig>
+      <fieldconfig fieldExpr="ontologyTerm.name"></fieldconfig>
+      <fieldconfig fieldExpr="qualifier"></fieldconfig>
+   </fields>
+</class>
+
 <class className="org.intermine.model.bio.DataSet">
    <fields>
       <fieldconfig fieldExpr="name"></fieldconfig>
@@ -162,6 +170,14 @@
    </fields>
 </class>
 
+<class className="org.intermine.model.bio.MAAnnotation">
+   <fields>
+      <fieldconfig fieldExpr="ontologyTerm.identifier"></fieldconfig>
+      <fieldconfig fieldExpr="ontologyTerm.name"></fieldconfig>
+      <fieldconfig fieldExpr="qualifier"></fieldconfig>
+   </fields>
+</class>
+
 <class className="org.intermine.model.bio.MPAnnotation">
    <fields>
       <fieldconfig fieldExpr="ontologyTerm.identifier"></fieldconfig>
@@ -272,6 +288,14 @@
       <fieldconfig showInResults="false" displayer="/model/chromosomeLocDisplayer.jsp" fieldExpr="chromosomeLocation"></fieldconfig>
       <fieldconfig fieldExpr="lod"></fieldconfig>
       <fieldconfig fieldExpr="pValue"></fieldconfig>
+   </fields>
+</class>
+
+<class className="org.intermine.model.bio.RSAnnotation">
+   <fields>
+      <fieldconfig fieldExpr="ontologyTerm.identifier"></fieldconfig>
+      <fieldconfig fieldExpr="ontologyTerm.name"></fieldconfig>
+      <fieldconfig fieldExpr="qualifier"></fieldconfig>
    </fields>
 </class>
 
