@@ -29,10 +29,6 @@ print `ant create-db-userprofile`;
 print `cp ${HOME}userprofile.xml ${webapp_home}build/userprofile.xml`;
 print `ant read-userprofile-xml`;
 
-#step 4 release webapp
-print `ant clean`;
-print `ant default remove-webapp release-webapp`;
-
-#step 5 precompute templates
+#step 4 precompute templates and release webapp
 print `ant precompute-templates`;
 print `ant default remove-webapp release-webapp`;
