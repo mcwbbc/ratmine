@@ -127,7 +127,12 @@ public class MaStatLdr extends EnrichmentWidgetLdr
         ConstraintSet cs = new ConstraintSet(ConstraintOp.AND);
 
         // gene.goAnnotation CONTAINS GOAnnotation
-        QueryCollectionReference c1 = new QueryCollectionReference(qcGene, "maAnnotation");
+        QueryCollectionReference c1;
+		if (bagType.equals("GEODataSet")) {
+			c1 = new QueryCollectionReference(qcGEODataSet, "maAnnotation");
+		} else {
+			c1 = new QueryCollectionReference(qcGene, "maAnnotation");
+		}
         cs.addConstraint(new ContainsConstraint(c1, ConstraintOp.CONTAINS, qcGoAnnotation));
 
         // ignore the big three ontologies
@@ -162,7 +167,7 @@ public class MaStatLdr extends EnrichmentWidgetLdr
             try {
                 taxonIdInts.add(new Integer(taxonId));
             } catch (NumberFormatException e) {
-                LOG.error("Error rendering pw stat widget, invalid taxonIds: " + taxonIds);
+                LOG.error("Error rendering ma stat widget, invalid taxonIds: " + taxonIds);
                 // don't throw an exception, return NULL instead.  The widget will display 'no
                 // results'. the javascript that renders widgets assumes a valid widget and thus
                 // can't handle an exception thrown here.
