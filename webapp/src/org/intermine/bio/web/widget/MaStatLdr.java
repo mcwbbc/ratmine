@@ -179,8 +179,13 @@ public class MaStatLdr extends EnrichmentWidgetLdr
         // can't be a NOT relationship!
         cs.addConstraint(new SimpleConstraint(qfQualifier, ConstraintOp.IS_NULL));
 
-        // gene is from organism
-        QueryObjectReference c9 = new QueryObjectReference(qcGene, "organism");
+        // object is from organism
+        QueryObjectReference c9;
+		if (bagType.equals("GEODataSet")) {
+			c9 =  new QueryObjectReference(qcGEODataSet, "organism");
+		} else {
+			c9 =  new QueryObjectReference(qcGene, "organism");
+		}
         cs.addConstraint(new ContainsConstraint(c9, ConstraintOp.CONTAINS, qcOrganism));
 
         if (!action.startsWith("population")) {
@@ -194,7 +199,13 @@ public class MaStatLdr extends EnrichmentWidgetLdr
 
         Query q = new Query();
         q.setDistinct(true);
-        q.addFrom(qcGene);
+		
+		if (bagType.equals("GEODataSet")){
+			q.addFrom(qcGEODataSet);
+		} else {
+			q.addFrom(qcGene);
+		}
+		
         q.addFrom(qcGoAnnotation);
         q.addFrom(qcOrganism);
         q.addFrom(qcGoParent);

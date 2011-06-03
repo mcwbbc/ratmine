@@ -458,7 +458,7 @@
                                link="org.intermine.bio.web.widget.MaStatURLQuery"
                                dataSetLoader="org.intermine.bio.web.widget.MaStatLdr"
                                 label="Mouse Gross Anatomy"
-                                filters="mouse anatomy"
+                                filters="adult_mouse_anatomy.gxd"
                                 filterLabel="Ontology"
                                 description="Mouse Anatomy enriched for objects in this list"
                                 typeClass="org.intermine.model.bio.GEODataSet" />

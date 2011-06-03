@@ -54,7 +54,7 @@ my $database_item;
 my %dataset_items;
 my %pub_items;
 
-$item_doc->add_item('Organism', taxonId => '10116');
+my $organism_item = $item_doc->add_item('Organism', taxonId => '10116');
 
 my @files = <$input_directory/*.soft>;
 foreach my $file (@files)
@@ -170,6 +170,7 @@ sub createDatasetItems
 		
 		$item_attr{publication} = $pub_item if $pub_item;
 		$item_attr{dataSource} = $database_item;
+		$item_attr{organism} = $organism_item;
 		$item = $item_doc->add_item(GEODataSet => %item_attr);
 		$dataset_items{$key} = $item;
 	}
