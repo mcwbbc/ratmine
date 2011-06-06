@@ -463,6 +463,24 @@
                                 description="Mouse Anatomy enriched for objects in this list"
                                 typeClass="org.intermine.model.bio.GEODataSet" />
 
+    <enrichmentwidgetdisplayer id="cl_enrichment" title="Cell Enrichment"
+                               link="org.intermine.bio.web.widget.ClStatURLQuery"
+                               dataSetLoader="org.intermine.bio.web.widget.ClStatLdr"
+                                label="Cell"
+                                filters="cell"
+                                filterLabel="Ontology"
+                                description="Cell enriched for objects in this list"
+                                typeClass="org.intermine.model.bio.GEODataSet" />
+
+    <enrichmentwidgetdisplayer id="rs_enrichment" title="Rat Strain Enrichment"
+                               link="org.intermine.bio.web.widget.RsStatURLQuery"
+                               dataSetLoader="org.intermine.bio.web.widget.RsStatLdr"
+                                label="Rat Strain"
+                                filters="Rat Strain Ontology"
+                                filterLabel="Ontology"
+                                description="Rat Strain enriched for objects in this list"
+                                typeClass="org.intermine.model.bio.GEODataSet" />
+
 <!--		<bagtabledisplayer id="qtls" title="QTLs"
                 			         pathStrings="Gene.overlappingfeatures"
 			                         description="Count of QTLs that overlap with genes in the list."

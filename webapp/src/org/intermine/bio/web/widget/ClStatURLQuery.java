@@ -23,7 +23,7 @@ import org.intermine.web.logic.widget.WidgetURLQuery;
  * @author Julie Sullivan
  * @updated Andrew Vallejos
  */
-public class MaStatURLQuery implements WidgetURLQuery
+public class ClStatURLQuery implements WidgetURLQuery
 {
     //private static final Logger LOG = Logger.getLogger(GoStatURLQuery.class);
     private ObjectStore os;
@@ -35,7 +35,7 @@ public class MaStatURLQuery implements WidgetURLQuery
      * @param key go terms user selected
      * @param bag bag page they were on
      */
-    public MaStatURLQuery(ObjectStore os, InterMineBag bag, String key) {
+    public ClStatURLQuery(ObjectStore os, InterMineBag bag, String key) {
         this.bag = bag;
         this.key = key;
         this.os = os;
@@ -66,19 +66,19 @@ public class MaStatURLQuery implements WidgetURLQuery
         }
 
         q.addViews(
-            prefix + ".maAnnotation.ontologyTerm.identifier",
-            prefix + ".maAnnotation.ontologyTerm.name",
-            prefix + ".maAnnotation.ontologyTerm.relations.parentTerm.identifier",
-            prefix + ".maAnnotation.ontologyTerm.relations.parentTerm.name");
+            prefix + ".clAnnotation.ontologyTerm.identifier",
+            prefix + ".clAnnotation.ontologyTerm.name",
+            prefix + ".clAnnotation.ontologyTerm.relations.parentTerm.identifier",
+            prefix + ".clAnnotation.ontologyTerm.relations.parentTerm.name");
 
         q.addConstraint(Constraints.in(bagType, bag.getName()));
 
         // can't be a NOT relationship!
-        q.addConstraint(Constraints.isNull(prefix + ".maAnnotation.qualifier"));
+        q.addConstraint(Constraints.isNull(prefix + ".clAnnotation.qualifier"));
 
         if (!showAll) {
 	        String[] keys = key.split(",");
-	        q.addConstraint(Constraints.oneOfValues(prefix + ".maAnnotation.ontologyTerm.parents.identifier",
+	        q.addConstraint(Constraints.oneOfValues(prefix + ".clAnnotation.ontologyTerm.parents.identifier",
 	                Arrays.asList(key)));
    		}
         return q;
