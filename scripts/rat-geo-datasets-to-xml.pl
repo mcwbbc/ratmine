@@ -67,6 +67,8 @@ foreach my $file (@files)
 			case "DATABASE"	{ createDatabaseItems($$hashed_data{$class}); }
 			case "DATASET"	{ createDatasetItems($$hashed_data{$class}); }
 			case "SUBSET"	{ createSubsetItems($$hashed_data{$class}); } #TODO
+			case "PLATFORM"	{ createPlatformItems($$hashed_data{$class}); } #TODO
+			case "SAMPLE"	{ createSampleItems($$hashed_data{$class}); } #TODO
 			else			{}
 		} #switch
 	} #foreach my $class
@@ -179,6 +181,25 @@ sub createDatasetItems
 sub createSubsetItems
 {
 	#print "create subset item\n";
+}
+
+sub createPlatformItems
+{
+	my $hashed_info = shift;
+	my (%item_attr, $item);
+	
+	foreach my $key (keys(%$hashed_info))
+	{
+		next if(exists $platform_items{$key});
+		
+		$item_attr{name} = $hashed_info->{$key}->{Platform_title};
+		$item_attr{primaryIdentifier} = $hashed_info->{$key}->{Platform_geo_accession};
+		$item_attr{vendor} = $hashed_info->{$key}->{Platform_manufacturer};
+		$item = $item_doc->add_item(Array => %item_attr);
+		
+		$platform_items{$key} = $item;
+		
+	}
 }
 
 sub getPublicationItem
