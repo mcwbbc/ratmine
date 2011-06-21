@@ -51,7 +51,7 @@ foreach my $input_file (@files)
 {	
 	my $name = $1 if $input_file =~ /[\\\/]([^\\\/]+?)\./;
 	
-	my $array_item = $item_doc->add_item('Array', primaryIdentifier => $name,
+	my $array_item = $item_doc->add_item('Array', name => $name,
 											vendor => 'AffyMetrix',
 											organism => $org_item);
 	
