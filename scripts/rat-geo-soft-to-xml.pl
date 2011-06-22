@@ -35,6 +35,10 @@ GetOptions( 'model=s' => \$model_file,
 			'help' => \$help,
 			'verbose' => \$vf);
 
+if($help or !$model)
+{
+	printHelp();
+}
 my $model = new InterMine::Model(file => $model_file);
 my $item_doc = new InterMine::Item::Document(model => $model, output => $output, auto_write => 1);
 
@@ -75,6 +79,23 @@ $item_doc->close;
 exit(0);
 
 ###subroutintes
+
+sub printHelp
+{
+	print <<HELP;
+rat-geo-soft-to-xml.pl --model path_to_model_file --input path_to_input_directory --output intermine.xml
+
+Arguments:
+model	model file
+input	input directory
+output	output file
+
+Flags:
+series	use if processing GEO series records
+help	prints this message
+
+HELP
+}
 
 sub downloadData
 {
