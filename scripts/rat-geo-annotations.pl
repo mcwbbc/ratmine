@@ -44,13 +44,15 @@ my %ma_items;
 my %cl_items;
 
 my %gds_items;
+my %gsm_items;
+my %gse_items;
 
 open(my $IN, '<', $input_file);
 
 while(<$IN>)
 {
 	chomp;
-	my($gds, $id) = split("\t");
+	my($gd_id, $id) = split("\t");
 	
 	$id =~ /\|(\w{2}):\d+/;
 	my $ont = $1;
@@ -59,27 +61,22 @@ while(<$IN>)
 	
 	print "$ont | $id\n";
 	
-	unless($gds_items{$gds})
-	{
-		my $item = $item_doc->add_item('GEODataSet', name => $gds);
-		$gds_items{$gds} = $item;
-	}
-	
+	my $geo_item = findGEOItem($gd_id);
 		
 	if($ont eq 'MA')
 	{
 		my $ont_item = getMAItem($id);
-		$item_doc->add_item('MAAnnotation', subjectDataSet => $gds_items{$gds}, ontologyTerm => $ont_item);
+		$item_doc->add_item('MAAnnotation', subjectDataSet => $geo_item, ontologyTerm => $ont_item);
 	}
 	elsif($ont eq 'CL')
 	{
 		my $ont_item = getCLItem($id);
-		$item_doc->add_item('CLAnnotation', subjectDataSet => $gds_items{$gds}, ontologyTerm => $ont_item);
+		$item_doc->add_item('CLAnnotation', subjectDataSet => $geo_item, ontologyTerm => $ont_item);
 	}
 	elsif($ont eq 'RS')
 	{
 		my $ont_item = getRSItem($id);
-		$item_doc->add_item('RSAnnotation', subjectDataSet => $gds_items{$gds}, ontologyTerm => $ont_item);
+		$item_doc->add_item('RSAnnotation', subjectDataSet => $geo_item, ontologyTerm => $ont_item);
 	}
 	
 } #while
@@ -88,6 +85,43 @@ $item_doc->close;
 exit(0);
 
 ###subroutintes
+
+sub findGEOItem
+{
+	my $id = shift;
+	
+	my $class = $& if $id =~ /^\w{3}/;
+	
+	my $item;
+	
+	if($class eq 'GDS')
+	{
+		$item = getItem(\%gds_items, 'GEODataSet', $id);
+	}
+	elsif($class eq 'GSE')
+	{
+		$item = getItem(\%gse_items, 'GEOSeries', $id);
+	}
+	elsif($class eq 'GSM')
+	{
+		$item = getItem(\%gsm_items, 'GEOSample', $id);
+	}
+	else
+	{	die("Unknown class: $class\n");	}
+} #end findGEOItem
+
+sub getItem
+{
+	my($items_ref, $class, $id) = @_;
+	
+	unless($items_ref->{$id})
+	{
+		my $item = $item_doc->add_item($class, name => $id);
+		$items_ref->{$id} = $item;
+	}
+	
+	return $items_ref->{$id};
+}
 
 sub getMAItem
 {

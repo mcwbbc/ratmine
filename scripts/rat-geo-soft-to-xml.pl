@@ -24,18 +24,19 @@ use LWP::UserAgent;
 
 
 #arguments
-my ($model_file, $input_directory, $output, $series_flag);
+my ($model_file, $input_directory, $output);
 #flags
-my ($help, $vf);
+my ($help, $vf, $series_flag, $samples_flag);
 
 GetOptions( 'model=s' => \$model_file,
 			'input=s' => \$input_directory,
 			'output=s' => \$output,
 			'series' => \$series_flag,
+			'samples' => \$samples_flag,
 			'help' => \$help,
 			'verbose' => \$vf);
 
-if($help or !$model)
+if($help or !$model_file or ($series_flag and $samples_flag))
 {
 	printHelp();
 }
@@ -48,6 +49,7 @@ my %dataset_items;
 my %pub_items;
 my %platform_items;
 my %series_items;
+my %sample_items;
 
 my $organism_item = $item_doc->add_item('Organism', taxonId => '10116');
 
@@ -55,6 +57,8 @@ my @files;
 
 if($series_flag)
 {	@files = <$input_directory/*_series.soft>;	}
+elsif($samples_flag)
+{	@files = <$input_directory/*_sample.soft>;	}
 else
 {	@files = <$input_directory/*.soft>;	}
 
@@ -70,6 +74,7 @@ foreach my $file (@files)
 			case "SUBSET"	{ createSubsetItems($$hashed_data{$class}); } #TODO
 			case "PLATFORM"	{ createPlatformItems($$hashed_data{$class}); }
 			case "SERIES"	{ createSeriesItems($$hashed_data{$class}); }
+			case "SAMPLE"	{ createSampleItems($$hashed_data{$class});	}
 			else			{}
 		} #switch
 	} #foreach my $class
@@ -125,13 +130,13 @@ sub processFile
 		if(/^\^/)
 		{
 			s/.//;
-			($class, $name) = split(' = '); 
+			($class, $name) = split(' = ', $_, 2); 
 		}
 		elsif(/^!/)
 		{
 			die('malformed SOFT file') unless ($class and $name);
 			s/.//;
-			my ($point, $value) = split(' = ');
+			my ($point, $value) = split(' = ', $_, 2);
 			
 			if($info{$class}->{$name}->{$point})
 			{
@@ -257,7 +262,47 @@ sub createSeriesItems
 		
 		$item = $item_doc->add_item(GEOSeries => %item_attr);
 		
-		$platform_items{$key} = $item;
+		$series_items{$key} = $item;
+		
+	}
+}
+
+sub createSampleItems
+{
+	my $hashed_info = shift;
+	my (%item_attr, $item);
+	
+	foreach my $key (keys(%$hashed_info))
+	{
+		next if(exists $sample_items{$key});
+		
+		$item_attr{title} = $hashed_info->{$key}->{Sample_title};
+		$item_attr{geoAccession} = $key;
+		$item_attr{type} = $hashed_info->{$key}->{Sample_type};
+		$item_attr{source} = $hashed_info->{$key}->{Sample_source_name_ch1};
+		$item_attr{molecule} = $hashed_info->{$key}->{Sample_molecule_ch1};
+		$item_attr{status} = $hashed_info->{$key}->{Sample_status};
+
+print $hashed_info->{$key}->{Sample_series_id} ."\n";
+
+		my $series_item = getSeriesItem($hashed_info->{$key}->{Sample_series_id});
+		my $platform_item = getPlatformItem($hashed_info->{$key}->{Sample_platform_id});
+		
+		$item_attr{description} = join(" ", @{$hashed_info->{$key}->{Sample_description}});
+		
+		if(ref($series_item) eq "ARRAY")
+		{	$item_attr{geoSeries} = $series_item;	}
+		elsif($platform_item)
+		{	$item_attr{geoSeries} = [$series_item];	}		
+		
+		if($platform_item and ref($platform_item) eq "ARRAY")
+		{	$item_attr{platforms} = $platform_item;	}
+		elsif($platform_item)
+		{	$item_attr{platforms} = [$platform_item];	}
+		
+		$item = $item_doc->add_item(GEOSample => %item_attr);
+		
+		$sample_items{$key} = $item;
 		
 	}
 }
@@ -313,4 +358,32 @@ sub getPlatformItem
 		}
 		return $platform_items{$geoAcc};
 	}
+}
+
+sub getSeriesItem
+{
+	my $geoAcc = shift;
+	
+	return undef unless $geoAcc;
+		
+	if(ref($geoAcc) eq 'ARRAY')
+	{
+		my @series;
+		foreach my $s (@$geoAcc)
+		{
+			my $si = getSeriesItem($s);
+			push(@series, $si);
+		}
+		return \@series;
+	}
+	else
+	{
+		unless(exists $series_items{$geoAcc})
+		{
+			my $item = $item_doc->add_item('GEOSeries', geoAccession => $geoAcc);
+			$series_items{$geoAcc} = $item;
+		}
+		return $series_items{$geoAcc};
+	}
+
 }

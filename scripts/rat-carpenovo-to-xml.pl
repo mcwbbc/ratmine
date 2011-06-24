@@ -20,14 +20,14 @@ use RCM;
 use List::MoreUtils qw/zip/;
 
 
-my ($model_file, $genes_file, $gene_xml, $help, $taxon_id);
+my ($model_file, $input_file, $output_xml, $help, $taxon_id);
 GetOptions( 'model=s' => \$model_file,
 			'input_file=s' => \$input_file,
 			'output_file=s' => \$output_xml,
 			'taxon_id=s' => \$taxon_id,
 			'help' => \$help);
 
-if($help or !($model_file and $genes_file))
+if($help or !($model_file and $input_file))
 {
 	printHelp();
 	exit(0);
@@ -38,19 +38,52 @@ my $data_source = 'Rat Genome Database';
 # The item factory needs the model so that it can check that new objects have
 # valid classnames and fields
 my $model = new InterMine::Model(file => $model_file);
-my $item_doc = new InterMine::Item::Document(model => $model, output => $gene_xml, auto_write => 1);
+my $item_doc = new InterMine::Item::Document(model => $model, output => $output_xml, auto_write => 1);
 
 ####
 #User Additions
 my $org_item = $item_doc->add_item('Organism', taxonId => $taxon_id);
 my $dataset_item = $item_doc->add_item('DataSet', name => $data_source);
 
-#my $chrom_items;
-#$chrom_items = RCM::addChromosomes($item_doc, $org_item);
+my $chrom_items = RCM::addChromosomes($item_doc, $org_item);
 
 # read the genes file
-open(my $GENES, '<', $genes_file) or die ("cannot open $genes_file");
+open(my $INPUT, '<', $input_file) or die ("cannot open $input_file");
 my $index;
-my %pubs;
-my %prots;
-while(<$GENES>)
+
+
+while(<$INPUT>)
+{
+	chomp;
+	if(/^\D/) #parses header line
+	{
+		$index = RCM::parseHeader($_);
+		next
+	}
+	my @fields = split(/\t/);
+   	my %info = zip(@$index, @fields);
+	my $chr_item = $chrom_items->{$info{CHROMOSOME}};
+	
+	
+	my $snp_item = $item_doc->add_item('SNP', primaryIdentifier => $info{VARIANT_ID},
+								chromosome => $chr_item,
+								allele => $info{VAR_NUC});
+	
+	$item_doc->add_item('Location', start => $info{START_POS},
+									end => $info{END_POS},
+									locatedOn => $chr_item,
+									feature => $snp_item);
+}
+
+$item_doc->close;
+
+### Subroutines ###
+
+sub printHelp
+{
+	print <<HELP
+	
+	HELP!
+	
+HELP
+}
