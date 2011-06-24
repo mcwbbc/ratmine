@@ -4,7 +4,6 @@
 # the script dumps the XML to STDOUT, as per the example on the InterMine wiki
 # However, the script also creates a gff3 file to the location specified
 
-use Switch;
 use strict;
 
 BEGIN {
@@ -21,7 +20,6 @@ use RCM;
 use List::MoreUtils qw/zip/;
 use XML::XPath;
 use LWP::UserAgent;
-
 
 #arguments
 my ($model_file, $input_directory, $output);
@@ -67,16 +65,17 @@ foreach my $file (@files)
 	my $hashed_data = processFile($file);
 	foreach my $class (keys(%$hashed_data))
 	{
-		switch($class)
+		#emulating Switch, since its not working
+		for($class)
 		{
-			case "DATABASE"	{ createDatabaseItems($$hashed_data{$class}); }
-			case "DATASET"	{ createDatasetItems($$hashed_data{$class}); }
-			case "SUBSET"	{ createSubsetItems($$hashed_data{$class}); } #TODO
-			case "PLATFORM"	{ createPlatformItems($$hashed_data{$class}); }
-			case "SERIES"	{ createSeriesItems($$hashed_data{$class}); }
-			case "SAMPLE"	{ createSampleItems($$hashed_data{$class});	}
-			else			{}
-		} #switch
+			/DATABASE/ && do{ createDatabaseItems($$hashed_data{$class}); last;};
+			/DATASET/ && do{ createDatasetItems($$hashed_data{$class}); last;};
+			/SUBSET/ &&	do{ createSubsetItems($$hashed_data{$class}); last;}; #TODO
+			/PLATFORM/ && do{ createPlatformItems($$hashed_data{$class}); last;};
+			/SERIES/ &&	 do{ createSeriesItems($$hashed_data{$class}); last;};
+			/SAMPLE/ &&	do{ createSampleItems($$hashed_data{$class}); last;};
+			warn "Class $class not matched\n";
+		} #for
 	} #foreach my $class
 } #foreach my $file
 
