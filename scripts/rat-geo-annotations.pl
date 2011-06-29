@@ -116,7 +116,7 @@ sub getItem
 	
 	unless($items_ref->{$id})
 	{
-		my $item = $item_doc->add_item($class, name => $id);
+		my $item = $item_doc->add_item($class, geoAccession => $id);
 		$items_ref->{$id} = $item;
 	}
 	
