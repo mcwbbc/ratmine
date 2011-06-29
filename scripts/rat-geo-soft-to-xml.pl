@@ -282,12 +282,13 @@ sub createSampleItems
 		$item_attr{molecule} = $hashed_info->{$key}->{Sample_molecule_ch1};
 		$item_attr{status} = $hashed_info->{$key}->{Sample_status};
 
-print $hashed_info->{$key}->{Sample_series_id} ."\n";
-
 		my $series_item = getSeriesItem($hashed_info->{$key}->{Sample_series_id});
 		my $platform_item = getPlatformItem($hashed_info->{$key}->{Sample_platform_id});
 		
-		$item_attr{description} = join(" ", @{$hashed_info->{$key}->{Sample_description}});
+		if(ref($hashed_info->{$key}->{Sample_description}) eq "ARRAY")
+		{	$item_attr{description} = join(" ", @{$hashed_info->{$key}->{Sample_description}});	}
+		elsif(exists($hashed_info->{$key}->{Sample_description}))
+		{	$item_attr{description} = $hashed_info->{$key}->{Sample_description};	}
 		
 		if(ref($series_item) eq "ARRAY")
 		{	$item_attr{geoSeries} = $series_item;	}

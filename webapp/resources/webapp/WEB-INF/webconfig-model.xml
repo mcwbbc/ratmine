@@ -113,9 +113,12 @@
    </fields>
 </class>
 
-<class className="org.intermine.model.bio.GEODataSet">
+<class className="org.intermine.model.bio.GEODataset">
+</class>
+
+<class className="org.intermine.model.bio.GEORecord">
 	<fields>
-		<fieldconfig fieldExpr="name"></fieldconfig>
+		<fieldconfig fieldExpr="geoAccession"></fieldconfig>
 		<fieldconfig fieldExpr="title"></fieldconfig>
 	</fields>
 	<longdisplayers>
@@ -123,6 +126,12 @@
 	</longdisplayers>
 	<bagdisplayers>
 	</bagdisplayers>
+</class>
+
+<class className="org.intermine.model.bio.GEOSample">
+</class>
+
+<class className="org.intermine.model.bio.GEOSeries">
 </class>
 
 <class className="org.intermine.model.bio.GOAnnotation">
