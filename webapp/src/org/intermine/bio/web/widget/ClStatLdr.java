@@ -20,7 +20,7 @@ import org.intermine.metadata.Model;
 import org.intermine.model.bio.Gene;
 import org.intermine.model.bio.Organism;
 import org.intermine.model.bio.Protein;
-import org.intermine.model.bio.GEODataSet;
+import org.intermine.model.bio.GEORecord;
 import org.intermine.objectstore.ObjectStore;
 import org.intermine.objectstore.query.BagConstraint;
 import org.intermine.objectstore.query.ConstraintOp;
@@ -96,22 +96,22 @@ public class ClStatLdr extends EnrichmentWidgetLdr
             return null;
         }
         QueryClass qcProtein = new QueryClass(Protein.class);
-		QueryClass qcGEODataSet = new QueryClass(GEODataSet.class);
+		QueryClass qcGEORecord = new QueryClass(GEORecord.class);
         QueryClass qcOrganism = new QueryClass(Organism.class);
 
         QueryField qfQualifier = new QueryField(qcGoAnnotation, "qualifier");
         QueryField qfGeneId = new QueryField(qcGene, "id");
         QueryField qfTaxonId = new QueryField(qcOrganism, "taxonId");
         QueryField qfProteinId = new QueryField(qcProtein, "id");
-		QueryField qfGEODataSetId = new QueryField(qcGEODataSet, "id");
+		QueryField qfGEORecordId = new QueryField(qcGEORecord, "id");
         QueryField qfPrimaryIdentifier = null;
         QueryField qfId = null;
 		
         if (bagType.equals("Protein")) {
             qfPrimaryIdentifier = new QueryField(qcProtein, "primaryIdentifier");
             qfId = qfProteinId;
-        } else if (bagType.equals("GEODataSet")) {
-			qfPrimaryIdentifier = new QueryField(qcGEODataSet, "name");
+        } else if (bagType.equals("GEORecord")) {
+			qfPrimaryIdentifier = new QueryField(qcGEORecord, "geoAccession");
 			qfId = qfGEODataSetId;
 	
 		} else {
@@ -128,8 +128,8 @@ public class ClStatLdr extends EnrichmentWidgetLdr
 
         // gene.goAnnotation CONTAINS GOAnnotation
         QueryCollectionReference c1;
-		if (bagType.equals("GEODataSet")) {
-			c1 = new QueryCollectionReference(qcGEODataSet, "clAnnotation");
+		if (bagType.equals("GEORecord")) {
+			c1 = new QueryCollectionReference(qcGEORecord, "clAnnotation");
 		} else {
 			c1 = new QueryCollectionReference(qcGene, "clAnnotation");
 		}
@@ -181,8 +181,8 @@ public class ClStatLdr extends EnrichmentWidgetLdr
 
         // object is from organism
         QueryObjectReference c9;
-		if (bagType.equals("GEODataSet")) {
-			c9 =  new QueryObjectReference(qcGEODataSet, "organism");
+		if (bagType.equals("GEORecord")) {
+			c9 =  new QueryObjectReference(qcGEORecord, "organism");
 		} else {
 			c9 =  new QueryObjectReference(qcGene, "organism");
 		}
@@ -200,7 +200,7 @@ public class ClStatLdr extends EnrichmentWidgetLdr
         Query q = new Query();
         q.setDistinct(true);
 		
-		if (bagType.equals("GEODataSet")){
+		if (bagType.equals("GEORecord")){
 			q.addFrom(qcGEODataSet);
 		} else {
 			q.addFrom(qcGene);

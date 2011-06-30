@@ -50,8 +50,8 @@ public class ClStatURLQuery implements WidgetURLQuery
         String bagType = bag.getType();
 		String prefix;
 		
-        if ("GEODataSet".equals(bagType)) {
-			prefix = "GEODataSet";
+        if ("GEORecord".equals(bagType)) {
+			prefix = bagType;
 			q.addViews(prefix + ".name");
 	        q.addViews(prefix + ".title");
 		} else {
