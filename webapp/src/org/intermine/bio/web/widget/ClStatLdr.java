@@ -112,7 +112,7 @@ public class ClStatLdr extends EnrichmentWidgetLdr
             qfId = qfProteinId;
         } else if (bagType.equals("GEORecord")) {
 			qfPrimaryIdentifier = new QueryField(qcGEORecord, "geoAccession");
-			qfId = qfGEODataSetId;
+			qfId = qfGEORecordId;
 	
 		} else {
             qfPrimaryIdentifier = new QueryField(qcGene, "primaryIdentifier");
@@ -201,7 +201,7 @@ public class ClStatLdr extends EnrichmentWidgetLdr
         q.setDistinct(true);
 		
 		if (bagType.equals("GEORecord")){
-			q.addFrom(qcGEODataSet);
+			q.addFrom(qcGEORecord);
 		} else {
 			q.addFrom(qcGene);
 		}
