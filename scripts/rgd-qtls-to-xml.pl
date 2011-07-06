@@ -74,12 +74,11 @@ while(<$QTLS>)
 	my %qtl_attr = ( organism => $org_item,
 					primaryIdentifier => $qtl_info{QTL_RGD_ID},
 					symbol => $qtl_info{QTL_SYMBOL},
-					trait => $qtl_info{TRAIT_NAME},
 					name => $qtl_info{QTL_NAME});
 	
 	$qtl_attr{lod} = $qtl_info{LOD} if $qtl_info{LOD};
 	$qtl_attr{pValue} = $qtl_info{P_VALUE} if $qtl_info{P_VALUE};
-			
+	$qtl_attr{trait} = $qtl_info{TRAIT_NAME} if $qtl_info{TRAIT_NAME};		
 	#$qtl_item->set('synonyms', [$syn_item, $syn_item2]);
 	
 	my $chrom = $chrom_items->{$qtl_info{CHROMOSOME_FROM_REF}};

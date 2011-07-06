@@ -24,6 +24,7 @@ configuration XML file.
 use XML::XPath;
 use Getopt::Long;
 use LWP::UserAgent;
+use threads;
 use strict;
 
 my ($conf, $project, $help, $verbose, $dry);
@@ -40,9 +41,9 @@ if ($help or !($conf and $project))
 	exit(0);
 }
 
-my $projectInfo = &getProjectInfo($project);
+my $projectInfo = getProjectInfo($project);
 
-&updateData($conf, $projectInfo);
+updateData($conf, $projectInfo);
 
 exit (0);
 ###Subroutines###
@@ -99,35 +100,51 @@ sub updateData
 	
 	foreach my $node ($nodeset->get_nodelist)
 	{
-		my $source = $node->find('@name')->string_value;
-		my $remote = $node->find('remote-file')->string_value;
-		my $destination = $node->find('destination')->string_value;
-		my $localfile = '';
-		if ($remote)
-		{
-			if($$projectInfo{$source}{dir} or !$destination)
-			{
-				if($$projectInfo{$source}{file})
-				{
-					$destination = $$projectInfo{$source}{file};
-				}
-				elsif($$projectInfo{$source}{dir})
-				{
-					$localfile = $& if $remote =~ m|\/[^\/\\]+?$|;
-					$destination = $$projectInfo{$source}{dir} . $localfile if !$destination;
-				}
-			}#end if(!$destination)
-			
-			&downloadFile($remote, $destination, $dry);
-		}#end if ($remote)
-		
-		my $scriptset = $node->find('scripts/script');
-		foreach my $scriptnode ($scriptset->get_nodelist)
-		{
-			&runScript($scriptnode, $model, $destination, $source, $localfile, $dry);
-		}
+		threads->new(sub{updateNodeSource($node, $projectInfo, $model);});
 	}#end foreach $node
+	
+	while(threads->list(threads::running()))
+	{
+		foreach my $thr (threads->list(threads::joinable()))
+		{
+			$thr->join();
+		}
+		sleep(30);
+	}
 }#end updateData
+
+sub updateNodeSource
+{
+	my ($node, $projectInfo, $model) = @_;
+	
+	my $source = $node->find('@name')->string_value;
+	my $remote = $node->find('remote-file')->string_value;
+	my $destination = $node->find('destination')->string_value;
+	my $localfile = '';
+	if ($remote)
+	{
+		if($$projectInfo{$source}{dir} or !$destination)
+		{
+			if($$projectInfo{$source}{file})
+			{
+				$destination = $$projectInfo{$source}{file};
+			}
+			elsif($$projectInfo{$source}{dir})
+			{
+				$localfile = $& if $remote =~ m|\/[^\/\\]+?$|;
+				$destination = $$projectInfo{$source}{dir} . $localfile if !$destination;
+			}
+		}#end if(!$destination)
+		
+		&downloadFile($remote, $destination, $dry);
+	}#end if ($remote)
+	
+	my $scriptset = $node->find('scripts/script');
+	foreach my $scriptnode ($scriptset->get_nodelist)
+	{
+		&runScript($scriptnode, $model, $destination, $source, $localfile, $dry);
+	}
+}
 
 sub runScript
 {

@@ -20,14 +20,15 @@ use RCM;
 use List::MoreUtils qw/zip/;
 
 
-my ($model_file, $input_file, $output_xml, $help, $taxon_id);
+my ($model_file, $snp_file, $pf_file, $output_xml, $help, $taxon_id);
 GetOptions( 'model=s' => \$model_file,
-			'input_file=s' => \$input_file,
+			'snp_file=s' => \$snp_file,
+			'polyphen_file=s' => \$pf_file,
 			'output_file=s' => \$output_xml,
 			'taxon_id=s' => \$taxon_id,
 			'help' => \$help);
 
-if($help or !($model_file and $input_file))
+if($help or !($model_file and $snp_file and $pf_file))
 {
 	printHelp();
 	exit(0);
@@ -48,8 +49,9 @@ my $dataset_item = $item_doc->add_item('DataSet', name => $data_source);
 my $chrom_items = RCM::addChromosomes($item_doc, $org_item);
 
 # read the genes file
-open(my $INPUT, '<', $input_file) or die ("cannot open $input_file");
+open(my $INPUT, '<', $snp_file) or die ("cannot open $snp_file");
 my $index;
+my %vt_items;
 
 
 while(<$INPUT>)
@@ -73,7 +75,52 @@ while(<$INPUT>)
 									end => $info{END_POS},
 									locatedOn => $chr_item,
 									feature => $snp_item);
+
+	if($info{VARIANT_TRANSCRIPT_ID})
+	{
+		my $var_item = $item_doc->add_item('Transcript', primaryIdentifier => $info{VARIANT_TRANSCRIPT_ID});
+		$vt_items{$info{VARIANT_TRANSCRIPT_ID}} = $var_item;
+	}
 }
+close $INPUT;
+
+$index = undef;
+my %proteins;
+open(my $PFIN, '<', $pf_file);
+while(<$PFIN>)
+{
+	chomp;
+	s/\s*\t\s*/\t/g;
+	if(/^\D/) #parses header line
+	{
+		$index = RCM::parseHeader($_);
+		next
+	}
+	my @fields = split(/\t/);
+   	my %info = zip(@$index, @fields);
+	
+	if($info{PROTEIN_ID} and !exists($proteins{$info{PROTEIN_ID}}))
+	{ 
+		my $p = $item_doc->add_item('Protein', primaryAccession => $info{PROTEIN_ID});
+		$proteins{$info{PROTEIN_ID}} = $p;
+	}
+	my $protein = $proteins{$info{PROTEIN_ID}};
+
+	my $vt = $vt_items{$info{VARIANT_TRANSCRIPT_ID}};
+
+	my %pfattr = (primaryIdentifier => $info{POLYPHEN_ID},
+					prediction => $info{PREDICTION},
+					basis => $info{BASIS});
+
+	$pfattr{variantTranscript} = $vt if $vt;
+	$pfattr{alleleOne} = $info{AA1} if $info{AA1};
+	$pfattr{alleleTwo} = $info{AA2} if $info{AA2};
+	$pfattr{aminoAcidPosition} = $info{POSITION} if $info{POSITION};
+	$pfattr{protein} = $protein if $protein;
+
+	$item_doc->add_item('PolyPhen', %pfattr); 
+}
+close $PFIN;
 
 $item_doc->close;
 
