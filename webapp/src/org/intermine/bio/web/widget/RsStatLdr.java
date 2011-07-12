@@ -20,7 +20,10 @@ import org.intermine.metadata.Model;
 import org.intermine.model.bio.Gene;
 import org.intermine.model.bio.Organism;
 import org.intermine.model.bio.Protein;
+import org.intermine.model.bio.GEORecord;
 import org.intermine.model.bio.GEODataSet;
+import org.intermine.model.bio.GEOSample;
+import org.intermine.model.bio.GEOSeries;
 import org.intermine.objectstore.ObjectStore;
 import org.intermine.objectstore.query.BagConstraint;
 import org.intermine.objectstore.query.ConstraintOp;
@@ -96,28 +99,40 @@ public class RsStatLdr extends EnrichmentWidgetLdr
             return null;
         }
         QueryClass qcProtein = new QueryClass(Protein.class);
-		QueryClass qcGEODataSet = new QueryClass(GEODataSet.class);
         QueryClass qcOrganism = new QueryClass(Organism.class);
+		QueryClass qcGEORecord = null;
 
         QueryField qfQualifier = new QueryField(qcGoAnnotation, "qualifier");
         QueryField qfGeneId = new QueryField(qcGene, "id");
         QueryField qfTaxonId = new QueryField(qcOrganism, "taxonId");
         QueryField qfProteinId = new QueryField(qcProtein, "id");
-		QueryField qfGEODataSetId = new QueryField(qcGEODataSet, "id");
         QueryField qfPrimaryIdentifier = null;
         QueryField qfId = null;
 		
+		// determine what class to use based on bag type
         if (bagType.equals("Protein")) {
             qfPrimaryIdentifier = new QueryField(qcProtein, "primaryIdentifier");
             qfId = qfProteinId;
         } else if (bagType.equals("GEODataSet")) {
-			qfPrimaryIdentifier = new QueryField(qcGEODataSet, "name");
-			qfId = qfGEODataSetId;
-	
-		} else {
+			qcGEORecord = new QueryClass(GEODataSet.class);
+		} else if (bagType.equals("GEOSeries")) {
+			qcGEORecord = new QueryClass(GEOSeries.class);
+		} else if (bagType.equals("GEOSample")) {
+			qcGEORecord = new QueryClass(GEOSample.class);
+		}else {
             qfPrimaryIdentifier = new QueryField(qcGene, "primaryIdentifier");
             qfId = qfGeneId;
         }
+
+		// if the bag type is a GEO Record subclass then set the id
+		// qcGEORecord is used as a flag throughout the Ldr
+		QueryField qfGEORecordId = null;
+		if (qcGEORecord != null)
+		{
+			qfGEORecordId = new QueryField(qcGEORecord, "id");
+			qfPrimaryIdentifier = new QueryField(qcGEORecord, "geoAccession");
+			qfId = qfGEORecordId;
+		}
 
         // gene.goAnnotation.ontologyTerm.relations.parentTerm.identifier
         QueryField qfNamespace = new QueryField(qcGoParent, "namespace");
@@ -128,8 +143,8 @@ public class RsStatLdr extends EnrichmentWidgetLdr
 
         // gene.goAnnotation CONTAINS GOAnnotation
         QueryCollectionReference c1;
-		if (bagType.equals("GEODataSet")) {
-			c1 = new QueryCollectionReference(qcGEODataSet, "rsAnnotation");
+		if (qcGEORecord != null) {
+			c1 = new QueryCollectionReference(qcGEORecord, "rsAnnotation");
 		} else {
 			c1 = new QueryCollectionReference(qcGene, "rsAnnotation");
 		}
@@ -181,8 +196,8 @@ public class RsStatLdr extends EnrichmentWidgetLdr
 
         // object is from organism
         QueryObjectReference c9;
-		if (bagType.equals("GEODataSet")) {
-			c9 =  new QueryObjectReference(qcGEODataSet, "organism");
+		if (qcGEORecord != null) {
+			c9 =  new QueryObjectReference(qcGEORecord, "organism");
 		} else {
 			c9 =  new QueryObjectReference(qcGene, "organism");
 		}
@@ -200,8 +215,8 @@ public class RsStatLdr extends EnrichmentWidgetLdr
         Query q = new Query();
         q.setDistinct(true);
 		
-		if (bagType.equals("GEODataSet")){
-			q.addFrom(qcGEODataSet);
+		if (qcGEORecord != null){
+			q.addFrom(qcGEORecord);
 		} else {
 			q.addFrom(qcGene);
 		}

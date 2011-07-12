@@ -50,9 +50,9 @@ public class RsStatURLQuery implements WidgetURLQuery
         String bagType = bag.getType();
 		String prefix;
 		
-        if ("GEODataSet".equals(bagType)) {
-			prefix = "GEODataSet";
-			q.addViews(prefix + ".name");
+        if ("GEORecord".equals(bagType) || "GEODataSet".equals(bagType) ||"GEOSample".equals(bagType) ||"GEOSeries".equals(bagType)) {
+			prefix = bagType;
+			q.addViews(prefix + ".geoAccession");
 	        q.addViews(prefix + ".title");
 		} else {
 			prefix = ("Protein".equals(bagType) ? "Protein.genes" : "Gene");

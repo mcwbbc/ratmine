@@ -182,8 +182,17 @@ sub createDatasetItems
 	foreach my $key (keys(%$hashed_info))
 	{
 		next if(exists $dataset_items{$key});
+
+		if($hashed_info->{$key}->{dataset_platform_organism} =~ /rattus norvegicus/i)
+		{
+			$item_attr{organism} = $organism_item;
+		}
+		else
+		{
+			next;
+		}
 		
-		$item_attr{name} = $key;
+		$item_attr{geoAccession} = $key;
 		$item_attr{description} = $hashed_info->{$key}->{dataset_description};
 		$item_attr{title} = $hashed_info->{$key}->{dataset_title};
 		$item_attr{type} = $hashed_info->{$key}->{dataset_type};
@@ -204,7 +213,6 @@ sub createDatasetItems
 		{	$item_attr{platforms} = [$platform_item];	}
 		
 		$item_attr{dataSource} = $database_item;
-		$item_attr{organism} = $organism_item;
 		$item = $item_doc->add_item(GEODataSet => %item_attr);
 		$dataset_items{$key} = $item;
 	}
@@ -223,8 +231,16 @@ sub createPlatformItems
 	foreach my $key (keys(%$hashed_info))
 	{
 		next if(exists $platform_items{$key});
+		if($hashed_info->{$key}->{Platform_taxid} == 10116 or $hashed_info->{$key}->{Platform_organism} =~ /rattus norvegicus/i)
+		{
+			$item_attr{organism} = $organism_item;
+		}
+		else
+		{
+			next;
+		}
 		
-		$item_attr{name} = $hashed_info->{$key}->{Platform_title};
+		$item_attr{geoAccession} = $hashed_info->{$key}->{Platform_title};
 		$item_attr{primaryIdentifier} = $hashed_info->{$key}->{Platform_geo_accession};
 		$item_attr{vendor} = $hashed_info->{$key}->{Platform_manufacturer} if $hashed_info->{$key}->{Platform_manufacturer};
 		$item = $item_doc->add_item(Array => %item_attr);
@@ -242,6 +258,15 @@ sub createSeriesItems
 	foreach my $key (keys(%$hashed_info))
 	{
 		next if(exists $series_items{$key});
+
+		if($hashed_info->{$key}->{Series_samples_taxid} == 10116 or $hashed_info->{$key}->{Series_samples_organism} =~ /rattus norvegicus/i)
+		{
+			$item_attr{organism} = $organism_item;
+		}
+		else
+		{
+			next;
+		}
 		
 		$item_attr{title} = $hashed_info->{$key}->{Series_title};
 		$item_attr{geoAccession} = $key;
@@ -274,7 +299,15 @@ sub createSampleItems
 	foreach my $key (keys(%$hashed_info))
 	{
 		next if(exists $sample_items{$key});
-		
+		if($hashed_info->{$key}->{Sample_taxid_ch1} == 10116 or $hashed_info->{$key}->{Sample_organism_ch1} =~ /rattus norvegicus/i)
+		{
+			$item_attr{organism} = $organism_item;
+		}
+		else
+		{
+			next;
+		}
+
 		$item_attr{title} = $hashed_info->{$key}->{Sample_title};
 		$item_attr{geoAccession} = $key;
 		$item_attr{type} = $hashed_info->{$key}->{Sample_type};

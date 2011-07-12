@@ -241,6 +241,12 @@
    </fields>
 </class>
 
+<class className="org.intermine.model.bio.PolyPhen">
+	<fields>
+		<fieldconfig fieldExpr="primaryIdentifier"/>
+	</fields>
+</class>
+
 <class className="org.intermine.model.bio.Project">
 	<fields>
 		<fieldconfig fieldExpr="name"></fieldconfig>

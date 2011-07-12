@@ -21,6 +21,9 @@ import org.intermine.model.bio.Gene;
 import org.intermine.model.bio.Organism;
 import org.intermine.model.bio.Protein;
 import org.intermine.model.bio.GEORecord;
+import org.intermine.model.bio.GEODataSet;
+import org.intermine.model.bio.GEOSample;
+import org.intermine.model.bio.GEOSeries;
 import org.intermine.objectstore.ObjectStore;
 import org.intermine.objectstore.query.BagConstraint;
 import org.intermine.objectstore.query.ConstraintOp;
@@ -96,28 +99,37 @@ public class ClStatLdr extends EnrichmentWidgetLdr
             return null;
         }
         QueryClass qcProtein = new QueryClass(Protein.class);
-		QueryClass qcGEORecord = new QueryClass(GEORecord.class);
         QueryClass qcOrganism = new QueryClass(Organism.class);
+		QueryClass qcGEORecord = null;
 
         QueryField qfQualifier = new QueryField(qcGoAnnotation, "qualifier");
         QueryField qfGeneId = new QueryField(qcGene, "id");
         QueryField qfTaxonId = new QueryField(qcOrganism, "taxonId");
         QueryField qfProteinId = new QueryField(qcProtein, "id");
-		QueryField qfGEORecordId = new QueryField(qcGEORecord, "id");
         QueryField qfPrimaryIdentifier = null;
         QueryField qfId = null;
 		
         if (bagType.equals("Protein")) {
             qfPrimaryIdentifier = new QueryField(qcProtein, "primaryIdentifier");
             qfId = qfProteinId;
-        } else if (bagType.equals("GEORecord")) {
-			qfPrimaryIdentifier = new QueryField(qcGEORecord, "geoAccession");
-			qfId = qfGEORecordId;
-	
-		} else {
+        } else if (bagType.equals("GEODataSet")) {
+			qcGEORecord = new QueryClass(GEODataSet.class);
+		} else if (bagType.equals("GEOSeries")) {
+			qcGEORecord = new QueryClass(GEOSeries.class);
+		} else if (bagType.equals("GEOSample")) {
+			qcGEORecord = new QueryClass(GEOSample.class);
+		}else {
             qfPrimaryIdentifier = new QueryField(qcGene, "primaryIdentifier");
             qfId = qfGeneId;
         }
+
+		QueryField qfGEORecordId = null;
+		if (qcGEORecord != null)
+		{
+			qfGEORecordId = new QueryField(qcGEORecord, "id");
+			qfPrimaryIdentifier = new QueryField(qcGEORecord, "geoAccession");
+			qfId = qfGEORecordId;
+		}
 
         // gene.goAnnotation.ontologyTerm.relations.parentTerm.identifier
         QueryField qfNamespace = new QueryField(qcGoParent, "namespace");
@@ -128,7 +140,7 @@ public class ClStatLdr extends EnrichmentWidgetLdr
 
         // gene.goAnnotation CONTAINS GOAnnotation
         QueryCollectionReference c1;
-		if (bagType.equals("GEORecord")) {
+		if (qcGEORecord != null) {
 			c1 = new QueryCollectionReference(qcGEORecord, "clAnnotation");
 		} else {
 			c1 = new QueryCollectionReference(qcGene, "clAnnotation");
@@ -181,12 +193,13 @@ public class ClStatLdr extends EnrichmentWidgetLdr
 
         // object is from organism
         QueryObjectReference c9;
-		if (bagType.equals("GEORecord")) {
+		if (qcGEORecord != null) {
 			c9 =  new QueryObjectReference(qcGEORecord, "organism");
 		} else {
 			c9 =  new QueryObjectReference(qcGene, "organism");
 		}
         cs.addConstraint(new ContainsConstraint(c9, ConstraintOp.CONTAINS, qcOrganism));
+
 
         if (!action.startsWith("population")) {
             cs.addConstraint(new BagConstraint(qfId, ConstraintOp.IN, bag.getOsb()));
@@ -200,7 +213,7 @@ public class ClStatLdr extends EnrichmentWidgetLdr
         Query q = new Query();
         q.setDistinct(true);
 		
-		if (bagType.equals("GEORecord")){
+		if (qcGEORecord != null){
 			q.addFrom(qcGEORecord);
 		} else {
 			q.addFrom(qcGene);
