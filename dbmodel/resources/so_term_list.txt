@@ -19,3 +19,4 @@ gap
 pseudogene
 tRNA
 mRNA
+intron

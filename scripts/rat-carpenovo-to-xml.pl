@@ -53,7 +53,6 @@ open(my $INPUT, '<', $snp_file) or die ("cannot open $snp_file");
 my $index;
 my %vt_items;
 
-
 while(<$INPUT>)
 {
 	chomp;
@@ -75,12 +74,6 @@ while(<$INPUT>)
 									end => $info{END_POS},
 									locatedOn => $chr_item,
 									feature => $snp_item);
-
-	if($info{VARIANT_TRANSCRIPT_ID})
-	{
-		my $var_item = $item_doc->add_item('Transcript', primaryIdentifier => $info{VARIANT_TRANSCRIPT_ID});
-		$vt_items{$info{VARIANT_TRANSCRIPT_ID}} = $var_item;
-	}
 }
 close $INPUT;
 
@@ -90,7 +83,6 @@ open(my $PFIN, '<', $pf_file);
 while(<$PFIN>)
 {
 	chomp;
-	s/\s*\t\s*/\t/g;
 	if(/^\D/) #parses header line
 	{
 		$index = RCM::parseHeader($_);
@@ -106,12 +98,17 @@ while(<$PFIN>)
 	}
 	my $protein = $proteins{$info{PROTEIN_ID}};
 
-	my $vt = $vt_items{$info{VARIANT_TRANSCRIPT_ID}};
+	if($info{TRANSCRIPT_RGD_ID} and !$vt_items{$info{TRANSCRIPT_RGD_ID}})
+	{
+		my $var_item = $item_doc->add_item('Transcript', primaryIdentifier => $info{TRANSCRIPT_RGD_ID});
+		$vt_items{$info{TRANSCRIPT_RGD_ID}} = $var_item;
+	}
+	my $vt = $vt_items{$info{TRANSCRIPT_RGD_ID}};
 
 	my %pfattr = (primaryIdentifier => $info{POLYPHEN_ID},
-					prediction => $info{PREDICTION},
-					basis => $info{BASIS});
+					prediction => $info{PREDICTION});
 
+	$pfattr{basis} = $info{BASIS} if $info{BASIS};
 	$pfattr{variantTranscript} = $vt if $vt;
 	$pfattr{alleleOne} = $info{AA1} if $info{AA1};
 	$pfattr{alleleTwo} = $info{AA2} if $info{AA2};

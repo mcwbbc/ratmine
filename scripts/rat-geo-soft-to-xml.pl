@@ -48,6 +48,7 @@ my %pub_items;
 my %platform_items;
 my %series_items;
 my %sample_items;
+my %probe_items;
 
 my $organism_item = $item_doc->add_item('Organism', taxonId => '10116');
 
@@ -120,16 +121,31 @@ sub processFile
 {
 	my ($soft) = shift;
 	
+	my $table_flag = 0;
+
 	open(my $IN, '<', $soft);
 	my %info;
 	my ($class, $name);
 	while(<$IN>)
 	{
 		s/[\n\r]//g;
-		if(/^\^/)
+		if($table_flag)
+		{
+			if(/^!sample_table_end/)
+			{ $table_flag = 0 and next;	}
+
+			/^([\w_]+).*?([AP])$/;
+			my($probe, $call) = ($1, $2);
+			$info{$class}->{table}->{$probe} = $call if $probe;
+		}
+		elsif(/^\^/)
 		{
 			s/.//;
 			($class, $name) = split(' = ', $_, 2); 
+		}
+		elsif(/^!sample_table_begin/)
+		{
+			$table_flag = 1;
 		}
 		elsif(/^!/)
 		{
@@ -152,7 +168,7 @@ sub processFile
 			{
 				$info{$class}->{$name}->{$point} = "$value";
 			}
-		}	
+		}
 	}
 	return \%info;
 }
@@ -248,7 +264,7 @@ sub createPlatformItems
 		$platform_items{$key} = $item;
 		
 	}
-}
+}#end createPlatformItems
 
 sub createSeriesItems
 {
@@ -289,7 +305,7 @@ sub createSeriesItems
 		$series_items{$key} = $item;
 		
 	}
-}
+}#end createSeriesItems
 
 sub createSampleItems
 {
@@ -336,8 +352,26 @@ sub createSampleItems
 		$item = $item_doc->add_item(GEOSample => %item_attr);
 		
 		$sample_items{$key} = $item;
+
+		foreach my $key (keys(%{$hashed_info->{table}})) {
+			my $probeset = getProbesetItem($key);
+			$item_doc->add_item('SampleCall', probeSet => $probeset, call => $hashed_info->{table}->{$key}, geoSample => $item);
+		}
 		
 	}
+}#end createSampleItems
+
+sub getProbesetItem
+{
+	my $probeId = shift;	
+	return undef unless $probeId;
+	
+	unless(exists $probe_items{$probeId})
+	{
+		my $item = $item_doc->add_item('ProbeSet', primaryIdentifier => $probeId);
+		$probe_items{$probeId} = $item;
+	}
+	return $probe_items{$probeId};
 }
 
 sub getPublicationItem
