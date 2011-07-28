@@ -52,6 +52,7 @@ my $chrom_items = RCM::addChromosomes($item_doc, $org_item);
 open(my $INPUT, '<', $snp_file) or die ("cannot open $snp_file");
 my $index;
 my %vt_items;
+my %snp_items;
 
 while(<$INPUT>)
 {
@@ -68,7 +69,9 @@ while(<$INPUT>)
 	
 	my $snp_item = $item_doc->add_item('SNP', primaryIdentifier => $info{VARIANT_ID},
 								chromosome => $chr_item,
-								allele => $info{VAR_NUC});
+								allele => $info{VAR_NUC},
+								organism => $org_item);
+	$snp_items{$info{VARIANT_ID}} = $snp_item;
 	
 	$item_doc->add_item('Location', start => $info{START_POS},
 									end => $info{END_POS},
@@ -107,6 +110,10 @@ while(<$PFIN>)
 
 	my %pfattr = (primaryIdentifier => $info{POLYPHEN_ID},
 					prediction => $info{PREDICTION});
+
+	if($info{VARIANT_ID}){
+		$pfattr{snp} = $snp_items{$info{VARIANT_ID}};
+	}
 
 	$pfattr{basis} = $info{BASIS} if $info{BASIS};
 	$pfattr{variantTranscript} = $vt if $vt;
