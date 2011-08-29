@@ -124,10 +124,10 @@ sub processLine
 	
 	unless($probe_items{$$data{probeset}})
 	{
-		my $item = $item_doc->add_item('Probe', primaryIdentifier => $$data{probeset});
+		my $item = $item_doc->add_item('ProbeSet', primaryIdentifier => $$data{probeset});
 		$probe_items{$$data{probeset}} = $item;
 	}	
-	$qtl_attr{probe} = $probe_items{$$data{probeset}};
+	$qtl_attr{probeSet} = $probe_items{$$data{probeset}};
 
 	$qtl_attr{reaperPValue} = $reaper_pval;
 	

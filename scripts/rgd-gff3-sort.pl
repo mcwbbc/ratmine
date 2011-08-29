@@ -59,6 +59,7 @@ sub sortLines
 	while(<$IN>)
 	{
 		next if /^#/; #ignore comments
+		s/^chr//i; #remove Chr from chromosome id
 		my $feature = findFeature($_);
 		
 		$data{$feature} = () unless( exists $data{$feature} );

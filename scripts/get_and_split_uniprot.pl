@@ -36,10 +36,10 @@ my $results = GetOptions(
 
 printHelp if ($help or !$taxon);
 
-
-my $input = $outputDir . "/${taxon}_uniprot_all.xml";
-my $swiss = $outputDir . "/${taxon}_uniprot_sprot.xml";
-my $tremb = $outputDir . "/${taxon}_uniprot_trembl.xml";
+$output_dir .= '/' unless $output_dir =~ /[\/\\]$/; #ensure line ends with trailing slash
+my $input = $outputDir . "${taxon}_uniprot_all.xml";
+my $swiss = $outputDir . "${taxon}_uniprot_sprot.xml";
+my $tremb = $outputDir . "${taxon}_uniprot_trembl.xml";
 my $goa = "${taxon}_annotation.txt";
 my $genes = "${taxon}_genes.gff3";
 my $fasta = "${taxon}_genome.fasta";

@@ -21,9 +21,6 @@
    </fields>
 </class>
 <class className="org.intermine.model.bio.BioEntity">
-   <longdisplayers>
-      <displayer src="attributeLinkDisplayer.tile"></displayer>
-   </longdisplayers>
    <fields>
       <fieldconfig fieldExpr="primaryIdentifier"></fieldconfig>
    </fields>
@@ -58,9 +55,6 @@
 </class>
 
 <class className="org.intermine.model.bio.DataSource">
-   <longdisplayers>
-      <displayer src="/model/dataSourceLong.jsp"></displayer>
-   </longdisplayers>
    <fields>
       <fieldconfig fieldExpr="name"></fieldconfig>
       <fieldconfig doNotTruncate="true" fieldExpr="url"></fieldconfig>
@@ -87,11 +81,6 @@
 </class>
 
 <class className="org.intermine.model.bio.Gene">
-   <longdisplayers>
-      <displayer src="attributeLinkDisplayer.tile"></displayer>
-      <displayer src="/model/locatedSequenceFeatureImage.jsp"></displayer>
-	  <displayer src="cytoscapeNetworkDisplayer.tile"></displayer>
-   </longdisplayers>
     <fields>
       <fieldconfig fieldExpr="primaryIdentifier"></fieldconfig>
       <fieldconfig fieldExpr="symbol"></fieldconfig>
@@ -121,9 +110,6 @@
 		<fieldconfig fieldExpr="geoAccession"></fieldconfig>
 		<fieldconfig fieldExpr="title"></fieldconfig>
 	</fields>
-	<longdisplayers>
-		<displayer src="attributeLinkDisplayer.tile"></displayer>
-	</longdisplayers>
 	<bagdisplayers>
 	</bagdisplayers>
 </class>
@@ -225,9 +211,6 @@
 </class>
 
 <class className="org.intermine.model.bio.Organism">
-   <longdisplayers>
-      <displayer src="attributeLinkDisplayer.tile"></displayer>
-   </longdisplayers>
    <fields>
       <fieldconfig fieldExpr="name"></fieldconfig>
       <fieldconfig fieldExpr="taxonId"></fieldconfig>
@@ -257,9 +240,6 @@
 </class>
 
 <class className="org.intermine.model.bio.Protein">
-   <longdisplayers>
-      <displayer src="attributeLinkDisplayer.tile"></displayer>
-   </longdisplayers>
    <fields>
       <fieldconfig fieldExpr="primaryIdentifier"></fieldconfig>
       <fieldconfig fieldExpr="primaryAccession"></fieldconfig>
@@ -269,9 +249,6 @@
 </class>
 
 <class className="org.intermine.model.bio.Publication">
-   <longdisplayers>
-      <displayer src="attributeLinkDisplayer.tile"></displayer>
-   </longdisplayers>
    <fields>
       <fieldconfig fieldExpr="firstAuthor"></fieldconfig>
       <fieldconfig fieldExpr="title"></fieldconfig>
@@ -292,10 +269,6 @@
 </class>
 
 <class className="org.intermine.model.bio.QTL">
-   <longdisplayers>
-      <displayer src="attributeLinkDisplayer.tile"></displayer>
-      <!--<displayer src="/model/locatedSequenceFeatureImage.jsp"></displayer>-->
-   </longdisplayers>
    <fields>
       <fieldconfig fieldExpr="primaryIdentifier"></fieldconfig>
       <fieldconfig fieldExpr="symbol"></fieldconfig>
@@ -314,6 +287,14 @@
    </fields>
 </class>
 
+<class className="org.intermine.model.bio.SampleCall">
+	<fields>
+		<fieldconfig fieldExpr="geoSample.geoAccession"/>
+		<fieldconfig fieldExpr="call"/>
+		<fieldconfig fieldExpr="probeSet.primaryIdentifier"/>
+	</fields>
+</class>
+
 <class className="org.intermine.model.bio.Sequence">
    <fields>
       <fieldconfig showInResults="false" sectionTitle="Residues" fieldExpr="residues" fieldExporter="org.intermine.bio.web.export.ResidueFieldExporter" sectionOnRight="true" showInSummary="false" openByDefault="true" showInInlineCollection="false"></fieldconfig>
@@ -321,6 +302,7 @@
    </fields>
    <tabledisplayer src="/model/sequenceShortDisplayer.jsp"></tabledisplayer>
 </class>
+
 <class className="org.intermine.model.bio.SimpleSequenceLengthVariation">
    <fields>
       <fieldconfig fieldExpr="primaryIdentifier"></fieldconfig>
@@ -331,9 +313,6 @@
 </class>
 
 <class className="org.intermine.model.bio.SequenceFeature">
-   <longdisplayers>
-      <displayer src="attributeLinkDisplayer.tile"></displayer>
-   </longdisplayers>
    <fields>
       <fieldconfig fieldExpr="primaryIdentifier"></fieldconfig>
       <fieldconfig displayer="/model/sequenceShortDisplayerWithField.jsp" fieldExpr="length"></fieldconfig>
@@ -347,9 +326,6 @@
 </class>
 
 <class className="org.intermine.model.bio.Strain">
-   <longdisplayers>
-      <displayer src="attributeLinkDisplayer.tile"></displayer>
-   </longdisplayers>
    <fields>
       <fieldconfig fieldExpr="primaryIdentifier"></fieldconfig>
       <fieldconfig fieldExpr="symbol"></fieldconfig>
@@ -373,9 +349,6 @@
       <fieldconfig fieldExpr="chromosomeLocation.start" showInInlineCollection="false" showInSummary="false" />
       <fieldconfig fieldExpr="chromosomeLocation.end" showInInlineCollection="false" showInSummary="false" />
     </fields>
-    <longdisplayers>
-      <displayer src="attributeLinkDisplayer.tile"/>
-    </longdisplayers>
 </class>
 
 <!-- exporters -->
@@ -384,6 +357,14 @@
   <tableExportConfig id="gff3" actionPath="/exportAction?type=gff3Exporter"
 									className="org.intermine.bio.web.export.GFF3HttpExporter"/>
 
+<!-- report displayers -->
+	<reportdisplayers>
+		<reportdisplayer javaClass="org.intermine.bio.web.displayer.SequenceFeatureDisplayer"
+		                jspName="model/sequenceFeatureDisplayer.jsp"
+		                replacesFields="chromosome,chromosomeLocation,sequence,length,sequenceOntologyTerm,locations,cytoLocation"
+		                placement="summary"
+		                types="SequenceFeature"/>
+	</reportdisplayers>
 	<!-- widgets -->
 	<widgets>
 		

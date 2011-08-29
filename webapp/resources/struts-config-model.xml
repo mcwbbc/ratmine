@@ -33,3 +33,6 @@
 
 <action path="/cytoscapeNetworkAjax"
         type="org.intermine.bio.web.struts.CytoscapeNetworkAjaxAction"/>
+
+<action path="/initFriendlyMineLinkDisplayer"
+				type="org.intermine.bio.web.FriendlyMineLinkController"/>
