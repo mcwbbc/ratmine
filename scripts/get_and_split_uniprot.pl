@@ -34,20 +34,20 @@ my $results = GetOptions(
 				"output_dir=s" => \$outputDir
 );
 
-&printHelp if ($help or !$taxon);
+printHelp if ($help or !$taxon);
 
 
-my $input = $outputDir . "${taxon}_uniprot_all.xml";
-my $swiss = $outputDir . "${taxon}_uniprot_sprot.xml";
-my $tremb = $outputDir . "${taxon}_uniprot_trembl.xml";
+my $input = $outputDir . "/${taxon}_uniprot_all.xml";
+my $swiss = $outputDir . "/${taxon}_uniprot_sprot.xml";
+my $tremb = $outputDir . "/${taxon}_uniprot_trembl.xml";
 my $goa = "${taxon}_annotation.txt";
 my $genes = "${taxon}_genes.gff3";
 my $fasta = "${taxon}_genome.fasta";
 
-&parseSequenceFile($genesFile, $genes, $fasta) if $genesFile;
+parseSequenceFile($genesFile, $genes, $fasta) if $genesFile;
 
-&getUniProtXML($taxon, $input);
-&parseAndPrintXML($input, $swiss, $tremb, $goa, $goType);
+getUniProtXML($taxon, $input);
+parseAndPrintXML($input, $swiss, $tremb, $goa, $goType);
 
 exit(0);
 
@@ -94,7 +94,7 @@ sub getUniProtXML
 sub parseSequenceFile 
 {
 	my ($seqFile, $out, $fasta) = @_;
-	&printFASTA($seqFile, $fasta);
+	printFASTA($seqFile, $fasta);
 	my $in = Bio::SeqIO->new(-file => "$seqFile", -format => 'genbank');
 	open(GFF, ">$out");
 	while( my $seq = $in->next_seq() )
