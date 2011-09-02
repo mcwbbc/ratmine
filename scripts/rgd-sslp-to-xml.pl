@@ -51,10 +51,11 @@ open(my $IN, '<', $input_file) or die "cannot open $input_file\n";
 my $index;
 while(<$IN>)
 {
+	next if /^#/; #ignore comment lines
 	chomp;
 	if(/^\D/) #parses header line
 	{
-		$index = &RCM::parseHeader($_);
+		$index = RCM::parseHeader($_);
 		next
 	}
   
@@ -78,23 +79,31 @@ while(<$IN>)
 
 	my $chrom = $chrom_items->{$data{CHROMOSOME}};
 	$sslp_attr{chromosome} = $chrom if $chrom;
-		
-	if($data{CHROMOSOME} and $data{RGSC_genome_assembly_v3_4})
+	
+
+	my $sslp_item = $item_doc->add_item(SimpleSequenceLengthVariation => %sslp_attr);
+
+	if($data{CHROMOSOME} and $data{START_POS_3_4})
 	{
-		#print "\n$data[$index{'RGSC_genome_assembly_v3_4'}]\n";
-		my($start, $end) = split('-', $data{RGSC_genome_assembly_v3_4});
-		$sslp_attr{locations} = [ $item_doc->add_item( 'Location',
-												locatedOn => $chrom,
-												start => $start,
-												end => $end
-												)];
+		#print "\n$data{START_POS_3_4}\n";
+		my @starts = split(';', $data{START_POS_3_4});
+		my @stops = split(';', $data{STOP_POS_3_4});
+		my @chroms = split(';', $data{CHROMOSOME_3_4});
+
+		foreach my $start (@starts) {
+			my $end = shift @stops;
+			my $c = shift @chroms;
+			$item_doc->add_item( 'Location',
+									locatedOn => $chrom_items->{$c},
+									start => $start,
+									end => $end,
+									feature => $sslp_item
+									);
+		}
 
 	}
 	
-	my $sslp_item = $item_doc->add_item(SimpleSequenceLengthVariation => %sslp_attr);
-	$item_doc->add_item('Synonym', value => $data{SSLP_SYMBOL}, subject => $sslp_item);
-	$item_doc->add_item('Synonym', value => $data{SSLP_RGD_ID}, subject => $sslp_item);
-	
+
 }#end while(<IN>)
 close $IN;
 $item_doc->close();
