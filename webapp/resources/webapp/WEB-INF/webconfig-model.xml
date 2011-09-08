@@ -136,6 +136,17 @@
    </fields>
 </class>	
 
+<class className="org.intermine.model.bio.Homologue">
+	<fields>
+		<fieldconfig fieldExpr="gene.primaryIdentifier"/>
+		<fieldconfig fieldExpr="gene.symbol"/>
+		<fieldconfig fieldExpr="gene.organism.name"/>
+		<fieldconfig fieldExpr="homologue.primaryIdentifier"/>
+		<fieldconfig fieldExpr="homologue.symbol"/>
+		<fieldconfig fieldExpr="homologue.organism.name"/>
+	</fields>
+</class>
+
 <class className="org.intermine.model.bio.Interaction">
 	<fields>
 		<fieldconfig fieldExpr="gene.primaryIdentifier"></fieldconfig>
