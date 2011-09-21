@@ -86,7 +86,7 @@ sub printSortedData
 	print "Print data to $outfile...\n";
 	open(my $OUT, '>', $outfile) or die("unable to open $outfile\n");
 	
-	my @order = qw(gene mRNA exon CDS 3UTR 5UTR);
+	my @order = qw(gene mRNA exon CDS);
 	my @features = keys(%$sorted_data);
 	print "printing features: @features\n";
 	print "in order: @order\n";
@@ -96,6 +96,8 @@ sub printSortedData
 		{
 			foreach my $line (@$lines)
 			{
+				$line =~ s/Name=Gene:/Name=/;
+				$line =~ s/ID=RGD/ID=/;
 				print $OUT $line;
 			}
 		}

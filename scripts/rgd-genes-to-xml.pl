@@ -79,7 +79,7 @@ while(<$GENES>)
 																$gene_info{GENE_TYPE} !~ /splice|allele/i);
 	$gene_attr{geneType} = $gene_info{GENE_TYPE} if $gene_info{GENE_TYPE};
 	$gene_attr{nomenclatureStatus} = $gene_info{NOMENCLATURE_STATUS} if $gene_info{NOMENCLATURE_STATUS};
-	$gene_attr{fishBand} = $gene_info{FISH_BAND} if $gene_info{FISH_BAND};
+	$gene_attr{fishBand} = "$gene_info{CHROMOSOME_NEW_REF}$gene_info{FISH_BAND}" if $gene_info{FISH_BAND};
 
 
 	if(my $ids = $gene_info{CURATED_REF_PUBMED_ID}) 
