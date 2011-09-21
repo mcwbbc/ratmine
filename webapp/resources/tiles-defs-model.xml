@@ -17,7 +17,7 @@
 
 <definition name="cytoscapeNetworkDisplayer.tile" path="/model/cytoscapeNetworkDisplayer.jsp"
         controllerUrl="/initCytoscapeNetworkDisplayer.do"/>
-<!--
+
 <definition name="friendlyMineLinkDisplayer.tile" path="/model/friendlyMineLinkDisplayer.jsp"
 				controllerUrl="initFriendlyMineLinkDisplayer.do"/>
-				-->
+				
