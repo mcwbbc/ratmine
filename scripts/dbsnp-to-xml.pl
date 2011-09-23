@@ -118,40 +118,11 @@ sub processDbSNPFile
 			$snp_attr{primaryIdentifier} = "rs$id";
 			$snp_attr{organism} = $org_item;
 			
-			#find consequence/function
-			#sets multiple functional classes
-			my $fxnSet = $xp->find('//Assembly[@groupLabel="'.$assembly.'"]/Component/MapLoc/FxnSet');
-			my @consequences;
-			print "Loading Consequences...\n" if $vf;
-			foreach my $fxnNode ($fxnSet->get_nodelist)
-			{
-				my $fxnClass = $fxnNode->find('@fxnClass')->string_value;
-				unless($consequences{$fxnClass})
-				{	$consequences{$fxnClass} = $item_doc->add_item('ConsequenceType', type => $fxnClass); }
-				push(@consequences, $consequences{$fxnClass});
-			}
-			$snp_attr{consequenceTypes} = \@consequences if $#consequences > -1; #ignore empty array
-			
-	
 			#find chromosome
 			print "Loading chromosomes...\n" if $vf;
 			my $chrom = $xp->find('//Assembly[@groupLabel="'.$assembly.'"]/Component/@chromosome')->string_value;
-			$snp_attr{chromosome} = $chr_items->{$chrom};
+			$snp_attr{chromosome} = $chr_items->{$chrom};	
 
-			#set chromosome and location
-			my $pos = $xp->find('//Assembly[@groupLabel="'.$assembly.'"]/Component/MapLoc/@physMapInt')->string_value;
-			my $orient = $xp->find('//Assembly[@groupLabel="'.$assembly.'"]/Component/MapLoc/@orient')->string_value;
-			if($orient eq 'forward')
-			{	$pos++; }
-			elsif($orient eq 'reverse')
-			{	$pos--; }
-			
-			print "Loading location...\n" if $vf;
-			print "$pos: $chrom\n" if $vf;
-			my %loc_attr = (start => $pos,
-							end => $pos,
-							locatedOn => $chr_items->{$chrom});
-			
 			#set rsSequence
 			my $rs5 = $xp->find('/Rs/Sequence/Seq5')->string_value;
 			my $rsAllele = $xp->find('/Rs/Sequence/Observed')->string_value;
@@ -160,12 +131,47 @@ sub processDbSNPFile
 			$snp_attr{fivePrimeSequence} = $rs5;
 			$snp_attr{allele} = $rsAllele;
 			$snp_attr{threePrimeSequence} = $rs3;
-		
+			
+			#sets multiple locations
+			my $maplocs = $xp->find('//Assembly[@groupLabel="'.$assembly.'"]/Component/MapLoc');
+			
+			my @consequences;
+			my @locations;
+			print "Loading location...\n" if $vf;
+			foreach my $mlNode ($maplocs->get_nodelist)
+			{
+				my $pos = $mlNode->find('@physMapInt')->string_value;
+				my $orient = $xp->find('@orient')->string_value;
+				if($orient eq 'forward')
+				{	$pos++; }
+				elsif($orient eq 'reverse')
+				{	$pos--; }
+
+				print "$pos: $chrom\n" if $vf;
+				my $loc_item = $item_doc->add_item('Location', start => $pos,
+								end => $pos,
+								locatedOn => $chr_items->{$chrom});
+				push(@locations, $loc_item);
+				
+				#find consequence/function
+				#sets multiple functional classes
+				my $fxnSet = $mlNode->find('FxnSet');
+				my @consequences;
+				print "Loading Consequences...\n" if $vf;
+				foreach my $fxnNode ($fxnSet->get_nodelist)
+				{
+					my $fxnClass = $fxnNode->find('@fxnClass')->string_value;
+					unless($consequences{$fxnClass})
+					{	$consequences{$fxnClass} = $item_doc->add_item('ConsequenceType', type => $fxnClass); }
+					push(@consequences, $consequences{$fxnClass});
+				}				
+			} #foreach my $mlNode
+			
+			$snp_attr{locations} = \@locations;
+			$snp_attr{consequenceTypes} = \@consequences;
+			
 			print "Loading rsSNP...\n" if $vf;
 			my $snp_item = $item_doc->add_item(rsSNP => %snp_attr);
-			my %rs_loc = %loc_attr;
-			$rs_loc{feature} = $snp_item;
-			$item_doc->add_item(Location => %rs_loc);
 			
 			#create ssSNPs
 			my %ssSNPs;
@@ -184,9 +190,6 @@ sub processDbSNPFile
 				
 				print "Loading ssSNP...\n" if $vf;
 				my $ss_item = $item_doc->add_item(ssSNP => %ss_attr);
-				my %ss_loc = %loc_attr;
-				$ss_loc{feature} = $ss_item;
-				$item_doc->add_item(Location => %ss_loc);
 				
 				$ssSNPs{$ssId} = $ss_item;
 			}
