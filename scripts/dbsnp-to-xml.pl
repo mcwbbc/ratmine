@@ -156,7 +156,6 @@ sub processDbSNPFile
 				#find consequence/function
 				#sets multiple functional classes
 				my $fxnSet = $mlNode->find('FxnSet');
-				my @consequences;
 				print "Loading Consequences...\n" if $vf;
 				foreach my $fxnNode ($fxnSet->get_nodelist)
 				{
