@@ -141,29 +141,32 @@ sub processDbSNPFile
 			foreach my $mlNode ($maplocs->get_nodelist)
 			{
 				my $pos = $mlNode->find('@physMapInt')->string_value;
-				my $orient = $xp->find('@orient')->string_value;
-				if($orient eq 'forward')
-				{	$pos++; }
-				elsif($orient eq 'reverse')
-				{	$pos--; }
-
-				print "$pos: $chrom\n" if $vf;
-				my $loc_item = $item_doc->add_item('Location', start => $pos,
-								end => $pos,
-								locatedOn => $chr_items->{$chrom});
-				push(@locations, $loc_item);
-				
-				#find consequence/function
-				#sets multiple functional classes
-				my $fxnSet = $mlNode->find('FxnSet');
-				print "Loading Consequences...\n" if $vf;
-				foreach my $fxnNode ($fxnSet->get_nodelist)
+				if($pos)
 				{
-					my $fxnClass = $fxnNode->find('@fxnClass')->string_value;
-					unless($consequences{$fxnClass})
-					{	$consequences{$fxnClass} = $item_doc->add_item('ConsequenceType', type => $fxnClass); }
-					push(@consequences, $consequences{$fxnClass});
-				}				
+					my $orient = $xp->find('@orient')->string_value;
+					if($orient eq 'forward')
+					{	$pos++; }
+					elsif($orient eq 'reverse')
+					{	$pos--; }
+
+					print "$pos: $chrom\n" if $vf;
+					my $loc_item = $item_doc->add_item('Location', start => $pos,
+									end => $pos,
+									locatedOn => $chr_items->{$chrom});
+					push(@locations, $loc_item);
+				
+					#find consequence/function
+					#sets multiple functional classes
+					my $fxnSet = $mlNode->find('FxnSet');
+					print "Loading Consequences...\n" if $vf;
+					foreach my $fxnNode ($fxnSet->get_nodelist)
+					{
+						my $fxnClass = $fxnNode->find('@fxnClass')->string_value;
+						unless($consequences{$fxnClass})
+						{	$consequences{$fxnClass} = $item_doc->add_item('ConsequenceType', type => $fxnClass); }
+						push(@consequences, $consequences{$fxnClass});
+					}
+				}
 			} #foreach my $mlNode
 			
 			$snp_attr{locations} = \@locations;

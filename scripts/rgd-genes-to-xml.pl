@@ -143,7 +143,8 @@ Convert the GENES_RAT file from RGD into InterMine XML
 Arguments:
  --model		Mine model file
  --rgd_genes		GENES_RAT file from RGD FTP site
- --output_file		InterMine XML file 
+ --output_file		InterMine XML file
+ --taxon_id             Taxon ID of Organism 
  --help			Print this message
 HELP
 }
