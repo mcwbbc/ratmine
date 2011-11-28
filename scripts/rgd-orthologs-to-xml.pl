@@ -78,9 +78,13 @@ while(<$IN>)
 												organism => $mouse_item);
 
 		}
+		my $type = shift(@mouse_types);
 		$item_doc->add_item('Orthologue', gene => $rat_gene, 
 										homologue => $mouse_genes{$mouse_id}, 
-										type => shift(@mouse_types));
+										type => $type);
+		$item_doc->add_item('Orthologue', gene => $mouse_genes{$mouse_id}, 
+										homologue => $rat_gene, 
+										type => $type);
 	} #end foreach $mouse_id
 
 	my @human_ids = split(/\|/, $data{HUMAN_ORTHOLOG_RGD});
@@ -92,9 +96,13 @@ while(<$IN>)
 												primaryIdentifier => $human_id, 
 												organism => $human_item);
 		}
+		my $type = shift(@human_types);
 		$item_doc->add_item('Orthologue', gene => $rat_gene, 
 										homologue => $human_genes{$human_id}, 
-										type => shift(@human_types));
+										type => $type);
+		$item_doc->add_item('Orthologue', gene => $human_genes{$human_id}, 
+										homologue => $rat_gene, 
+										type => $type);
 	} #end foreach $human_id
 
 

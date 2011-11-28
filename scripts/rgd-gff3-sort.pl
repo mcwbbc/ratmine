@@ -96,9 +96,19 @@ sub printSortedData
 		{
 			foreach my $line (@$lines)
 			{
-				$line =~ s/Name=Gene:/Name=/;
-				$line =~ s/ID=RGD/ID=/;
-				$line =~ s/Parent=RGD/Parent=/;
+				my @data = split(/\t/, $line, 9);
+				$data[8] =~ s/Name=Gene:/Name=/g;
+				$data[8] =~ s/ID=RGD/ID=/g;
+				$data[8] =~ s/Parent=RGD/Parent=/g;
+				$data[8] =~ s/=\s+/=/g;
+				$data[8] =~ s/,\t/,/g;
+				$data[8] =~ s/\s+?;/;/g;
+				$data[8] =~ s/associatedGene[\d\D]+?ID/ID/g;
+				$data[8] =~ s/\t//g;
+				$data[8] =~ s/\w+=;//g;
+				$data[8] =~ s/,\s+/,/g;
+				
+				$line = join("\t", @data);
 				print $OUT $line;
 			}
 		}

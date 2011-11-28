@@ -275,6 +275,7 @@ sub createSeriesItems
 	{
 		next if(exists $series_items{$key});
 
+=cut
 		if($hashed_info->{$key}->{Series_samples_taxid} == 10116 or $hashed_info->{$key}->{Series_samples_organism} =~ /rattus norvegicus/i)
 		{
 			$item_attr{organism} = $organism_item;
@@ -283,7 +284,21 @@ sub createSeriesItems
 		{
 			next;
 		}
+
+=cut
+
+		if(ref $hashed_info->{$key}->{Series_summary} eq "ARRAY")
+		{ $item_attr{description} = join(' ', @{$hashed_info->{$key}->{Series_summary}}); }
+		else
+		{ $item_attr{description} = $hashed_info->{$key}->{Series_summary}; }
 		
+		if(ref $hashed_info->{$key}->{Series_type} eq "ARRAY")
+		{ $item_attr{type} = join ' ', @{$hashed_info->{$key}->{Series_type}}; }
+		elsif(exists $hashed_info->{$key}->{Series_type})
+		{ $item_attr{type} = $hashed_info->{$key}->{Series_type}; }
+
+		#$item_attr{url}
+		#$item_attr{version}
 		$item_attr{title} = $hashed_info->{$key}->{Series_title};
 		$item_attr{geoAccession} = $key;
 

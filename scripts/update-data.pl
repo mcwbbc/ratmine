@@ -26,23 +26,24 @@ use Getopt::Long;
 use LWP::UserAgent;
 use strict;
 
-my ($conf, $project, $help, $verbose, $dry);
+my ($conf, $project, $help, $verbose, $dry, $source);
 
 GetOptions( 'config=s' => \$conf,
 			'project=s' => \$project,
 			'verbose' => \$verbose,
+			'source=s' => \$source,
 			'dry-run' => \$dry,
 			'help' => \$help );
 			
 if ($help or !($conf and $project))
 {
-	&printHelp;
+	printHelp();
 	exit(0);
 }
 
-my $projectInfo = &getProjectInfo($project);
+my $projectInfo = getProjectInfo($project);
 
-&updateData($conf, $projectInfo);
+updateData($conf, $projectInfo, $source);
 
 exit (0);
 ###Subroutines###
@@ -59,7 +60,9 @@ sub printHelp
 	Options:
 	--conf [file]\tconfiguration xml file
 	--project [file]\tproject.xml file
+	--source [source]\trun the updates script on a single source, useful for testing
 	--verbose\tprints out additional information, may be useful for debugging
+	--dry-run\tdry run
 	--help\t\tprints this message
 
  See conf/download_conf.xml.example for information on creating a
@@ -70,8 +73,9 @@ HELP
 sub getProjectInfo
 {
 	my $project_file = shift;
-	
+
 	my $xp = XML::XPath->new(filename => $project_file);
+
 	my $nodeset = $xp->find('/project/sources/source'); #find all sources
 	
 	my %project_info;
@@ -90,22 +94,28 @@ sub getProjectInfo
 
 sub updateData
 {
-	my ($conf, $projectInfo) = @_;
+	my ($conf, $projectInfo, $source) = @_;
 	
 	my $xp = XML::XPath->new(filename => $conf);
 	my $model = $xp->find('/project-config/model-file')->string_value;
 	
-	my $nodeset = $xp->find('/project-config/source');
+	my $xpq;
+	if($source)
+	{ $xpq = '/project-config/source[@name="' . $source . '"]';	}
+	else
+	{ $xpq = '/project-config/source';	}
+	my $nodeset = $xp->find($xpq);
 	
 	foreach my $node ($nodeset->get_nodelist)
 	{
 		my $source = $node->find('@name')->string_value;
-		my $remote = $node->find('remote-file')->string_value;
-		my $destination = $node->find('destination')->string_value;
+        my $destination = $node->find('destination')->string_value;
 		my $localfile = '';
-		if ($remote)
+        my $remoteSet = $node->find('remote-file');
+		foreach my $remoteNode ($remoteSet->get_nodelist)
 		{
-			if($$projectInfo{$source}{dir} or !$destination)
+            my $remote = $remoteNode->string_value;
+			if($$projectInfo{$source}{dir})
 			{
 				if($$projectInfo{$source}{file})
 				{
@@ -114,17 +124,17 @@ sub updateData
 				elsif($$projectInfo{$source}{dir})
 				{
 					$localfile = $& if $remote =~ m|\/[^\/\\]+?$|;
-					$destination = $$projectInfo{$source}{dir} . $localfile if !$destination;
+					$destination = $$projectInfo{$source}{dir} . $localfile;
 				}
 			}#end if(!$destination)
 			
-			&downloadFile($remote, $destination, $dry);
+			downloadFile($remote, $destination, $dry);
 		}#end if ($remote)
 		
 		my $scriptset = $node->find('scripts/script');
 		foreach my $scriptnode ($scriptset->get_nodelist)
 		{
-			&runScript($scriptnode, $model, $destination, $source, $localfile, $dry);
+			runScript($scriptnode, $model, $destination, $source, $localfile, $dry);
 		}
 	}#end foreach $node
 }#end updateData
@@ -177,6 +187,7 @@ sub runScript
 sub downloadFile
 {
 	my ($remoteFile, $localFile, $dry) = @_;
+    print "$remoteFile downing to $localFile...\n";
 	return if $dry;
 
 	my $ua = LWP::UserAgent->new;

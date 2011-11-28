@@ -37,6 +37,9 @@
 <action path="/initFriendlyMineLinkDisplayer"
 				type="org.intermine.bio.web.FriendlyMineLinkController"/>
 
+<action path="/bedExportAction" name="bedExportForm"
+        type="org.intermine.web.struts.TableExportAction" parameter="method"/>
+
 <!-- Beginning of Genomic Region Search configuration -->
 
 <action path="/initGenomicRegionSearchOptions"

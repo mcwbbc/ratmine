@@ -12,8 +12,8 @@ my $webapp_home = $HOME . $PROJECT . 'webapp/';
 
 chdir($webapp_home);
 print `ant default remove-webapp`;
-print `ant write-userprofile-xml`;
-print `cp ${webapp_home}build/userprofile.xml $HOME`;
+#print `ant write-userprofile-xml`;
+#print `cp ${webapp_home}build/userprofile.xml $HOME`;
 
 #step 2 rebuild database
 my $db_home = $HOME . $PROJECT . 'dbmodel/';
@@ -25,9 +25,9 @@ print `perl ../bio/scripts/project_build -v localhost dump`;
 
 #step 3 rebuild userdata
 chdir($webapp_home);
-print `ant create-db-userprofile`;
-print `cp ${HOME}userprofile.xml ${webapp_home}build/userprofile.xml`;
-print `ant read-userprofile-xml`;
+#print `ant create-db-userprofile`;
+#print `cp ${HOME}userprofile.xml ${webapp_home}build/userprofile.xml`;
+#print `ant read-userprofile-xml`;
 
 #step 4 precompute templates and release webapp
 print `ant precompute-templates`;

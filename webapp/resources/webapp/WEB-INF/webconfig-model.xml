@@ -92,6 +92,8 @@
       <fieldconfig showInSummary="false" fieldExpr="chromosomeLocation.end" showInInlineCollection="false"></fieldconfig>
       <fieldconfig fieldExpr="organism.name"></fieldconfig>
    </fields>
+   <bagdisplayers>
+   </bagdisplayers>
 </class>
 
 <class className="org.intermine.model.bio.Genotype">
@@ -375,11 +377,19 @@
 		                replacesFields="chromosome,chromosomeLocation,sequence,length,sequenceOntologyTerm,locations,cytoLocation"
 		                placement="summary"
 		                types="SequenceFeature"/>
+		
 		<reportdisplayer javaClass="org.intermine.bio.web.displayer.GBrowseDisplayer"
 		                 jspName="model/gbrowseDisplayer.jsp"
 		                 replacesFields=""
 		                 placement="Genomics"
 		                 types="SequenceFeature"/>
+		<!--
+		<reportdisplayer javaClass="org.intermine.bio.web.displayer.GBrowseDisplayer"
+		                 jspName="model/locatedSequenceFeatureImage.jsp"
+		                 replacesFields=""
+		                 placement="Genomics"
+		                 types="SequenceFeature"/>
+-->
 		<reportdisplayer javaClass="org.intermine.bio.web.displayer.GeneStructureDisplayer"
 		                 jspName="model/geneStructureDisplayer.jsp"
 		                 replacesFields="transcripts,exons,CDSs,introns,UTRs,fivePrimeUTR,threePrimeUTR"
@@ -432,6 +442,7 @@
 	                                 label="Keyword"
 	                                 description="UniProt keywords enriched for proteins in this list."
 	                                 typeClass="org.intermine.model.bio.Protein" />
+
 	      <enrichmentwidgetdisplayer id="go_enrichment" title="Gene Ontology Enrichment"
 	                                 link="org.intermine.bio.web.widget.GoStatURLQuery"
 	                                 dataSetLoader="org.intermine.bio.web.widget.GoStatLdr"
@@ -440,7 +451,7 @@
 	                                 filters="biological_process,cellular_component,molecular_function"
 	                                 filterLabel="Ontology"
 	                                 typeClass="org.intermine.model.bio.Gene,org.intermine.model.bio.Protein"
-	                                 externalLink="http://amigo.geneontology.org/cgi-bin/amigo/term-details.cgi?term=" />
+	                                 externalLink="http://rgd.mcw.edu/rgdweb/ontology/annot.html?acc_id=" />
 
 
 	      <enrichmentwidgetdisplayer id="do_enrichment" title="Disease Ontology Enrichment"

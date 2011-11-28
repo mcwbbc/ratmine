@@ -20,3 +20,5 @@ pseudogene
 tRNA
 mRNA
 intron
+binding_site
+assembly

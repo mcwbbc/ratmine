@@ -58,7 +58,7 @@
 		<aspect-source name="IntAct" url="http://www.ebi.ac.uk/intact"/>
   </aspect>
 
-  <aspect name="Mammalian Phenotype">
+  <aspect name="Phenotype">
     <subtitle></subtitle>
     <icon-image>model/images/mp.png</icon-image>
     <large-image>model/images/mp.png</large-image>
@@ -110,7 +110,7 @@
     </intro-text>
   </aspect>
 
-  <aspect name="Quantitative Trait Loci">
+  <aspect name="QTL">
 	<subtitle></subtitle>
 	<icon-image>model/images/QTL_image_197x153.gif</icon-image>
 	<large-image>model/images/QTL_image_197x153.gif</large-image>
@@ -125,7 +125,7 @@
 	<aspect-source name="Wikipedia" url="http://en.wikipedia.org/wiki/Gene" />
   </aspect>
 
-  <aspect name="Single Nucleotide Polymorphism">
+  <aspect name="SNP">
 	<subtitle></subtitle>
 	<icon-image>model/images/snp_image.jpg</icon-image>
 	<large-image>model/images/snp_image.jpg</large-image>
