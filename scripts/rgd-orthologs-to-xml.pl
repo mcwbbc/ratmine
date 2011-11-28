@@ -33,7 +33,7 @@ if($help or !($model_file and $input_file))
 }
 
 my $model = new InterMine::Model(file => $model_file);
-my $item_doc = new InterMine::Item::Document(model => $model, output => $output_file, auto_write => 0);
+my $item_doc = new InterMine::Item::Document(model => $model, output => $output_file, auto_write => 1);
 
 my $rat_id = '10116';
 my $mouse_id = '10090';
