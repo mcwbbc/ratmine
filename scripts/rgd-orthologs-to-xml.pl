@@ -33,7 +33,7 @@ if($help or !($model_file and $input_file))
 }
 
 my $model = new InterMine::Model(file => $model_file);
-my $item_doc = new InterMine::Item::Document(model => $model, output => $output_file, auto_write => 1);
+my $item_doc = new InterMine::Item::Document(model => $model, output => $output_file, auto_write => 0);
 
 my $rat_id = '10116';
 my $mouse_id = '10090';
@@ -51,6 +51,7 @@ open(my $IN, '<', $input_file) or die "cannot open $input_file\n";
 my $index;
 my %mouse_genes;
 my %human_genes;
+my %sources;
 my $header_flag = 0;
 while(<$IN>)
 {
@@ -69,7 +70,7 @@ while(<$IN>)
 	my $rat_gene = $item_doc->add_item('Gene', primaryIdentifier => $data{RAT_GENE_RGD_ID}, organism => $rat_item);
 
 	my @mouse_ids = split(/\|/, $data{MOUSE_ORTHOLOG_RGD});
-	my @mouse_types = split(/\|/, $data{MOUSE_ORTHOLOG_SOURCE});
+	my @mouse_source = split(/\|/, $data{MOUSE_ORTHOLOG_SOURCE});
 	foreach my $mouse_id (@mouse_ids) {
 		unless($mouse_genes{$mouse_id})
 		{
@@ -78,17 +79,25 @@ while(<$IN>)
 												organism => $mouse_item);
 
 		}
-		my $type = shift(@mouse_types);
-		$item_doc->add_item('Orthologue', gene => $rat_gene, 
+		my $source = shift(@mouse_source);
+
+		unless ($sources{$source}) {
+			$sources{$source} = $item_doc->add_item('DataSet', name => $source);
+		}
+
+		my $rat_gene = $item_doc->add_item('Homologue', gene => $rat_gene, 
 										homologue => $mouse_genes{$mouse_id}, 
-										type => $type);
-		$item_doc->add_item('Orthologue', gene => $mouse_genes{$mouse_id}, 
+										type => 'orthologue',
+										dataSets => [$sources{$source}]);
+		my $mouse_gene = $item_doc->add_item('Homologue', gene => $mouse_genes{$mouse_id}, 
 										homologue => $rat_gene, 
-										type => $type);
+										type => 'orthologue',
+										dataSets => [$sources{$source}]);
+
 	} #end foreach $mouse_id
 
 	my @human_ids = split(/\|/, $data{HUMAN_ORTHOLOG_RGD});
-	my @human_types = split(/\|/, $data{HUMAN_ORTHOLOG_SOURCE});
+	my @human_source = split(/\|/, $data{HUMAN_ORTHOLOG_SOURCE});
 	foreach my $human_id (@human_ids) {
 		unless($human_genes{$human_id})
 		{
@@ -96,13 +105,20 @@ while(<$IN>)
 												primaryIdentifier => $human_id, 
 												organism => $human_item);
 		}
-		my $type = shift(@human_types);
-		$item_doc->add_item('Orthologue', gene => $rat_gene, 
+		my $source = shift(@human_source);
+
+		unless ($sources{$source}) {
+			$sources{$source} = $item_doc->add_item('DataSet', name => $source);
+		}
+
+		$item_doc->add_item('Homologue', gene => $rat_gene, 
 										homologue => $human_genes{$human_id}, 
-										type => $type);
-		$item_doc->add_item('Orthologue', gene => $human_genes{$human_id}, 
+										type => 'orthologue',
+										dataSets => [$sources{$source}]);
+		$item_doc->add_item('Homologue', gene => $human_genes{$human_id}, 
 										homologue => $rat_gene, 
-										type => $type);
+										type => 'orthologue',
+										dataSets => [$sources{$source}]);
 	} #end foreach $human_id
 
 

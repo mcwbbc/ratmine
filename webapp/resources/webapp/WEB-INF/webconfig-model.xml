@@ -201,6 +201,16 @@
    </fields>
 </class>
 
+<class className="org.intermine.model.bio.OntologyAnnotation">
+   <fields>
+      <fieldconfig fieldExpr="ontologyTerm.identifier"></fieldconfig>
+      <fieldconfig fieldExpr="ontologyTerm.name"></fieldconfig>
+      <fieldconfig fieldExpr="qualifier"></fieldconfig>
+	  <fieldconfig fieldExpr="subject.primaryIdentifier"></fieldconfig>
+	  <fieldconfig fieldExpr="symbol"></fieldconfig>
+   </fields>
+</class>
+
 <class className="org.intermine.model.bio.OntologyTerm">
    <fields>
       <fieldconfig fieldExpr="identifier"></fieldconfig>
