@@ -382,17 +382,18 @@
 
 <!-- report displayers -->
 	<reportdisplayers>
+	<!--
 		<reportdisplayer javaClass="org.intermine.bio.web.displayer.SequenceFeatureDisplayer"
 		                jspName="model/sequenceFeatureDisplayer.jsp"
 		                replacesFields="chromosome,chromosomeLocation,sequence,length,sequenceOntologyTerm,locations,cytoLocation"
 		                placement="summary"
 		                types="SequenceFeature"/>
-		
+		-->
 		<reportdisplayer javaClass="org.intermine.bio.web.displayer.GBrowseDisplayer"
 		                 jspName="model/gbrowseDisplayer.jsp"
 		                 replacesFields=""
 		                 placement="Genomics"
-		                 types="SequenceFeature"/>
+		                 types="Gene"/>
 		<!--
 		<reportdisplayer javaClass="org.intermine.bio.web.displayer.GBrowseDisplayer"
 		                 jspName="model/locatedSequenceFeatureImage.jsp"
@@ -430,14 +431,14 @@
 	<widgets>
 		
 	      <graphdisplayer id="chromosome_distribution" title="Chromosome Distribution"
-	        domainLabel="Chromosome"
-	        rangeLabel="Count"
-	        dataSetLoader="org.intermine.bio.web.widget.ChromosomeDistributionDataSetLdr"
-	        link="org.intermine.bio.web.widget.ChromosomeDistributionGraphURLGenerator"
-	        description="Actual: number of items in this list found on each chromosome.  Expected: given the total number of items on the chromosome and the number of items in this list, the number of items expected to be found on each chromosome."
-	        graphType="BarChart"
-	        extraAttributeClass="org.intermine.bio.web.logic.BioUtil"
-	        typeClass="org.intermine.model.bio.Gene,org.intermine.model.bio.SequenceFeature"
+						domainLabel="Chromosome"
+						rangeLabel="Count"
+						dataSetLoader="org.intermine.bio.web.widget.ChromosomeDistributionDataSetLdr"
+						link="org.intermine.bio.web.widget.ChromosomeDistributionGraphURLGenerator"
+						description="Actual: number of items in this list found on each chromosome.  Expected: given the total number of items on the chromosome and the number of items in this list, the number of items expected to be found on each chromosome."
+				        graphType="BarChart"
+						extraAttributeClass="org.intermine.bio.util.BioUtil"
+						typeClass="org.intermine.model.bio.Gene"
 	       />
 	      <enrichmentwidgetdisplayer id="protein_features" title="UniProt Features"
 	                                 link="org.intermine.bio.web.widget.UniProtFeaturesURLQuery"
