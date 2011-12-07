@@ -19,16 +19,16 @@
 				controllerUrl="initFriendlyMineLinkDisplayer.do"/>
 				
 <definition name="genomicRegionSearchOptions.page" extends="layout.template">
-	<put name="body" value="genomicRegionSearchOptions.tile" />
-	<put name="pageName" value="genomicRegionSearch" />
+  <put name="body" value="genomicRegionSearchOptions.tile" />
+  <put name="pageName" value="genomicRegionSearch" />
 </definition>
 
 <definition name="genomicRegionSearchOptions.tile" path="/model/genomicRegionSearchOptionsBase.jsp"
-		controllerUrl="/initGenomicRegionSearchOptions.do" />
+  controllerUrl="/initGenomicRegionSearchOptions.do" />
 
 <definition name="genomicRegionSearchResults.page" extends="layout.template">
-	<put name="body" value="/model/genomicRegionSearchResultsBase.jsp" />
-	<put name="pageName" value="genomicRegionSearchResults" />
+  <put name="body" value="/model/genomicRegionSearchResultsBase.jsp" />
+  <put name="pageName" value="genomicRegionSearchResults" />
 </definition>
 
 <definition name="bedExportOptions.tile" path="/model/bedExportOptions.jsp"
