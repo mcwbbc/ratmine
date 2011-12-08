@@ -37,16 +37,16 @@ writes out the chromosome items if $writer is passed
 
 =cut
 
-sub getChromosomes
+sub getRatChromosomes
 {
 	return (1..20, 'M', 'X', 'Y');
 }
 
-sub addChromosomes
+sub addRatChromosomes
 {
 	my ($item_doc, $org_item) = @_;
 	my $chr = {
-		map { $_ => $item_doc->add_item('Chromosome', primaryIdentifier => $_, organism => $org_item) } getChromosomes
+		map { $_ => $item_doc->add_item('Chromosome', primaryIdentifier => $_, organism => $org_item) } getRatChromosomes
 	};
 	return $chr;
 }

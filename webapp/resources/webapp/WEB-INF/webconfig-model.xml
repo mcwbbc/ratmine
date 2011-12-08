@@ -194,6 +194,14 @@
    </fields>
 </class>	
 
+<class className="org.intermine.model.bio.OMIM">
+	<fields>
+		<fieldconfig fieldExpr="primaryIdentifier"></fieldconfig>
+		<fieldconfig fieldExpr="title"></fieldconfig>
+		<fieldconfig fieldExpr="status"></fieldconfig>
+	</fields>
+</class>
+
 <class className="org.intermine.model.bio.Ontology">
    <fields>
       <fieldconfig fieldExpr="name"></fieldconfig>

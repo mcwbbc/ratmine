@@ -53,7 +53,7 @@ my $item_doc = new InterMine::Item::Document(model => $model, output => $qtl_xml
 my $org_item = $item_doc->add_item('Organism', 'taxonId' => $taxon_id);
 
 my $chrom_items;
-$chrom_items = RCM::addChromosomes($item_doc, $org_item);
+$chrom_items = RCM::addRatChromosomes($item_doc, $org_item);
 
 # read the genes file
 open(my $QTLS, '<', $qtls_file);

@@ -26,8 +26,10 @@
 				<option type="model" name="model" />
 				<option type="input" name="rgd_genes" />
 				<option type="output" name="output_file" />
+				<option type="custom" name="taxon">10116</option>
 			</script>
 		</scripts>
+	</source>
 		
 		<source name="uniprot-rat">
 			<!-- this source already has a data download script -->

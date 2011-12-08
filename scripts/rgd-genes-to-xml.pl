@@ -45,14 +45,12 @@ my $item_doc = new InterMine::Item::Document(model => $model, output => $gene_xm
 my $org_item = $item_doc->add_item('Organism', taxonId => $taxon_id);
 my $dataset_item = $item_doc->add_item('DataSet', name => $data_source);
 
-#my $chrom_items;
-#$chrom_items = RCM::addChromosomes($item_doc, $org_item);
-
 # read the genes file
 open(my $GENES, '<', $genes_file) or die ("cannot open $genes_file");
 my $index;
 my %pubs;
 my %prots;
+my %omim;
 while(<$GENES>)
 {
 	chomp;
@@ -88,6 +86,15 @@ while(<$GENES>)
 		{
 			$pubs{$id} = $item_doc->add_item('Publication', pubMedId => $id) unless ($pubs{$id});
 			push @{$gene_attr{publications}}, $pubs{$id};
+		}
+	}
+	
+	if(my $ids = $gene_info{OMIM_ID}) 
+	{
+      	foreach my $id (split(/[,;]/, $ids))
+		{
+			$omim{$id} = $item_doc->add_item('OMIM', primaryIdentifier => $id) unless ($omim{$id});
+			push @{$gene_attr{OMIMRecords}}, $omim{$id};
 		}
 	}
 	

@@ -46,7 +46,7 @@ my $item_doc = new InterMine::Item::Document(model => $model, output => $output_
 my $org_item = $item_doc->add_item('Organism', taxonId => $taxon_id);
 my $dataset_item = $item_doc->add_item('DataSet', name => $data_source);
 
-my $chrom_items = RCM::addChromosomes($item_doc, $org_item);
+my $chrom_items = RCM::addRatChromosomes($item_doc, $org_item);
 
 # read the genes file
 open(my $INPUT, '<', $snp_file) or die ("cannot open $snp_file");
