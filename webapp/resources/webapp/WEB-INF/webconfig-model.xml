@@ -202,6 +202,15 @@
 	</fields>
 </class>
 
+<class className="org.intermine.model.bio.OMIMPhenotype">
+	<fields>
+		<fieldconfig fieldExpr="omimRecord.primaryIdentifier"></fieldconfig>
+		<fieldconfig fieldExpr="omimRecord.title"></fieldconfig>		
+		<fieldconfig fieldExpr="title"></fieldconfig>
+		<fieldconfig fieldExpr="method.description"></fieldconfig>
+	</fields>
+</class>
+
 <class className="org.intermine.model.bio.Ontology">
    <fields>
       <fieldconfig fieldExpr="name"></fieldconfig>
