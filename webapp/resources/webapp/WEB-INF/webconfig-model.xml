@@ -21,6 +21,11 @@
    </fields>
 </class>
 <class className="org.intermine.model.bio.BioEntity">
+	<headerconfig>
+		<titles>
+			<title mainTitles="symbol|primaryIdentifier" numberOfMainTitlesToShow="1" subTitles="*organism.shortName*" />
+		</titles>
+	</headerconfig>
    <fields>
       <fieldconfig fieldExpr="primaryIdentifier"></fieldconfig>
    </fields>
@@ -81,6 +86,11 @@
 </class>
 
 <class className="org.intermine.model.bio.Gene">
+	<headerconfig>
+		<customlinks>
+			<customlink url="http://rgd.mcw.edu/rgdweb/report/gene/main.html?id={primaryIdentifier}" image="rgd_logo_small.gif"/>
+		</customlinks>
+	</headerconfig>
     <fields>
       <fieldconfig fieldExpr="primaryIdentifier"></fieldconfig>
       <fieldconfig fieldExpr="symbol"></fieldconfig>
@@ -423,21 +433,25 @@
 		                 replacesFields="transcripts,exons,CDSs,introns,UTRs,fivePrimeUTR,threePrimeUTR"
 		                 placement="Genomics"
 		                 types="Gene,Transcript,Exon,Intron,UTR,CDS"/>
+
 		<reportdisplayer javaClass="org.intermine.bio.web.displayer.GeneOntologyDisplayer"
 		                 jspName="model/geneOntologyDisplayer.jsp"
 		                 replacesFields="goAnnotation,ontologyAnnotations"
-		                 placement="Function"
+		                 placement="Gene Ontology"
 		                 types="Gene"/>
+
 		<reportdisplayer javaClass="org.intermine.bio.web.displayer.UniProtCommentsDisplayer"
 		                jspName="model/uniProtCommentsDisplayer.jsp"
 		                replacesFields=""
-		                placement="summary"
+		                placement="Proteins"
 		                types="Gene,Protein"/>
+
 		<reportdisplayer javaClass="org.intermine.bio.web.displayer.CytoscapeNetworkDisplayer"
 		                jspName="model/cytoscapeNetworkDisplayer.jsp"
 		                replacesFields="interactions"
 		                placement="Interactions"
 		                types="Gene,Protein"/>
+
 		<reportdisplayer javaClass="org.intermine.bio.web.displayer.OverlappingFeaturesDisplayer"
 		                jspName="model/overlappingFeaturesDisplayer.jsp"
 		                replacesFields="overlappingFeatures"
