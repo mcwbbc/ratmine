@@ -126,6 +126,14 @@
 	</bagdisplayers>
 </class>
 
+<class className="org.intermine.model.bio.GEOAnnotation">
+	<fields>
+		<fieldconfig fieldExpr="probeSet.primaryIdentifier"/>
+		<fieldconfig fieldExpr="gene.symbol"/>
+		<fieldconfig fieldExpr="array.geoAccession"/>
+	</fields>
+</class>
+
 <class className="org.intermine.model.bio.GEOSample">
 </class>
 

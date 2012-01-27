@@ -77,12 +77,13 @@ while(<$IN>)
 		}
 	}
 
-	my $chrom = $chrom_items->{$data{CHROMOSOME}};
-	$sslp_attr{chromosome} = $chrom if $chrom;
+#	my $chrom = $chrom_items->{$data{CHROMOSOME}};
+#	$sslp_attr{chromosome} = $chrom if $chrom;
 	
 
 	my $sslp_item = $item_doc->add_item(SimpleSequenceLengthVariation => %sslp_attr);
 
+=cut
 	if($data{CHROMOSOME} and $data{START_POS_3_4})
 	{
 		#print "\n$data{START_POS_3_4}\n";
@@ -103,6 +104,7 @@ while(<$IN>)
 
 	}
 	
+=cut
 
 }#end while(<IN>)
 close $IN;

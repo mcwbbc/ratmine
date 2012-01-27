@@ -256,8 +256,8 @@ sub createPlatformItems
 			next;
 		}
 		
-		$item_attr{geoAccession} = $hashed_info->{$key}->{Platform_title};
-		$item_attr{primaryIdentifier} = $hashed_info->{$key}->{Platform_geo_accession};
+		$item_attr{name} = $hashed_info->{$key}->{Platform_title};
+		$item_attr{geoAccession} = $hashed_info->{$key}->{Platform_geo_accession};
 		$item_attr{vendor} = $hashed_info->{$key}->{Platform_manufacturer} if $hashed_info->{$key}->{Platform_manufacturer};
 		$item = $item_doc->add_item(Array => %item_attr);
 		
@@ -435,7 +435,7 @@ sub getPlatformItem
 	{
 		unless(exists $platform_items{$geoAcc})
 		{
-			my $item = $item_doc->add_item('Array', primaryIdentifier => $geoAcc);
+			my $item = $item_doc->add_item('Array', geoAccession => $geoAcc);
 			$platform_items{$geoAcc} = $item;
 		}
 		return $platform_items{$geoAcc};

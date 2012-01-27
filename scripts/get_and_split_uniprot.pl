@@ -34,9 +34,9 @@ my $results = GetOptions(
 				"output_dir=s" => \$outputDir
 );
 
-printHelp if ($help or !$taxon);
+printHelp() if ($help or !$taxon);
 
-$output_dir .= '/' unless $output_dir =~ /[\/\\]$/; #ensure line ends with trailing slash
+$outputDir .= '/' unless $outputDir =~ /[\/\\]$/; #ensure line ends with trailing slash
 my $input = $outputDir . "${taxon}_uniprot_all.xml";
 my $swiss = $outputDir . "${taxon}_uniprot_sprot.xml";
 my $tremb = $outputDir . "${taxon}_uniprot_trembl.xml";
