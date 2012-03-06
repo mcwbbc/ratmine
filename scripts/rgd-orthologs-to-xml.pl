@@ -85,11 +85,11 @@ while(<$IN>)
 			$sources{$source} = $item_doc->add_item('DataSet', name => $source);
 		}
 
-		my $rat_gene = $item_doc->add_item('Homologue', gene => $rat_gene, 
+		$item_doc->add_item('Homologue', gene => $rat_gene, 
 										homologue => $mouse_genes{$mouse_id}, 
 										type => 'orthologue',
 										dataSets => [$sources{$source}]);
-		my $mouse_gene = $item_doc->add_item('Homologue', gene => $mouse_genes{$mouse_id}, 
+		$item_doc->add_item('Homologue', gene => $mouse_genes{$mouse_id}, 
 										homologue => $rat_gene, 
 										type => 'orthologue',
 										dataSets => [$sources{$source}]);

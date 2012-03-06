@@ -20,6 +20,7 @@ use RCM;
 use List::MoreUtils qw/zip/;
 use XML::XPath;
 use LWP::UserAgent;
+use Data::Dumper;
 
 #arguments
 my ($model_file, $input_directory, $output);
@@ -64,6 +65,8 @@ else
 foreach my $file (@files)
 {
 	my $hashed_data = processFile($file);
+	#print Dumper($hashed_data);
+	#exit(0);
 	foreach my $class (keys(%$hashed_data))
 	{
 		#emulating Switch, since its not working
@@ -215,8 +218,15 @@ sub createDatasetItems
 		$item_attr{valueType} = $hashed_info->{$key}->{dataset_value_type};
 		#$item_attr{publicReleaseDate} = $hashed_info->{$key}->{dataset_update_date};
 		
+		my $data_series_item = getSeriesItem($hashed_info->{$key}->{dataset_reference_series});
+
+		if ($data_series_item) {
+			$item_attr{geoSeries} = $data_series_item;
+		}
+
 		my $pub_item = getPublicationItem($hashed_info->{$key}->{dataset_pubmed_id});
 		my $platform_item = getPlatformItem($hashed_info->{$key}->{dataset_platform});
+		
 		
 		if($pub_item and ref($pub_item) eq "ARRAY")
 		{	$item_attr{publications} = $pub_item;	}

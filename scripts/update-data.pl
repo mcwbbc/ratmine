@@ -115,16 +115,19 @@ sub updateData
 		foreach my $remoteNode ($remoteSet->get_nodelist)
 		{
             my $remote = $remoteNode->string_value;
-			if($$projectInfo{$source}{dir})
+			if(!$destination)
 			{
-				if($$projectInfo{$source}{file})
+				if($$projectInfo{$source}{dir})
 				{
-					$destination = $$projectInfo{$source}{file};
-				}
-				elsif($$projectInfo{$source}{dir})
-				{
-					$localfile = $& if $remote =~ m|\/[^\/\\]+?$|;
-					$destination = $$projectInfo{$source}{dir} . $localfile;
+					if($$projectInfo{$source}{file})
+					{
+						$destination = $$projectInfo{$source}{file};
+					}
+					elsif($$projectInfo{$source}{dir})
+					{
+						$localfile = $& if $remote =~ m|\/[^\/\\]+?$|;
+						$destination = $$projectInfo{$source}{dir} . $localfile;
+					}
 				}
 			}#end if(!$destination)
 			
