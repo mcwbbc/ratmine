@@ -147,14 +147,6 @@
       <fieldconfig fieldExpr="qualifier"></fieldconfig>
    </fields>
 </class>
-	
-<class className="org.intermine.model.bio.GOAnnotation">
-   <fields>
-      <fieldconfig fieldExpr="ontologyTerm.identifier"></fieldconfig>
-      <fieldconfig fieldExpr="ontologyTerm.name"></fieldconfig>
-      <fieldconfig fieldExpr="qualifier"></fieldconfig>
-   </fields>
-</class>	
 
 <class className="org.intermine.model.bio.Homologue">
 	<fields>
