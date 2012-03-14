@@ -16,12 +16,12 @@ print `ant default remove-webapp`;
 #print `cp ${webapp_home}build/userprofile.xml $HOME`;
 
 #step 2 rebuild database
-my $db_home = $HOME . $PROJECT . 'dbmodel/';
+#my $db_home = $HOME . $PROJECT . 'dbmodel/';
 
 chdir($db_home);
 print `ant clean build-db`;
 chdir($HOME.$PROJECT);
-print `perl ../bio/scripts/project_build -v localhost dump`;
+print `perl ../bio/scripts/project_build -b -v localhost dump`;
 
 #step 3 rebuild userdata
 chdir($webapp_home);

@@ -132,6 +132,8 @@ sub updateData
 			}#end if(!$destination)
 			
 			downloadFile($remote, $destination, $dry);
+	        $destination = $node->find('destination')->string_value;
+
 		}#end if ($remote)
 		
 		my $scriptset = $node->find('scripts/script');

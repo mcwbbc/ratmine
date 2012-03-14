@@ -1,0 +1,315 @@
+<?xml version="1.0" ?>
+<project-config>
+	
+	<!-- path to your genomic model file -->
+	<model-file>ratmine/dbmodel/build/model/genomic_model.xml</model-file>
+	
+	<!-- types of options 
+		model = grabs the model-file
+		input = grabs the destination file
+		output = uses either the src.data.Dir or src.data.File from project.cml
+		custom = uses whatever value is entered into the option node
+		flag = denotes a flag option, aka no value
+	-->
+
+	<source name="omim-text">
+		<remote-file>ftp://your:credentials@grcf.jhmi.edu/OMIM/omim.txt.Z</remote-file>
+		<destination>/path/tmp/omim.text.gz</destination>
+		<scripts>
+			<script script="gzip -d -f">
+				<option type="input"/>
+			</script>
+			<script script="perl omim-to-xml.pl">
+				<option type="custom" name="omim_text">/path/tmp/omim.text</option>
+				<option type="model" name="model"/>
+				<option type="output" name="omim_xml"/>
+			</script>
+		</scripts>
+	</source>
+
+
+	<source name="omim-genes">
+		<remote-file>ftp://your:credentials@grcf.jhmi.edu/OMIM/genemap</remote-file>
+		<destination>/path/tmp/genemap</destination>
+		<scripts>
+			<script script="perl omim-genemap-to-xml.pl">
+				<option type="input" name="gene_map"/>
+				<option type="model" name="model"/>
+				<option type="output" name="omim_xml"/>
+			</script>
+		</scripts>
+	</source>
+
+	<source name="rat-genes">
+		<remote-file>ftp://rgd.mcw.edu/pub/data_release/GENES_RAT.txt</remote-file>
+		<destination>/path/tmp/GENES_RAT.txt</destination>
+		<scripts>
+			<script script="perl rgd-genes-to-xml.pl">
+				<option type="model" name="model" />
+				<option type="input" name="rgd_genes" />
+				<option type="output" name="output_file" />
+				<option type="custom" name="taxon_id">10116</option>
+			</script>
+		</scripts>
+	</source>
+
+	<source name="human-genes">
+		<remote-file>ftp://rgd.mcw.edu/pub/data_release/GENES_HUMAN.txt</remote-file>
+		<destination>/path/tmp/GENES_HUMAN.txt</destination>
+		<scripts>
+			<script script="perl rgd-genes-to-xml.pl">
+				<option type="model" name="model" />
+				<option type="input" name="rgd_genes" />
+				<option type="output" name="output_file" />
+				<option type="custom" name="taxon_id">9606</option>
+			</script>
+		</scripts>
+	</source>
+
+	<source name="mouse-genes">
+		<remote-file>ftp://rgd.mcw.edu/pub/data_release/GENES_MOUSE.txt</remote-file>
+		<destination>/path/tmp/GENES_MOUSE.txt</destination>
+		<scripts>
+			<script script="perl rgd-genes-to-xml.pl">
+				<option type="model" name="model" />
+				<option type="input" name="rgd_genes" />
+				<option type="output" name="output_file" />
+				<option type="custom" name="taxon_id">10090</option>
+			</script>
+		</scripts>
+	</source>
+
+	<source name="rat-orthologs">
+		<remote-file>ftp://rgd.mcw.edu/pub/data_release/RGD_ORTHOLOGS.txt</remote-file>
+		<destination>/path/tmp/RGD_ORTHOLOGS.txt</destination>
+		<scripts>
+			<script script="perl rgd-orthologs-to-xml.pl">
+				<option type="model" name="model"/>
+				<option type="input" name="input"/>
+				<option type="output" name="output"/>
+			</script>
+		</scripts>
+	</source>
+
+	<source name="rat-gff">
+		<scripts>
+			<!-- rat -->
+			<script script="perl rgd-gff3-sort.pl">
+				<option type="custom" name="dir">/path/tmp/Rat/Gene/</option>
+				<option type="output" name="out_dir"/>
+			</script>
+			<script script="perl rgd-gff3-sort.pl">
+				<option type="custom" name="dir">/path/tmp/Rat/Sslp/</option>
+				<option type="output" name="out_dir"/>
+			</script>
+			<script script="perl rgd-gff3-sort.pl">
+				<option type="custom" name="dir">/path/tmp/Rat/Qtl/</option>
+				<option type="output" name="out_dir"/>
+			</script>
+		</scripts>
+	</source>
+
+	<source name="mouse-gff">
+		<scripts>
+			<!-- mouse -->
+			<script script="perl rgd-gff3-sort.pl">
+				<option type="custom" name="dir">/path/tmp/Mouse/Gene/</option>
+				<option type="output" name="out_dir"/>
+			</script>
+		</scripts>
+	</source>
+
+	<source name="human-gff">
+		<scripts>
+			<!-- human -->
+			<script script="perl rgd-gff3-sort.pl">
+				<option type="custom" name="dir">/path/tmp/Human/Gene/</option>
+				<option type="output" name="out_dir"/>
+			</script>
+		</scripts>
+	</source>
+	
+	<source name="rat-qtls">
+		<remote-file>ftp://rgd.mcw.edu/pub/data_release/QTLS_RAT.txt</remote-file>
+		<destination>/path/tmp/QTLS_RAT.txt</destination>
+		<scripts>
+			<script script="perl rgd-qtls-to-xml.pl">
+				<option type="model" name="model" />
+				<option type="input" name="qtl_input" />
+				<option type="output" name="xml_output" />
+			</script>
+		</scripts>
+	</source>
+	
+	<source name="rat-chromosome-fasta">
+		<!-- no data download for this yet -->
+	</source>
+
+	<source name="db-snp">
+		<scripts>
+			<script script="perl dbsnp-to-xml.pl">
+				<option type="model" name="model" />
+				<option type="custom" name="input">/path/tmp/dbSNP/</option>
+				<option type="output" name="output" />
+				<option type="custom" name="taxon">10116</option>
+				<option type="custom" name="assembly">RGSC_v3.4</option>
+				<option type="flag" name="download" />
+			</script>
+		</scripts>
+	</source>
+
+	<source name="uniprot-rat">
+		<scripts>
+			<script script="perl get_and_split_uniprot.pl">
+				<option type="custom" name="taxon">10116</option>
+				<option type="output" name="output_dir" />
+			</script>
+		</scripts>
+	</source>
+	
+	<source name="go">
+		<remote-file>http://www.geneontology.org/ontology/obo_format_1_2/gene_ontology.1_2.obo</remote-file>
+	</source>
+	
+	<source name="go-annotation">
+		<remote-file>http://cvsweb.geneontology.org/cgi-bin/cvsweb.cgi/go/gene-associations/gene_association.rgd.gz?rev=HEAD</remote-file>
+		<destination>/path/tmp/gene_association.rgd.gz</destination>
+		<scripts>
+			<script script="gzip -d -f">
+				<option type="input"/>
+			</script>
+			<script script="sort -k 2,2">
+				<option type="custom">/path/tmp/gene_association.rgd</option>
+				<option type="custom">&gt;</option>
+				<option type="custom">/path/go-annotation/gene_association.rgd</option>
+			</script>
+		</scripts>
+	</source>
+	
+	<source name="rat-mp">
+		<remote-file>ftp://ftp.informatics.jax.org/pub/reports/MPheno_OBO.ontology</remote-file>
+		<destination>/path/ratmine_src_data/mp/MPheno_OBO.obo</destination>
+	</source>
+	
+	<source name="rat-mp-annot">
+		<remote-file>ftp://rgd.mcw.edu/pub/data_release/annotated_rgd_objects_by_ontology/rattus_genes_mp</remote-file>
+		<remote-file>ftp://rgd.mcw.edu/pub/data_release/annotated_rgd_objects_by_ontology/mus_genes_mp</remote-file>
+		<remote-file>ftp://rgd.mcw.edu/pub/data_release/annotated_rgd_objects_by_ontology/homo_genes_mp</remote-file>
+	</source>
+	
+	<source name="rat-pw">
+		<remote-file>ftp://rgd.mcw.edu/pub/ontology/pathway/pathway.obo</remote-file>
+	</source>
+	
+	<source name="rat-pw-annot">
+		<remote-file>ftp://rgd.mcw.edu/pub/data_release/annotated_rgd_objects_by_ontology/rattus_genes_pw</remote-file>
+		<remote-file>ftp://rgd.mcw.edu/pub/data_release/annotated_rgd_objects_by_ontology/mus_genes_pw</remote-file>
+		<remote-file>ftp://rgd.mcw.edu/pub/data_release/annotated_rgd_objects_by_ontology/homo_genes_pw</remote-file>
+	</source>
+	
+	<source name="rat-do">
+		<remote-file>ftp://rgd.mcw.edu/pub/ontology/disease/CTD.obo</remote-file>
+	</source>
+	
+	<source name="rat-do-annot">
+		<remote-file>ftp://rgd.mcw.edu/pub/data_release/annotated_rgd_objects_by_ontology/rattus_genes_do</remote-file>
+		<remote-file>ftp://rgd.mcw.edu/pub/data_release/annotated_rgd_objects_by_ontology/mus_genes_do</remote-file>
+		<remote-file>ftp://rgd.mcw.edu/pub/data_release/annotated_rgd_objects_by_ontology/homo_genes_do</remote-file>
+	</source>
+
+	<source name="rat-rs">
+		<remote-file>http://rest.bioontology.org/bioportal/ontologies/download/42515</remote-file>
+		<destination>/path/rs/strainont03_24_10_v2.0.obo</destination>
+	</source>
+		
+	<source name="rat-strains">
+		<remote-file>ftp://rgd.mcw.edu/pub/data_release/STRAINS.txt</remote-file>
+		<destination>/path/tmp/strains.txt</destination>
+		<scripts>
+			<script script="perl rgd-strains-to-xml.pl">
+				<option type="input" name="rgd_strains"/>
+				<option type="model" name="model"/>
+				<option type="output" name="output_file"/>
+				<option type="custom" name="strain_obo">/path/rs/strainont03_24_10_v2.0.obo</option>
+			</script>
+		</scripts>
+	</source>
+
+	<source name="rat-genotype"/>
+
+	<source name="rat-sslps">
+		<remote-file>ftp://rgd.mcw.edu/pub/data_release/SSLPS_RAT.txt</remote-file>
+		<destination>/path/tmp/sslp_rat.txt</destination>
+		<scripts>
+			<script script="perl rgd-sslp-to-xml.pl">
+				<option type="input" name="input"/>
+				<option type="model" name="model"/>
+				<option type="output" name="output"/>
+			</script>
+		</scripts>
+	</source>
+
+	<source name="rat-sslp-alleles">
+		<remote-file>ftp://rgd.mcw.edu/pub/data_release/SSLPS_ALLELES_RAT.txt</remote-file>
+		<destination>/path/tmp/sslp_alleles_rat.txt</destination>
+		<scripts>
+			<script script="perl rgd-sslp-alleles-to-xml.pl">
+				<option type="input" name="input"/>
+				<option type="model" name="model"/>
+				<option type="output" name="output"/>
+			</script>
+		</scripts>
+	</source>
+
+	<source name="ratmine-metadata" />
+
+	<source name="experiment-eqtl" />
+
+	<source name="geo-probe-annotation">
+		<destination>/path/geo/geoannotations/</destination>
+		<scripts>
+			<script script="perl geo-platform-to-xml.pl">
+				<option type="input" name="input"/>
+				<option type="model" name="model"/>
+				<option type="output" name="output"/>
+				<option type="custom" name="download"/>
+			</script>
+		</scripts>
+		
+	</source>
+ 
+	<source name="rat-geo-platforms">
+		<destination>/path/geo/geoplatforms</destination>
+		<scripts>
+			<script script="perl rat-geo-soft-to-xml.pl">
+				<option type="model" name="model"/>
+				<option type="input" name="input"/>
+				<option type="output" name="output"/>
+			</script>
+		</scripts>
+	</source>
+
+	<source name="rat-geo-series">
+		<destination>/path/geo/geoseries</destination>
+		<scripts>
+			<script script="perl rat-geo-soft-to-xml.pl">
+				<option type="custom" name="series"/>
+				<option type="model" name="model"/>
+				<option type="input" name="input"/>
+				<option type="output" name="output"/>
+			</script>
+		</scripts>
+	</source>
+
+	<source name="rat-geo-samples">
+		<destination>/path/geo/geoseries</destination>
+		<scripts>
+			<script script="perl -I/home/intermine/build/intermine_current/intermine/perl/lib rat-geo-soft-to-xml.pl">
+				<option type="custom" name="samples"/>
+				<option type="model" name="model"/>
+				<option type="input" name="input"/>
+				<option type="output" name="output"/>
+			</script>
+		</scripts>
+	</source>	
+</project-config>
