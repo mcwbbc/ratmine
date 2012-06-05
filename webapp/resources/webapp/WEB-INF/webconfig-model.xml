@@ -501,7 +501,7 @@
 	                                 dataSetLoader="org.intermine.bio.web.widget.DoStatLdr"
 	                                 description="DO terms enriched for items in this list."
 	                                 label="DO Term"
-	                                 filters="disease_ontology"
+	                                 filters="CTD.ontology"
 	                                 filterLabel="Ontology"
 	                                 typeClass="org.intermine.model.bio.Gene,org.intermine.model.bio.Protein"
 	                                 externalLink="http://rgd.mcw.edu/tools/ontology/ont_annot.cgi?ontology=do&amp;ont_id=" />
