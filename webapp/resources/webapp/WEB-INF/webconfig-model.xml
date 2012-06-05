@@ -469,7 +469,7 @@
 						description="Actual: number of items in this list found on each chromosome.  Expected: given the total number of items on the chromosome and the number of items in this list, the number of items expected to be found on each chromosome."
 				        graphType="BarChart"
 						extraAttributeClass="org.intermine.bio.util.BioUtil"
-						typeClass="org.intermine.model.bio.Gene"
+						typeClass="org.intermine.model.bio.Gene,org.intermine.model.bio.QTL"
 	       />
 	      <enrichmentwidgetdisplayer id="protein_features" title="UniProt Features"
 	                                 link="org.intermine.bio.web.widget.UniProtFeaturesURLQuery"
@@ -501,7 +501,7 @@
 	                                 dataSetLoader="org.intermine.bio.web.widget.DoStatLdr"
 	                                 description="DO terms enriched for items in this list."
 	                                 label="DO Term"
-	                                 filters="disease_ontology"
+	                                 filters="CTD.ontology"
 	                                 filterLabel="Ontology"
 	                                 typeClass="org.intermine.model.bio.Gene,org.intermine.model.bio.Protein"
 	                                 externalLink="http://rgd.mcw.edu/tools/ontology/ont_annot.cgi?ontology=do&amp;ont_id=" />
