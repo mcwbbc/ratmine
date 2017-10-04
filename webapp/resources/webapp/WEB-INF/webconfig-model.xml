@@ -340,27 +340,11 @@
                      types="BioEntity"/>
 	
 	</reportdisplayers>
-	<!-- widgets -->
+	<!-- widgets
+	     Each Sequece Feature requires its own unique widget definition -->
 	<widgets>
-
-		<graphdisplayer id="chromosome_distribution_for_gene"
-                      title="Chromosome Distribution"
-                      description="Actual: number of items in this list found on each chromosome.  Expected: given the total number of items on the chromosome and the number of items in this list, the number of items expected to be found on each chromosome."
-                      graphType="ColumnChart"
-                      rangeLabel="Count"
-                      domainLabel="Chromosome"
-                      filterLabel="Organism"
-                      filters="organism.name=[list]"
-                      startClass="SequenceFeature"
-                      typeClass="SequenceFeature"
-                      categoryPath="chromosome.primaryIdentifier"
-                      seriesLabels="Actual,Expected"
-                      seriesPath="ActualExpectedCriteria"
-                      constraints="organism.name=[Organism]"
-                      views="primaryIdentifier, symbol, secondaryIdentifier, organism.name, chromosome.primaryIdentifier,
-                             chromosomeLocation.start, chromosomeLocation.end, chromosomeLocation.strand"/>
-
-		<enrichmentwidgetdisplayer id="publication_enrichment"
+<!-- proteins -->
+		<enrichmentwidgetdisplayer id="publication_enrichment_protein"
                            title="Publication Enrichment"
                            description="Publications enriched for proteins in this list."
                            label="Publication"
@@ -372,7 +356,7 @@
                            typeClass="Protein"
                            views="organism.name, publications.title, publications.firstAuthor, publications.journal, publications.year, publications.pubMedId"
                            externalLink="http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?cmd=Retrieve&amp;db=PubMed&amp;dopt=Abstract&amp;list_uids=" />
-
+		
 		<enrichmentwidgetdisplayer id="protein_features"
                                  title="UniProt Features"
                                  description="UniProt features enriched for proteins in this list."
@@ -398,7 +382,24 @@
                                  typeClass="Protein"
                                  views="primaryIdentifier, primaryAccession, organism.name,
                                        keywords.name, keywords.description"/>
-
+<!-- genes -->
+		<graphdisplayer id="chromosome_distribution_for_gene"
+                      title="Chromosome Distribution"
+                      description="Actual: number of items in this list found on each chromosome.  Expected: given the total number of items on the chromosome and the number of items in this list, the number of items expected to be found on each chromosome."
+                      graphType="ColumnChart"
+                      rangeLabel="Count"
+                      domainLabel="Chromosome"
+                      filterLabel="Organism"
+                      filters="organism.name=[list]"
+                      startClass="SequenceFeature"
+                      typeClass="SequenceFeature"
+                      categoryPath="chromosome.primaryIdentifier"
+                      seriesLabels="Actual,Expected"
+                      seriesPath="ActualExpectedCriteria"
+                      constraints="organism.name=[Organism]"
+                      views="primaryIdentifier, symbol, secondaryIdentifier, organism.name, chromosome.primaryIdentifier,
+                             chromosomeLocation.start, chromosomeLocation.end, chromosomeLocation.strand"/>
+		
 		<enrichmentwidgetdisplayer id="go_enrichment_for_gene"
                                  title="Gene Ontology Enrichment"
                                  description="GO terms enriched for items in this list."
@@ -462,6 +463,19 @@
                                  views="secondaryIdentifier, symbol, organism.name,
 					mpAnnotation.ontologyTerm.identifier, mpAnnotation.ontologyTerm.name,
 					mpAnnotation.ontologyTerm.parents.identifier, mpAnnotation.ontologyTerm.parents.name"/>
+
+		<enrichmentwidgetdisplayer id="publication_enrichment_gene"
+                           title="Publication Enrichment"
+                           description="Publications enriched for genes in this list."
+                           label="Publication"
+                           startClass="Gene"
+                           startClassDisplay="primaryIdentifier"
+                           enrich="publications.title"
+                           enrichIdentifier="publications.pubMedId"
+                           constraints="organism.name=[list],primaryIdentifier  = null"
+                           typeClass="Gene"
+                           views="organism.name, publications.title, publications.firstAuthor, publications.journal, publications.year, publications.pubMedId"
+                           externalLink="http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?cmd=Retrieve&amp;db=PubMed&amp;dopt=Abstract&amp;list_uids=" />
 
 	</widgets>
 </webconfig>
