@@ -5,17 +5,41 @@
   <queries>
   </queries>
 <template-queries>
+<template name="Organism_Protein" title="Organism --&gt; All proteins." longDescription="Show all the proteins from a particular organism." comment="">
+  <query name="Organism_Protein" model="genomic" view="Protein.primaryIdentifier Protein.primaryAccession" longDescription="Show all the proteins from a particular organism." sortOrder="Protein.primaryIdentifier asc">
+    <constraint path="Protein.organism.name" editable="true" description="Show all the proteins from the organism:" op="=" value="Plasmodium falciparum 3D7"/>
+  </query>
+</template>
+<template name="Gene_Protein" title="Gene --&gt; Proteins." longDescription="Show the proteins for a particular gene." comment="06.06.07 updated to work from gene class - Philip">
+  <query name="Gene_Protein" model="genomic" view="Gene.primaryIdentifier Gene.symbol Gene.proteins.primaryIdentifier Gene.proteins.primaryAccession" longDescription="Show the proteins for a particular gene." sortOrder="Gene.primaryIdentifier asc">
+    <pathDescription pathString="Gene.proteins" description="Protein"/>
+    <constraint path="Gene" editable="true" op="LOOKUP" value="ABRA"/>
+  </query>
+</template>
+<template name="All_Proteins_In_Organism_To_Publications" title="All proteins in organism --&gt; Publications." longDescription="Show the publications for each gene in one organism. References are loaded from FlyBase for all Drosophila species, and from NCBI for D. melanogaster, C. elegans and S. cerevisiae." comment="">
+  <query name="All_Proteins_In_Organism_To_Publications" model="genomic" view="Protein.primaryIdentifier Protein.primaryAccession Protein.organism.name Protein.publications.firstAuthor Protein.publications.title Protein.publications.year Protein.publications.journal Protein.publications.volume Protein.publications.pages Protein.publications.pubMedId" sortOrder="Protein.primaryIdentifier asc">
+    <constraint path="Protein.organism.name" editable="true" description="Organism.name" op="=" value="Plasmodium falciparum 3D7"/>
+  </query>
+</template>
 </template-queries>
 <tags>
   <tag name="im:public" objectIdentifier="Gene_Protein" type="template">
   </tag>
-  <tag name="im:public" objectIdentifier="GO_name_Gene" type="template">
+  <tag name="im:public" objectIdentifier="Organism_Protein" type="template">
   </tag>
-  <tag name="im:public" objectIdentifier="GOname_GOidentifier" type="template">
+  <tag name="im:public" objectIdentifier="All_Proteins_In_Organism_To_Publications" type="template">
+  </tag>
+    <tag name="im:frontpage" objectIdentifier="Gene_Protein" type="template">
+  </tag>
+  <tag name="im:frontpage" objectIdentifier="Organism_Protein" type="template">
+  </tag>
+  <tag name="im:frontpage" objectIdentifier="All_Proteins_In_Organism_To_Publications" type="template">
   </tag>
   <tag name="im:public" objectIdentifier="GOtermidentifier_name" type="template">
   </tag>
   <tag name="im:public" objectIdentifier="Gene_GO" type="template">
+  </tag>
+  <tag name="im:frontpage" objectIdentifier="Gene_GO" type="template">
   </tag>
   <tag name="im:public" objectIdentifier="Gene_Identifiers" type="template">
   </tag>
