@@ -352,7 +352,7 @@
                            startClassDisplay="primaryIdentifier"
                            enrich="publications.title"
                            enrichIdentifier="publications.pubMedId"
-                           constraints="organism.name=[list],primaryIdentifier  = null"
+                           constraints="organism.name=[list],primaryIdentifier != null"
                            typeClass="Protein"
                            views="organism.name, publications.title, publications.firstAuthor, publications.journal, publications.year, publications.pubMedId"
                            externalLink="http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?cmd=Retrieve&amp;db=PubMed&amp;dopt=Abstract&amp;list_uids=" />
@@ -472,7 +472,7 @@
                            startClassDisplay="primaryIdentifier"
                            enrich="publications.title"
                            enrichIdentifier="publications.pubMedId"
-                           constraints="organism.name=[list],primaryIdentifier  = null"
+                           constraints="organism.name=[list],primaryIdentifier != null"
                            typeClass="Gene"
                            views="organism.name, publications.title, publications.firstAuthor, publications.journal, publications.year, publications.pubMedId"
                            externalLink="http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?cmd=Retrieve&amp;db=PubMed&amp;dopt=Abstract&amp;list_uids=" />

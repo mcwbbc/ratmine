@@ -1,5 +1,5 @@
 <aspects>
-	
+
 	<aspect name="Disease">
     <subtitle>Disease Ontology</subtitle>
     <icon-image>model/images/do.png</icon-image>
@@ -14,7 +14,7 @@
 			genes such that the information available for each gene includes a list of its DO annotations.
     </intro-text>
     <tile-name>model/DO.jsp</tile-name>
-  </aspect>  
+  </aspect> 
   
   <aspect name="Gene Ontology">
     <subtitle></subtitle>
@@ -45,8 +45,7 @@
 	<aspect-source name="Ensembl" url="http://www.ensembl.org/Rattus_norvegicus/Info/Index"/>
 	<aspect-source name="Wikipedia" url="http://en.wikipedia.org/wiki/Gene" />
   </aspect>
-
-	<aspect name="Interactions">
+  <aspect name="Interactions">
     <subtitle></subtitle>
     <icon-image>model/images/interactions.gif</icon-image>
     <large-image>model/images/interactions.gif</large-image>
@@ -57,7 +56,6 @@
     <aspect-source name="BioGrid" url="http://thebiogrid.org"/>
 		<aspect-source name="IntAct" url="http://www.ebi.ac.uk/intact"/>
   </aspect>
-
   <aspect name="Phenotype">
     <subtitle></subtitle>
     <icon-image>model/images/mp.png</icon-image>
@@ -124,7 +122,7 @@
 	<aspect-source name="QTL" url="http://rgd.mcw.edu/rgdweb/search/qtls.html?100"/>
 	<aspect-source name="Wikipedia" url="http://en.wikipedia.org/wiki/Gene" />
   </aspect>
-
+<!--
   <aspect name="SNP">
 	<subtitle></subtitle>
 	<icon-image>model/images/snp_image.jpg</icon-image>
@@ -136,5 +134,5 @@
 	<aspect-source name="Ensembl" url="http://www.ensembl.org/Rattus_norvegicus/Info/Index"/>
 	<aspect-source name="Wikipedia" url="http://en.wikipedia.org/wiki/Single-nucleotide_polymorphism" />
   </aspect>
-  
+-->  
 </aspects>

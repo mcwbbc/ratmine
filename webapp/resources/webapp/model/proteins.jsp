@@ -8,22 +8,16 @@
         Current data
       </div>
       <div class="body">
-	  	  <!--insert hidden here -->
-		<h4>
-			<a href="javascript:toggleDiv('hiddenDiv1');">
-			<img id='hiddenDiv1Toggle' src="images/disclosed.gif"/>
-			Proteins in RatMine ...
-			</a>
-		</h4>
-		<div id="hiddenDiv1" class="dataSetDescription">
-			<A href="http://www.uniprot.org/">UniProt
-			Knowledgebase (UniProtKB)</A>
+        <DL>
+          <DT><A href="http://www.ebi.uniprot.org/index.shtml">UniProt
+          Knowledgebase (UniProtKB)</A></DT>
+          <DD>
             All proteins from the <A
-            href="http://www.uniprot.org/">UniProt
-            Knowledgebase</A> for the following organisms have
+            href="http://www.ebi.uniprot.org/index.shtml">UniProt
+            Knowledgebase</A> (version 7.5) for the following organisms have
             been loaded:
             <UL>
-              <LI><I>Rattus Norvegicus</I></LI>
+              <LI><I>Plasmodium falciparum (isolate 3D7)</I></LI>
             </UL>
             For each protein record in UniProt for each species the following
             information is extracted:
@@ -37,40 +31,22 @@
               <LI>Sequence</LI>
               <LI>Gene ORF name</LI>
             </UL>
-		</div>
-		<h4>
-			<a href="javascript:toggleDiv('hiddenDiv2');">
-			<img id='hiddenDiv2Toggle' src="images/disclosed.gif"/>
-			Data from InterPro in RatMine ...
-			</a>
-		</h4>
-		<div id="hiddenDiv2" class="dataSetDescription">
-			Protein family and domain assignments to proteins are loaded from Uniprot (see above). Details for each family or domain are loaded from <a href="http://www.ebi.ac.uk/interpro/" target="_blank">InterPro</a>
-		</div>
-	    <!-- end hidden -->
-	  </div>
+          </DD>
+        </DL>
+      </div>
     </td>
     <td valign="top">
       <div class="heading2">
-        Bulk download
+        Bulk download <i>P. falciparum 3d7</i> data
       </div>
       <div class="body">
         <ul>
           <li>
             <span style="white-space:nowrap">
-              <im:querylink text="<i>Rattus norvegicus</i> proteins and corresponding genes(browse)" skipBuilder="true">
-                <query name="" model="genomic" view="Protein.primaryAccession Protein.genes.symbol" sortOrder="Protein.primaryAccession asc">
-					<node path="Protein" type="Protein">
-					</node>
-					<node path="Protein.organism" type="Organism">
-					</node>
-					<node path="Protein.organism.name" type="String">
-					<constraint op="=" value="Rattus norvegicus" description="" identifier="" code="A" extraValue="">
-					</constraint>
-					</node>
-					<node path="Protein.genes" type="Gene">
-					</node>
-                </query>
+              <im:querylink text="Plasmodium falciparum proteins and corresponding genes:" skipBuilder="true">
+<query name="" model="genomic" view="Protein.primaryIdentifier Protein.primaryAccession Protein.organism.name Protein.genes.primaryIdentifier Protein.genes.secondaryIdentifier Protein.genes.organism.shortName" sortOrder="Protein.primaryIdentifier asc">
+  <constraint path="Protein.organism.name" op="=" value="Plasmodium falciparum 3D7"/>
+</query>
               </im:querylink>
             </span>
           </li>
