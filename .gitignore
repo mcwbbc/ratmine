@@ -17,6 +17,9 @@ datadownload_conf.xml
 datadownload_conf.xml
 download_conf.xml
 *.iml
-*/.classpath
+.classpath
+dbmodel/.classpath
+integrate/.classpath
+webapp/.classpath
 .project
 nohup.out
