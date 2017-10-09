@@ -17,3 +17,6 @@ datadownload_conf.xml
 datadownload_conf.xml
 download_conf.xml
 *.iml
+.classpath
+.project
+nohup.out
