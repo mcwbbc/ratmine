@@ -271,7 +271,7 @@
     		<reportdisplayer javaClass="org.intermine.bio.web.displayer.GeneOntologyDisplayer"
 		        jspName="model/geneOntologyDisplayer.jsp"
         		replacesFields="go"
-        		placement="summary"
+        		placement="geneOntology"
         		types="Gene"/>
 
 		<reportdisplayer javaClass="org.intermine.bio.web.displayer.ProteinSequenceDisplayer"
@@ -298,7 +298,7 @@
 		<reportdisplayer javaClass="org.intermine.bio.web.displayer.PublicationAnnotationsDisplayer"
 			jspName="model/publicationAnnotationsDisplayer.jsp"
                      	replacesFields=""
-                     	placement="summary"
+                     	placement="literature"
                      	parameters="Gene,Protein,GOAnnotation.evidence,Submission"
                      	types="Publication"/>
 
@@ -329,7 +329,7 @@
 		<reportdisplayer javaClass="org.intermine.bio.web.displayer.PublicationCountsDisplayer"
                      jspName="model/publicationCountsDisplayer.jsp"
                      replacesFields=""
-                     placement="Genomics"
+                     placement="literature"
                      types="BioEntity"/>
 	
 	</reportdisplayers>
