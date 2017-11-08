@@ -67,15 +67,19 @@ while(<$IN>)
 	my @fields = split(/\t/);
    	my %data = zip(@$index, @fields);
 
-	my $rat_gene = $item_doc->add_item('Gene', primaryIdentifier => $data{RAT_GENE_RGD_ID}, organism => $rat_item);
+	my $rat_gene = $item_doc->add_item('Gene', primaryIdentifier => 'RGD:' . $data{RAT_GENE_RGD_ID}, organism => $rat_item);
 
 	my @mouse_ids = split(/\|/, $data{MOUSE_ORTHOLOG_RGD});
+	my @mgi_ids = split(/\|/, $data{MOUSE_ORTHOLOG_MGI});
 	my @mouse_source = split(/\|/, $data{MOUSE_ORTHOLOG_SOURCE});
 	foreach my $mouse_id (@mouse_ids) {
 		unless($mouse_genes{$mouse_id})
 		{
+			my $s_id = shift(@mgi_ids);
+			$s_id ||= "";
 			$mouse_genes{$mouse_id} = $item_doc->add_item('Gene', 
-												primaryIdentifier => $mouse_id, 
+												primaryIdentifier => 'RGD:' . $mouse_id,
+												secondaryIdentifier => $s_id, 
 												organism => $mouse_item);
 
 		}
@@ -97,12 +101,16 @@ while(<$IN>)
 	} #end foreach $mouse_id
 
 	my @human_ids = split(/\|/, $data{HUMAN_ORTHOLOG_RGD});
+	my @hgnc_ids = split(/\|/, $data{HUMAN_ORTHOLOG_HGNC_ID});
 	my @human_source = split(/\|/, $data{HUMAN_ORTHOLOG_SOURCE});
 	foreach my $human_id (@human_ids) {
 		unless($human_genes{$human_id})
 		{
+			my $s_id = shift(@hgnc_ids);
+			$s_id ||= "";
 			$human_genes{$human_id} = $item_doc->add_item('Gene', 
-												primaryIdentifier => $human_id, 
+												primaryIdentifier => 'RGD:' . $human_id, 
+												secondaryIdentifier => $s_id,
 												organism => $human_item);
 		}
 		my $source = shift(@human_source);
