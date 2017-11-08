@@ -35,14 +35,14 @@
       <fieldconfig fieldExpr="secondaryIdentifier" showInInlineCollection="false" showInSummary="false" showInResults="false"/>
       <fieldconfig fieldExpr="symbol"/>
       <fieldconfig fieldExpr="name"/>
-			<fieldconfig fieldExpr="pharmGKBidentifier" label="Pharm GKB Identifier" showInInlineCollection="false" showInSummary="false" showInResults="false" />
+      <fieldconfig fieldExpr="pharmGKBidentifier" label="Pharm GKB Identifier" showInInlineCollection="false" showInSummary="false" showInResults="false" />
       <fieldconfig fieldExpr="length" displayer="/model/sequenceShortDisplayerWithField.jsp" />
       <fieldconfig fieldExpr="chromosomeLocation" displayer="/model/chromosomeLocDisplayer.jsp" showInResults="false" />
       <fieldconfig fieldExpr="chromosome.primaryIdentifier" showInInlineCollection="true" showInSummary="true" showInResults="false"/>
-      <fieldconfig fieldExpr="chromosomeLocation.start" showInInlineCollection="true" showInSummary="true" showInResults="false"/>
-      <fieldconfig fieldExpr="chromosomeLocation.end" showInInlineCollection="true" showInSummary="true" showInResults="false"/>
+      <fieldconfig fieldExpr="chromosomeLocation.start" showInInlineCollection="true" showInSummary="false" showInResults="false"/>
+      <fieldconfig fieldExpr="chromosomeLocation.end" showInInlineCollection="true" showInSummary="false" showInResults="false"/>
       <fieldconfig fieldExpr="organism.shortName" />
-			<fieldconfig fieldExpr="description" showInInlineCollection="false" showInSummary="false" doNotTruncate="true" showInResults="false" />
+      <fieldconfig fieldExpr="description" showInInlineCollection="false" showInSummary="false" doNotTruncate="true" showInResults="false" />
     </fields>
 </class>
 
