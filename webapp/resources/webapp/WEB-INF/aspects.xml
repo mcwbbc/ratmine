@@ -99,7 +99,7 @@
 	<aspect-source name="Wikipedia" url="http://en.wikipedia.org/wiki/Protein" />
   </aspect>
 
-  <aspect name="Publication">
+  <aspect name="Literature">
 	<subtitle></subtitle>
 	<icon-image>model/images/book.png</icon-image>
     <large-image>model/images/book.png</large-image>
@@ -122,6 +122,7 @@
 	<aspect-source name="QTL" url="http://rgd.mcw.edu/rgdweb/search/qtls.html?100"/>
 	<aspect-source name="Wikipedia" url="http://en.wikipedia.org/wiki/Gene" />
   </aspect>
+
 <!--
   <aspect name="SNP">
 	<subtitle></subtitle>

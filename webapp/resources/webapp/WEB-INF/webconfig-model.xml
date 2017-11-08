@@ -298,7 +298,7 @@
 		<reportdisplayer javaClass="org.intermine.bio.web.displayer.PublicationAnnotationsDisplayer"
 			jspName="model/publicationAnnotationsDisplayer.jsp"
                      	replacesFields=""
-                     	placement="literature"
+                     	placement="Literature"
                      	parameters="Gene,Protein,GOAnnotation.evidence,Submission"
                      	types="Publication"/>
 
@@ -329,7 +329,7 @@
 		<reportdisplayer javaClass="org.intermine.bio.web.displayer.PublicationCountsDisplayer"
                      jspName="model/publicationCountsDisplayer.jsp"
                      replacesFields=""
-                     placement="literature"
+                     placement="Literature"
                      types="BioEntity"/>
 	
 	</reportdisplayers>
