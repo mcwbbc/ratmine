@@ -59,22 +59,22 @@
 
 <class className="org.intermine.model.bio.SimpleSequenceLengthVariation">
    <fields>
-      <fieldconfig fieldExpr="primaryIdentifier"></fieldconfig>
-      <fieldconfig fieldExpr="symbol"></fieldconfig>
-      <fieldconfig showInResults="false" fieldExpr="chromosomeLocation" displayer="/model/chromosomeLocDisplayer.jsp"></fieldconfig>
-      <fieldconfig fieldExpr="organism.name"></fieldconfig>
+      <fieldconfig fieldExpr="primaryIdentifier" />
+      <fieldconfig fieldExpr="symbol" />
+      <fieldconfig showInResults="false" fieldExpr="chromosomeLocation" displayer="/model/chromosomeLocDisplayer.jsp" />
+      <fieldconfig fieldExpr="organism.name" />
    </fields>
 </class>
 
 <class className="org.intermine.model.bio.SequenceFeature">
    <fields>
-      <fieldconfig fieldExpr="primaryIdentifier"></fieldconfig>
-      <fieldconfig displayer="/model/sequenceShortDisplayerWithField.jsp" fieldExpr="length"></fieldconfig>
-      <fieldconfig showInResults="false" displayer="/model/chromosomeLocDisplayer.jsp" fieldExpr="chromosomeLocation"></fieldconfig>
-      <fieldconfig showInSummary="false" fieldExpr="chromosome.primaryIdentifier" showInInlineCollection="false"></fieldconfig>
-      <fieldconfig showInSummary="false" fieldExpr="chromosomeLocation.start" showInInlineCollection="false"></fieldconfig>
-      <fieldconfig showInSummary="false" fieldExpr="chromosomeLocation.end" showInInlineCollection="false"></fieldconfig>
-      <fieldconfig fieldExpr="organism.name"></fieldconfig>
+      <fieldconfig fieldExpr="primaryIdentifier" />
+      <fieldconfig displayer="/model/sequenceShortDisplayerWithField.jsp" fieldExpr="length" />
+      <fieldconfig displayer="/model/chromosomeLocDisplayer.jsp" fieldExpr="chromosomeLocation" showInResults="false" />
+      <fieldconfig fieldExpr="chromosome.primaryIdentifier" showInInlineCollection="false" showInResults="false"></fieldconfig>
+      <fieldconfig fieldExpr="chromosomeLocation.start" showInInlineCollection="false" showInSummary="false" showInResults="false"/>
+      <fieldconfig fieldExpr="chromosomeLocation.end" showInInlineCollection="false" showInSummary="false" showInResults="false"/>
+      <fieldconfig fieldExpr="organism.name" />
    </fields>
    <bagdisplayers></bagdisplayers>
 </class>
