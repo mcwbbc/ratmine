@@ -19,14 +19,12 @@
 <class className="org.intermine.model.bio.DataSet">
    <fields>
       <fieldconfig fieldExpr="name"></fieldconfig>
-      <!--<fieldconfig doNotTruncate="true" fieldExpr="url"></fieldconfig>-->
    </fields>
 </class>
 
 <class className="org.intermine.model.bio.DataSource">
    <fields>
       <fieldconfig fieldExpr="name"></fieldconfig>
-     <!--<fieldconfig doNotTruncate="true" fieldExpr="url"></fieldconfig>-->
    </fields>
    <tabledisplayer src="/model/dataSourceLong.jsp"></tabledisplayer>
 </class>
@@ -80,7 +78,7 @@
    </fields>
    <bagdisplayers></bagdisplayers>
 </class>
-
+<!-- removed from model?
 <class className="org.intermine.model.bio.Strain">
    <fields>
       <fieldconfig fieldExpr="primaryIdentifier"></fieldconfig>
@@ -89,7 +87,7 @@
       <fieldconfig fieldExpr="type"></fieldconfig>
    </fields>
 </class>
-
+-->
 <class className="org.intermine.model.bio.Synonym">
         <fields>
                 <fieldconfig fieldExpr="value"/>
