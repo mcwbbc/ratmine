@@ -32,7 +32,7 @@
 <class className="org.intermine.model.bio.Gene">
     <fields>
       <fieldconfig fieldExpr="primaryIdentifier"/>
-      <fieldconfig fieldExpr="secondaryIdentifier"/>
+      <fieldconfig fieldExpr="secondaryIdentifier" showInInlineCollection="false" showInSummary="false" showInResults="false"/>
       <fieldconfig fieldExpr="symbol"/>
       <fieldconfig fieldExpr="name"/>
 			<fieldconfig fieldExpr="pharmGKBidentifier" label="Pharm GKB Identifier" showInInlineCollection="false" showInSummary="false" showInResults="false" />
