@@ -19,9 +19,9 @@ if [ "$1" = "gff3" ]  || [ "$1" = "all" ]
    then
 
 cd $TEMP_DIR
-scp -r avallejos@kyle.rgd.mcw.edu:/home/rgddata/pipelines/RGDGff3Pipeline/dist/log/RGDGFF3/Output/Gene .
-scp -r avallejos@kyle.rgd.mcw.edu:/home/rgddata/pipelines/RGDGff3Pipeline/dist/log/RGDGFF3/Output/Qtl .
-scp -r avallejos@kyle.rgd.mcw.edu:/home/rgddata/pipelines/RGDGff3Pipeline/dist/log/RGDGFF3/Output/Sslp .
+scp -r rgddata@kyle.rgd.mcw.edu:/home/rgddata/pipelines/RGDGff3Pipeline/dist/log/RGDGFF3/Output/Gene .
+scp -r rgddata@kyle.rgd.mcw.edu:/home/rgddata/pipelines/RGDGff3Pipeline/dist/log/RGDGFF3/Output/Qtl .
+scp -r rgddata@kyle.rgd.mcw.edu:/home/rgddata/pipelines/RGDGff3Pipeline/dist/log/RGDGFF3/Output/Sslp .
 rm $DOWNL_DIR/genome/gff/rat/*.* 
 rm $DOWNL_DIR/genome/gff/human/*.* 
 rm $DOWNL_DIR/genome/gff/mouse/*.* 
