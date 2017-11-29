@@ -35,13 +35,13 @@ if($help or !($model_file and $input_file))
 my $model = new InterMine::Model(file => $model_file);
 my $item_doc = new InterMine::Item::Document(model => $model, output => $output_file, auto_write => 1);
 
-my $rat_id = '10116';
-my $mouse_id = '10090';
-my $human_id = '9606';
+my $rat_tax = '10116';
+my $mouse_tax = '10090';
+my $human_tax = '9606';
 
-my $rat_item = $item_doc->add_item('Organism', taxonId => $rat_id);
-my $mouse_item = $item_doc->add_item('Organism', taxonId => $mouse_id);
-my $human_item = $item_doc->add_item('Organism', taxonId => $human_id);
+my $rat_item = $item_doc->add_item('Organism', taxonId => $rat_tax);
+my $mouse_item = $item_doc->add_item('Organism', taxonId => $mouse_tax);
+my $human_item = $item_doc->add_item('Organism', taxonId => $human_tax);
 
 #process Header
 
@@ -51,6 +51,7 @@ open(my $IN, '<', $input_file) or die "cannot open $input_file\n";
 my $index;
 my %mouse_genes;
 my %human_genes;
+my %rat_genes;
 my %sources;
 my $header_flag = 0;
 while(<$IN>)
@@ -67,25 +68,34 @@ while(<$IN>)
 	my @fields = split(/\t/);
    	my %data = zip(@$index, @fields);
 
-	my $rat_gene = $item_doc->add_item('Gene', primaryIdentifier => 'RGD:' . $data{RAT_GENE_RGD_ID}, organism => $rat_item);
+        # Check to see if a Rat Gene exists before creating a new record
+	if(!exists($rat_genes{$data{RAT_GENE_RGD_ID}})){
+		#print $data{RAT_GENE_RGD_ID} . "\n";
+		$rat_genes{$data{RAT_GENE_RGD_ID}} = $item_doc->add_item('Gene', primaryIdentifier => 'RGD:' . $data{RAT_GENE_RGD_ID}, organism => $rat_item);
+	}
+	my $rat_gene = $rat_genes{$data{RAT_GENE_RGD_ID}};
 
 	my @mouse_ids = split(/\|/, $data{MOUSE_ORTHOLOG_RGD});
 	my @mgi_ids = split(/\|/, $data{MOUSE_ORTHOLOG_MGI});
 	my @mouse_source = split(/\|/, $data{MOUSE_ORTHOLOG_SOURCE});
 	foreach my $mouse_id (@mouse_ids) {
-		unless($mouse_genes{$mouse_id})
+		unless(exists $mouse_genes{$mouse_id})
 		{
 			my $s_id = shift(@mgi_ids);
-			$s_id ||= "";
-			$mouse_genes{$mouse_id} = $item_doc->add_item('Gene', 
-												primaryIdentifier => 'RGD:' . $mouse_id,
-												secondaryIdentifier => $s_id, 
-												organism => $mouse_item);
+			if($s_id) { $mouse_genes{$mouse_id} = $item_doc->add_item('Gene', 
+										primaryIdentifier => 'RGD:' . $mouse_id,
+										secondaryIdentifier => $s_id, 
+										organism => $mouse_item); }
+			
+			else { $mouse_genes{$mouse_id} = $item_doc->add_item('Gene', 
+										primaryIdentifier => 'RGD:' . $mouse_id,
+										organism => $mouse_item); }
+			
 
 		}
 		my $source = shift(@mouse_source);
 
-		unless ($sources{$source}) {
+		unless (exists $sources{$source}) {
 			$sources{$source} = $item_doc->add_item('DataSet', name => $source);
 		}
 
@@ -104,18 +114,22 @@ while(<$IN>)
 	my @hgnc_ids = split(/\|/, $data{HUMAN_ORTHOLOG_HGNC_ID});
 	my @human_source = split(/\|/, $data{HUMAN_ORTHOLOG_SOURCE});
 	foreach my $human_id (@human_ids) {
-		unless($human_genes{$human_id})
+		unless(exists $human_genes{$human_id})
 		{
 			my $s_id = shift(@hgnc_ids);
-			$s_id ||= "";
-			$human_genes{$human_id} = $item_doc->add_item('Gene', 
-												primaryIdentifier => 'RGD:' . $human_id, 
-												secondaryIdentifier => $s_id,
-												organism => $human_item);
+			if($s_id) { $human_genes{$human_id} = $item_doc->add_item('Gene', 
+										primaryIdentifier => 'RGD:' . $human_id, 
+										secondaryIdentifier => $s_id,
+										organism => $human_item); }
+
+			else { $human_genes{$human_id} = $item_doc->add_item('Gene', 
+										primaryIdentifier => 'RGD:' . $human_id, 
+										organism => $human_item); }
+
 		}
 		my $source = shift(@human_source);
 
-		unless ($sources{$source}) {
+		unless (exists $sources{$source}) {
 			$sources{$source} = $item_doc->add_item('DataSet', name => $source);
 		}
 
