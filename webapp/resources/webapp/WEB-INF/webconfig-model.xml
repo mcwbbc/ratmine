@@ -270,8 +270,8 @@
 
     		<reportdisplayer javaClass="org.intermine.bio.web.displayer.GeneOntologyDisplayer"
 		        jspName="model/geneOntologyDisplayer.jsp"
-        		replacesFields="go"
-        		placement="geneOntology"
+        		replacesFields="goAnnotation,ontologyAnnotation"
+        		placement="summary"
         		types="Gene"/>
 
 		<reportdisplayer javaClass="org.intermine.bio.web.displayer.ProteinSequenceDisplayer"
@@ -289,9 +289,9 @@
 		
 		<reportdisplayer javaClass="org.intermine.bio.web.displayer.HomologueDisplayer"
     			jspName="model/homologueDisplayer.jsp"
+			parameters="{'dataSets': ['Panther', 'HomoloGene']}"
     			replacesFields="homologues"
     			placement="summary"
-			parameters="{'dataSets': ['Panther data set', 'HomoloGene data set']}"
     			types="Gene"/>
 
 
@@ -414,7 +414,7 @@
                                        goAnnotation.ontologyTerm.parents.identifier,goAnnotation.ontologyTerm.parents.name"
                                  externalLink="http://amigo.geneontology.org/cgi-bin/amigo/term_details?term="
                                  correctionCoefficient="org.intermine.bio.web.widget.GeneLenghtCorrectionCoefficient"/>
-
+<!--
 		<enrichmentwidgetdisplayer id="pathway_enrichment"
                                  title="Pathway Enrichment"
                                  description="Pathways enriched for genes in this list - data from Reactome"
@@ -427,7 +427,7 @@
                                  constraints="organism.taxonId=[list], primaryIdentifier != null"
                                  typeClass="Gene"
                                  views="secondaryIdentifier, symbol, organism.name, pathways.identifier, pathways.name, pathways.dataSets.name"/>
-
+-->
 		<enrichmentwidgetdisplayer id="disease_enrichment"
                                  title="Disease Enrichment"
                                  description="Disease Terms enriched for genes in this list"
