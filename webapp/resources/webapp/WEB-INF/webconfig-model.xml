@@ -267,25 +267,25 @@
                      replacesFields=""
                      placement="Proteins"
                      types="Gene,Protein"/>	
-
+<!--
     		<reportdisplayer javaClass="org.intermine.bio.web.displayer.GeneOntologyDisplayer"
 		        jspName="model/geneOntologyDisplayer.jsp"
         		replacesFields="goAnnotation,ontologyAnnotation"
         		placement="summary"
         		types="Gene"/>
-
+-->
 		<reportdisplayer javaClass="org.intermine.bio.web.displayer.ProteinSequenceDisplayer"
     			jspName="model/proteinSequenceDisplayer.jsp"
     			replacesFields=""
     			placement="summary"
     			types="Protein"/>
-
+<!--
 		<reportdisplayer javaClass="org.intermine.bio.web.displayer.OverlappingFeaturesDisplayer"
 			jspName="model/overlappingFeaturesDisplayer.jsp"
 			replacesFields=""
 			placement="Genomics"
 			types="SequenceFeature"/>
-		
+--> <!--		
 		
 		<reportdisplayer javaClass="org.intermine.bio.web.displayer.HomologueDisplayer"
     			jspName="model/homologueDisplayer.jsp"
@@ -293,7 +293,7 @@
     			replacesFields="homologues"
     			placement="summary"
     			types="Gene"/>
-
+-->
 
 		<reportdisplayer javaClass="org.intermine.bio.web.displayer.PublicationAnnotationsDisplayer"
 			jspName="model/publicationAnnotationsDisplayer.jsp"
@@ -301,37 +301,38 @@
                      	placement="Literature"
                      	parameters="Gene,Protein,GOAnnotation.evidence,Submission"
                      	types="Publication"/>
-
+<!--
 		<reportdisplayer javaClass="org.intermine.bio.web.displayer.GeneStructureDisplayer"
    			 jspName="model/geneStructureDisplayer.jsp"
     			replacesFields=""
     			placement="Genomics"
     			types="Gene,Transcript,Exon,Intron,UTR,CDS"/>
-
+--> <!--
 		<reportdisplayer javaClass="org.intermine.bio.web.displayer.CytoscapeNetworkDisplayer"
                 	jspName="model/cytoscapeNetworkDisplayer.jsp"
                 	replacesFields="interactions"
                 	placement="summary"
 			types="Gene,Protein"/>
+--> <!--
 		<reportdisplayer javaClass="org.intermine.bio.web.displayer.MinePathwaysDisplayer"
                      jspName="model/minePathwaysDisplayer.jsp"
                      replacesFields="pathways"
                      placement="summary"
                      types="Gene"/>
-	
+--><!--	
 		<reportdisplayer javaClass="org.intermine.bio.web.displayer.PathwayDescriptionDisplayer"
                      jspName="model/pathwayDescriptionDisplayer.jsp"
                      showImmediately="true"
                      replacesFields=""
                      placement="summary"
                      types="Pathway"/>
-
+--> <!--
 		<reportdisplayer javaClass="org.intermine.bio.web.displayer.PublicationCountsDisplayer"
                      jspName="model/publicationCountsDisplayer.jsp"
                      replacesFields=""
                      placement="Literature"
                      types="BioEntity"/>
-	
+-->	
 	</reportdisplayers>
 	<!-- widgets
 	     Each Sequece Feature requires its own unique widget definition -->
