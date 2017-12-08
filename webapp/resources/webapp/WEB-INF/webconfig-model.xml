@@ -285,15 +285,15 @@
 			replacesFields=""
 			placement="Genomics"
 			types="SequenceFeature"/>
---> <!--		
+--> 		
 		
 		<reportdisplayer javaClass="org.intermine.bio.web.displayer.HomologueDisplayer"
     			jspName="model/homologueDisplayer.jsp"
-			parameters="{'dataSets': ['Panther', 'HomoloGene']}"
+			parameters="{'dataSets': ['Panther', 'HomoloGene', 'RGD', 'NCBI', 'Ensemble', 'EggNOG']}"
     			replacesFields="homologues"
     			placement="summary"
     			types="Gene"/>
--->
+
 
 		<reportdisplayer javaClass="org.intermine.bio.web.displayer.PublicationAnnotationsDisplayer"
 			jspName="model/publicationAnnotationsDisplayer.jsp"
@@ -307,13 +307,13 @@
     			replacesFields=""
     			placement="Genomics"
     			types="Gene,Transcript,Exon,Intron,UTR,CDS"/>
---> <!--
+--> 
 		<reportdisplayer javaClass="org.intermine.bio.web.displayer.CytoscapeNetworkDisplayer"
                 	jspName="model/cytoscapeNetworkDisplayer.jsp"
                 	replacesFields="interactions"
                 	placement="summary"
 			types="Gene,Protein"/>
---> <!--
+<!--
 		<reportdisplayer javaClass="org.intermine.bio.web.displayer.MinePathwaysDisplayer"
                      jspName="model/minePathwaysDisplayer.jsp"
                      replacesFields="pathways"
