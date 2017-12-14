@@ -147,20 +147,20 @@ if [ "$1" = "go-annotation" ]  || [ "$1" = "all" ]
 cd $TEMP_DIR
 #wget ftp://ftp.ebi.ac.uk/pub/databases/GO/goa/HUMAN/gene_association.goa_human.gz
 #wget http://geneontology.org/gene-associations/gene_association.goa_human.gz
-wget ftp://ftp.geneontology.org/pub/go/gene-associations/goa_human.gaf.gz
-wget ftp://ftp.geneontology.org/pub/go/gene-associations/gene_association.mgi.gz
+#wget ftp://ftp.geneontology.org/pub/go/gene-associations/goa_human.gaf.gz
+#wget ftp://ftp.geneontology.org/pub/go/gene-associations/gene_association.mgi.gz
 #wget ftp://ftp.informatics.jax.org/pub/reports/gene_association.mgi
 wget ftp://ftp.rgd.mcw.edu/pub/data_release/gene_association.rgd.gz 
 rm $DOWNL_DIR/go-annotation/*
 #gunzip gene_association.goa_human.gz
-gunzip goa_human.gaf.gz
-gunzip gene_association.mgi.gz
+#gunzip goa_human.gaf.gz
+#gunzip gene_association.mgi.gz
 gunzip gene_association.rgd.gz
 
 cp gene_association.rgd $DOWNL_DIR/go-annotation/
-cp gene_association.mgi $DOWNL_DIR/go-annotation/
+#cp gene_association.mgi $DOWNL_DIR/go-annotation/
 #cp gene_association.goa_human $DOWNL_DIR/go-annotation/
-cp goa_human.gaf $DOWNL_DIR/go-annotation/
+#cp goa_human.gaf $DOWNL_DIR/go-annotation/
 
 fi
 
