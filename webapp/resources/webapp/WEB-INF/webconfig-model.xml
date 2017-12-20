@@ -265,15 +265,15 @@
 		<reportdisplayer javaClass="org.intermine.bio.web.displayer.UniProtCommentsDisplayer"
                      jspName="model/uniProtCommentsDisplayer.jsp"
                      replacesFields=""
-                     placement="Proteins"
+                     placement="Proteomics"
                      types="Gene,Protein"/>	
-<!--
+
     		<reportdisplayer javaClass="org.intermine.bio.web.displayer.GeneOntologyDisplayer"
 		        jspName="model/geneOntologyDisplayer.jsp"
-        		replacesFields="goAnnotation,ontologyAnnotation"
-        		placement="summary"
-        		types="Gene"/>
--->
+        		replacesFields="goAnnotation,ontologyAnnotations"
+        		placement="Function"
+        		types="Gene,Protein"/>
+
 		<reportdisplayer javaClass="org.intermine.bio.web.displayer.ProteinSequenceDisplayer"
     			jspName="model/proteinSequenceDisplayer.jsp"
     			replacesFields=""
@@ -297,7 +297,7 @@
 
 		<reportdisplayer javaClass="org.intermine.bio.web.displayer.PublicationAnnotationsDisplayer"
 			jspName="model/publicationAnnotationsDisplayer.jsp"
-                     	replacesFields=""
+                     	replacesFields="publications"
                      	placement="Literature"
                      	parameters="Gene,Protein,GOAnnotation.evidence,Submission"
                      	types="Publication"/>
@@ -311,7 +311,7 @@
 		<reportdisplayer javaClass="org.intermine.bio.web.displayer.CytoscapeNetworkDisplayer"
                 	jspName="model/cytoscapeNetworkDisplayer.jsp"
                 	replacesFields="interactions"
-                	placement="summary"
+                	placement="Function"
 			types="Gene,Protein"/>
 <!--
 		<reportdisplayer javaClass="org.intermine.bio.web.displayer.MinePathwaysDisplayer"
@@ -326,13 +326,13 @@
                      replacesFields=""
                      placement="summary"
                      types="Pathway"/>
---> <!--
+--> 
 		<reportdisplayer javaClass="org.intermine.bio.web.displayer.PublicationCountsDisplayer"
                      jspName="model/publicationCountsDisplayer.jsp"
-                     replacesFields=""
+                     replacesFields="publications"
                      placement="Literature"
                      types="BioEntity"/>
--->	
+	
 	</reportdisplayers>
 	<!-- widgets
 	     Each Sequece Feature requires its own unique widget definition -->
